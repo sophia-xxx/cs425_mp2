@@ -27,7 +27,7 @@ var (
 	isJoining    bool
 )
 
-func getLocalIPAddr() net.IP {
+func GetLocalIPAddr() net.IP {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		logger.PrintError("net.Dial")
@@ -237,7 +237,7 @@ func initMembershipList(isGossip bool) {
 		localMessage.Type = pb.MessageType_JOINREQ
 	}
 
-	localIP := getLocalIPAddr().String()
+	localIP := GetLocalIPAddr().String()
 	selfID = localIP + ":" + ptypes.TimestampString(selfMember.LastSeen)
 
 	membership.AddMemberToMembershipList(localMessage, selfID, &selfMember)

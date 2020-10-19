@@ -6,25 +6,32 @@ import (
 	"os"
 	//"fmt"
 	"../config"
+	"../detector"
 	"../logger"
 )
 
-func getFileNode(filename string, isMaster bool) {
-
-}
+/*todo: master node deal with "get" message*/
+/*todo: server node deal with "get" message*/
 
 // deal with "get file" command
-func getFileCommand(filename string, sdfsFileName string) {
-	//filePath:="./sdfs"+sdfsFileName
-	//fileNodeList:=getFileNode(sdfsFileName,masterAddr)
-	//for _,fileNodeAddr :=range fileNodeList{
-	//	receiveFile()
-	//}
+func getFileCommand(sdfsFileName string, localFileName string) {
+	/*todo: send message to master server */
+	/*todo : send message to data server*/
+	localFilePath := "./localfile/" + localFileName
+	receiveFile(localFilePath)
 }
-func putFileCommand() {
+
+// deal with "put file" command
+func putFileCommand(localFileName string, sdfsFileName string) {
+	/*todo: send message to master server */
+	/*todo : send message to data server*/
+	localFilePath := "./localfile/" + localFileName
+	remoteAddr := ""
+	sendFile(localFilePath, remoteAddr)
 
 }
 
+//deal with "delete file" command
 func deleteFileCommand() {
 
 }
@@ -57,8 +64,9 @@ func sendFile(filepath string, dest string) {
 }
 
 // server process
-func receiveFile(filepath string, port string) {
-	localAddr, err := net.ResolveTCPAddr("tcp4", port)
+func receiveFile(filepath string) {
+	addressString := detector.GetLocalIPAddr().String() + config.PORT
+	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot resolve TCP address!")
 	}
@@ -93,10 +101,6 @@ func receiveFile(filepath string, port string) {
 		file.Write(buf[:n])
 
 	}
-}
-
-func getWriteServer() {
-
 }
 
 func deleteFile(filename string, dirpath string) {

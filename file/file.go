@@ -8,10 +8,12 @@ import (
 	"../config"
 	"../detector"
 	"../logger"
+	//"sync"
 )
 
-/*todo: master node deal with "get" message*/
-/*todo: server node deal with "get" message*/
+/*todo: masterNode and dataNode message handler*/
+/*todo: master allocate dataNode/ find dataNode*/
+/*todo: dataNode read and write sdfsfile*/
 
 // deal with "get file" command
 func getFileCommand(sdfsFileName string, localFileName string) {
@@ -32,8 +34,8 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 }
 
 //deal with "delete file" command
-func deleteFileCommand() {
-
+func deleteFileCommand(sdfsFileName string) {
+	/*todo: send message to master*/
 }
 
 // send file by TCP connection
@@ -103,7 +105,7 @@ func receiveFile(filepath string) {
 	}
 }
 
-func deleteFile(filename string, dirpath string) {
+func deleteFile(filename string) {
 	os.Remove(filename)
-	os.RemoveAll(dirpath)
+
 }

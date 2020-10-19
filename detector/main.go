@@ -126,6 +126,12 @@ func handleCommands(input string) {
 		}
 	case "leave":
 		sendLeaveRequest()
+
+	/*
+		todo: case of put/get/delete/ls/store
+		every case will import
+	*/
+
 	default:
 		logger.PrintError("Invalid command")
 	}

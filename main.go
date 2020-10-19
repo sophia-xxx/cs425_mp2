@@ -16,6 +16,9 @@ func main() {
 	isIntroducer := flag.Bool("intro", false, "flag for whether this machine is the introducer")
 	isGossip := flag.Bool("gossip", false, "flag for whether this machine uses gossip heartbeating for dissemination")
 	introducerIP := flag.String("introIp", "", "the string of the introducer to connect to")
+
+	//port:=flag.String("port", "8001", "the string of the port")
+
 	flag.Parse()
 
 	if (!*isIntroducer && *introducerIP == "") || (*isIntroducer && *introducerIP != "") {

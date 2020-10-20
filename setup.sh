@@ -1,22 +1,21 @@
 #! /bin/bash
 
 if [ ! -d "go" ]; then
-    mkdir go
+	mkdir go
 fi
 
 if [ ! -d "src" ]; then
-    mkdir src
+	mkdir src
 fi
 
 if [ ! -d "pkg" ]; then
-    mkdir pkg
+	mkdir pkg
 fi
 
 export GOROOT=/usr/lib/golang
-export GOPATH=/home/xiyafan2/go
+export GOPATH=/home/chunhao3/go
 
 go get github.com/jinzhu/copier
 go get github.com/golang/protobuf/proto
 go get github.com/golang/protobuf/ptypes/timestamp
 go get google.golang.org/protobuf/reflect/protoreflect
-go get google.golang.org/protobuf/runtime/protoimpl

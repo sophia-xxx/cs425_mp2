@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"net"
 	"os"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -265,4 +266,15 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	if scanner.Err() != nil {
 		logger.PrintError("Error reading input from commandline")
 	}
+}
+
+func GetMemberIDList() []string {
+	idList := make([]string, 0)
+	for k := range localMessage.MemberList {
+		idList = append(idList, k)
+	}
+
+	sort.Strings(idList)
+	return idList
+
 }

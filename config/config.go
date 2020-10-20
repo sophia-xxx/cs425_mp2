@@ -15,3 +15,5 @@ const STRAT_ALL = "all"
 const PULSE_TIME = 500
 
 const GOSSIP_FANOUT = 4
+
+const REPLICA = 4

@@ -2,7 +2,7 @@ package file
 
 import (
 	"encoding/json"
-
+	"hash/fnv"
 	//"fmt"
 	"io"
 	"net"
@@ -17,6 +17,9 @@ import (
 
 var (
 	introducerIp string
+	//localIp string
+	fileList     []string
+	fileNodeList map[string][]string
 )
 
 type FileMessage struct {
@@ -33,15 +36,49 @@ const (
 	MSG_ACK    = "ack"
 )
 
-// find nodes to write to or read from
-func findNode(sdfsFileName string) []string {
-	ipList := make([]string, 4)
-	/*todo: hash and get IP Address*/
-	return ipList
-
+func hash(s string) uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return h.Sum32()
 }
 
-//
+// find nodes to write to or read from
+func findNode(sdfsFileName string) []string {
+	storeList := fileNodeList[sdfsFileName]
+	nodeNum := config.REPLICA - len(storeList)
+	memberIdList := detector.GetMemberIDList()
+
+	ipList := make([]string, 0)
+	validIdList := make([]string, 0)
+	for _, id := range memberIdList {
+		if id == detector.GetLocalIPAddr().String() {
+			continue
+		}
+		for _, n := range storeList {
+			if id != n {
+				validIdList = append(validIdList, id)
+			}
+		}
+	}
+	count := 0
+	valid := true
+	for len(ipList) != nodeNum {
+		num := int(hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
+		ip := validIdList[num]
+		for _, i := range ipList {
+			if ip == i {
+				valid = false
+			}
+		}
+		if valid {
+			ipList = append(ipList, ip)
+		}
+		count++
+	}
+	return ipList
+}
+
+// server listen to TCP connection request
 func listenTCP() {
 	addressString := detector.GetLocalIPAddr().String() + config.PORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
@@ -57,7 +94,7 @@ func listenTCP() {
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot open TCP connection!")
 	}
-	/* deal with multiple reads, but will have problem with multiple writes*/
+	/* ?????deal with multiple reads, but will have problem with multiple writes*/
 	go handleConnection(conn)
 
 }
@@ -115,7 +152,7 @@ func sendMessage(dest string, message []byte) {
 	_, err = conn.Write(message)
 }
 
-// send file by TCP connection (send filename-get ACK-send file)
+// send file by TCP connection (send filename-->get ACK-->send file)
 func sendFile(localFilePath string, dest string, filename string) {
 	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+config.PORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
@@ -157,8 +194,9 @@ func sendFile(localFilePath string, dest string, filename string) {
 
 }
 
+/*todo: how to combine receive file into receive message*/
 // receive file by TCP connection
-func receiveFile(filepath string, conn *net.TCPConn) {
+/*func receiveFile(filepath string, conn *net.TCPConn) {
 	defer conn.Close()
 	// set directory and read file
 	//os.Mkdir("./sdfs",0777)
@@ -178,7 +216,7 @@ func receiveFile(filepath string, conn *net.TCPConn) {
 		file.Write(buf[:n])
 	}
 	return
-}
+}*/
 
 func deleteFile(filename string) {
 	os.Remove(filename)

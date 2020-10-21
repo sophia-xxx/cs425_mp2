@@ -1,5 +1,7 @@
 package config
 
+import "hash/fnv"
+
 const PORT string = "6789"
 
 const FILEPORT string = "8001"
@@ -21,3 +23,9 @@ const PULSE_TIME = 500
 const GOSSIP_FANOUT = 4
 
 const REPLICA = 4
+
+func Hash(s string) uint32 {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return h.Sum32()
+}

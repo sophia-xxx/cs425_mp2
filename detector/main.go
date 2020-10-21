@@ -270,14 +270,21 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 
 func GetMemberIDList() []string {
 	idList := make([]string, 0)
-	for k := range localMessage.MemberList {
-		idList = append(idList, k)
+	for k, member := range localMessage.MemberList {
+		if !failureList[k] && !member.IsLeaving {
+			idList = append(idList, k)
+		}
 	}
-
 	sort.Strings(idList)
 	return idList
 
 }
-func GetFailureList() {
-
+func GetFailNodeList() []string {
+	failNodes := make([]string, 0)
+	for k := range failureList {
+		if failureList[k] {
+			failNodes = append(failNodes, k)
+		}
+	}
+	return failNodes
 }

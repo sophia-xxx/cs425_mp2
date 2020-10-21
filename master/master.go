@@ -3,7 +3,8 @@ package master
 import (
 	"../config"
 	"../detector"
-	"hash/fnv"
+
+	"../failure"
 )
 
 var (
@@ -13,8 +14,10 @@ var (
 	fileNodeList map[string][]string
 )
 
+/*todo: apart from the file-node map, send message to nodes*/
+
 // add or update record in file-node map
-func updateFileRecord(sdfsFileName string, newNodeList []string) {
+func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 	// update existed record
 	if _, exist := fileNodeList[sdfsFileName]; exist {
 		oldFileNodeList := fileNodeList[sdfsFileName]
@@ -33,17 +36,43 @@ func updateFileRecord(sdfsFileName string, newNodeList []string) {
 
 }
 
-// delete record in file-node map
-func deleteFileReord(sdfsFileName string) {
-	if _, exist := fileNodeList[sdfsFileName]; exist {
-		delete(fileNodeList, sdfsFileName)
+// remove node from  file-node map
+func RemoveFailNode() {
+	failNodes := detector.GetFailNodeList()
+	for _, node := range failNodes {
+		if getAllFile(node) == nil {
+			continue
+		}
+		for _, file := range getAllFile(node) {
+			newNodeList := make([]string, 0)
+			for _, n := range fileNodeList[file] {
+				if n != node {
+					newNodeList = append(newNodeList, n)
+				}
+			}
+			fileNodeList[file] = newNodeList
+		}
 	}
 }
 
-func hash(s string) uint32 {
-	h := fnv.New32a()
-	h.Write([]byte(s))
-	return h.Sum32()
+// find all files for a given node IP
+func getAllFile(nodeIp string) []string {
+	files := make([]string, 0)
+	for file, nodeList := range fileNodeList {
+		for _, node := range nodeList {
+			if node == nodeIp {
+				files = append(files, file)
+			}
+		}
+	}
+	return files
+}
+
+// delete record in file-node map
+func deleteFileRecord(sdfsFileName string) {
+	if _, exist := fileNodeList[sdfsFileName]; exist {
+		delete(fileNodeList, sdfsFileName)
+	}
 }
 
 // find nodes to write to or read from
@@ -64,11 +93,11 @@ func findNewNode(sdfsFileName string) []string {
 			}
 		}
 	}
-	// randomly pick servers in valid nodes to store the file
+	// randomly pick servers in valid nodes to store the connection
 	count := 0
 	valid := true
 	for len(ipList) != nodeNum {
-		num := int(hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
+		num := int(config.Hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
 		ip := validIdList[num]
 		for _, i := range ipList {
 			if ip == i {
@@ -83,7 +112,16 @@ func findNewNode(sdfsFileName string) []string {
 	return ipList
 }
 
-// find the stored list for a certain file
+// master check whether to replicate files or not
+func CheckReplicate() {
+	for file, nodeList := range fileNodeList {
+		if len(nodeList) < config.REPLICA {
+			failure.ReplicateFile(file)
+		}
+	}
+}
+
+// find the node list for a certain file
 func findStoreNode(sdfsFileName string) []string {
 	return fileNodeList[sdfsFileName]
 }

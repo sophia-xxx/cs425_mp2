@@ -1,0 +1,19 @@
+syntax = "proto3";
+package tutorial;
+
+option go_package = "./MessagePackage";
+
+message TCPMessage {
+  MsgType Type = 1;
+  string fileInfo=2;
+  repeated string PayLoad =3;
+
+}
+
+enum MsgType {
+  SEARCH = 0;
+  SEARCHREP = 1;
+  WRITEACK = 2;
+  REPLICA=3;
+}
+

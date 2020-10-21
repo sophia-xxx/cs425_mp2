@@ -48,7 +48,7 @@ func handleConnection(conn *net.TCPConn) {
 }
 
 // send TCP message
-func sendMessage(dest string, message []byte) {
+func SendMessage(dest string, message []byte) {
 	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+config.TCPPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
 	if err != nil {

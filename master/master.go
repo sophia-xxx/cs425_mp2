@@ -2,9 +2,8 @@ package master
 
 import (
 	"../config"
+	"../connection"
 	"../detector"
-
-	"../failure"
 )
 
 var (
@@ -116,7 +115,9 @@ func findNewNode(sdfsFileName string) []string {
 func CheckReplicate() {
 	for file, nodeList := range fileNodeList {
 		if len(nodeList) < config.REPLICA {
-			failure.ReplicateFile(file)
+			storeList := fileNodeList[file]
+			ipList := findNewNode(file)
+			replicateFile(storeList, ipList, file)
 		}
 	}
 }
@@ -124,4 +125,11 @@ func CheckReplicate() {
 // find the node list for a certain file
 func findStoreNode(sdfsFileName string) []string {
 	return fileNodeList[sdfsFileName]
+}
+
+/*todo: send replicate message and target nodeList*/
+func replicateFile(storeList []string, newList []string, filename string) {
+	// decide which node is the good file
+	sourceNode := storeList[0]
+	connection.SendMessage(sourceNode, []byte("replicate"))
 }

@@ -2,6 +2,10 @@ package config
 
 const PORT string = "6789"
 
+const FILEPORT string = "8001"
+
+const TCPPORT string = "8002"
+
 const BUFFER_SIZE int = 32768
 
 const T_TIMEOUT = 2

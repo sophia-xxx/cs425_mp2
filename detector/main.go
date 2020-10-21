@@ -278,3 +278,6 @@ func GetMemberIDList() []string {
 	return idList
 
 }
+func GetFailureList() {
+
+}

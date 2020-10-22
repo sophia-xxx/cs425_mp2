@@ -1,6 +1,7 @@
 package master
 
 import (
+	mg "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../connection"
 	"../detector"
@@ -134,7 +135,13 @@ func replicateFile(storeList []string, newList []string, filename string) {
 	connection.SendMessage(sourceNode, []byte("replicate"))
 }
 
-func HandleSearchMessage(fileInto string) {
+func HandleSearchMessage(fileInto string, sender string) {
 	ipList := FindNewNode(fileInto)
+	repMessage := &mg.TCPMessage{
+		Type:    mg.MsgType_SEARCHREP,
+		PayLoad: ipList,
+	}
+	msgBytes, _ := connection.EncodeFileMessage(repMessage)
+	connection.SendMessage(sender, msgBytes)
 
 }

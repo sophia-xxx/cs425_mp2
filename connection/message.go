@@ -12,6 +12,8 @@ import (
 	"../master"
 )
 
+var isMaster bool
+
 // socket to listen TCP message
 func ListenMessage() {
 	addressString := detector.GetLocalIPAddr().String() + config.TCPPORT
@@ -35,7 +37,6 @@ func ListenMessage() {
 
 }
 
-/*todo: message handler*/
 func handleConnection(conn *net.TCPConn) {
 	// read message data
 	buf := make([]byte, config.BUFFER_SIZE)
@@ -45,17 +46,20 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	messageBytes := buf[0:n]
 	remoteMsg, _ := DecodeFileMessage(messageBytes)
-
-	switch remoteMsg.Type {
 	// master return target node to write and read
-	case mg.MsgType_SEARCH:
-		master.FindNewNode(remoteMsg.FileInfo)
+	if isMaster && remoteMsg.Type == mg.MsgType_SEARCH {
+		master.HandleSearchMessage(remoteMsg.FileInfo)
+	}
 	// client receive node list of search
-	case mg.MsgType_SEARCHREP:
+	if remoteMsg.Type == mg.MsgType_SEARCHREP {
+
+	}
 	// client get node ACK of write (up to 4 ACK, then write sucess)
-	case mg.MsgType_WRITEACK:
+	if remoteMsg.Type == mg.MsgType_WRITEACK {
+
+	}
 	// 	server get replicate message from master, then replicate a certain file
-	case mg.MsgType_REPLICA:
+	if remoteMsg.Type == mg.MsgType_REPLICA {
 
 	}
 

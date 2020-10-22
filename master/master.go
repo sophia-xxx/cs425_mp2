@@ -116,7 +116,7 @@ func CheckReplicate() {
 	for file, nodeList := range fileNodeList {
 		if len(nodeList) < config.REPLICA {
 			storeList := fileNodeList[file]
-			ipList := findNewNode(file)
+			ipList := FindNewNode(file)
 			replicateFile(storeList, ipList, file)
 		}
 	}
@@ -132,4 +132,9 @@ func replicateFile(storeList []string, newList []string, filename string) {
 	// decide which node is the good file
 	sourceNode := storeList[0]
 	connection.SendMessage(sourceNode, []byte("replicate"))
+}
+
+func HandleSearchMessage(fileInto string) {
+	ipList := FindNewNode(fileInto)
+
 }

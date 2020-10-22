@@ -14,7 +14,7 @@ import (
 	"../logger"
 	"../membership"
 	"../networking"
-	"../connection"
+	//"../connection"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -134,8 +134,8 @@ func handleCommands(input string) {
 	case "leave":
 		sendLeaveRequest()
 	case "put":
-		local_filename := param1;
-		sdfs_filename := param2;
+		local_filename := param1
+		sdfs_filename := param2
 		go putFileCommand(local_filename, sdfs_filename)
 	default:
 		logger.PrintError("Invalid command")

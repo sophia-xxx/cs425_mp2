@@ -1,8 +1,10 @@
 package connection
 
 import (
+	"github.com/golang/protobuf/proto"
 	"net"
-
+	//"strings"
+	mg "../ProtocolBuffers/MessagePackage"
 	//"fmt"
 	"../config"
 	"../detector"
@@ -41,19 +43,11 @@ func handleConnection(conn *net.TCPConn) {
 		logger.ErrorLogger.Println("Unable to read data!")
 	}
 	messageBytes := buf[0:n]
-	if len(messageBytes) == 0 {
+	remoteMsg, _ := DecodeFileMessage(messageBytes)
+	// master return target node to write and read
+	if remoteMsg.Type == mg.MsgType_SEARCH {
 
-	}else{
-		args := strings.Split(input, " ")
-		cmd := args[0]
-		param1 := ""
-		param2 := ""
-		switch cmd{
-			case "request_for_put_target":
-				
-		}
 	}
-
 }
 
 // send TCP message
@@ -66,7 +60,13 @@ func SendMessage(dest string, message []byte) {
 	_, err = conn.Write(message)
 }
 
-func EncodeFileCommandMessage(fileMessage string) ([]byte, error) {
+func EncodeFileMessage(fileMessage *mg.TCPMessage) ([]byte, error) {
 	message, err := proto.Marshal(fileMessage)
 	return message, err
+}
+func DecodeFileMessage(message []byte) (*mg.TCPMessage, error) {
+	list := &mg.TCPMessage{}
+	err := proto.Unmarshal(message, list)
+
+	return list, err
 }

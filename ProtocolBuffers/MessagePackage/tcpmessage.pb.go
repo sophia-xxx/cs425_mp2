@@ -37,10 +37,12 @@ const (
 // Enum value maps for MsgType.
 var (
 	MsgType_name = map[int32]string{
-		0: "SEARCH",
-		1: "SEARCHREP",
-		2: "WRITEACK",
+		0: "SEARCH", //put get to master
+		1: "SEARCHREP", //master send back with target ip
+		2: "WRITEACK", 
 		3: "REPLICA",
+		4: "FILEREQ",
+		5: "FILEREQACK",
 	}
 	MsgType_value = map[string]int32{
 		"SEARCH":    0,

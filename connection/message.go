@@ -9,6 +9,7 @@ import (
 	"../config"
 	"../detector"
 	"../logger"
+	"../master"
 )
 
 // socket to listen TCP message
@@ -44,10 +45,20 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	messageBytes := buf[0:n]
 	remoteMsg, _ := DecodeFileMessage(messageBytes)
+
+	switch remoteMsg.Type {
 	// master return target node to write and read
-	if remoteMsg.Type == mg.MsgType_SEARCH {
+	case mg.MsgType_SEARCH:
+		master.FindNewNode(remoteMsg.FileInfo)
+	// client receive node list of search
+	case mg.MsgType_SEARCHREP:
+	// client get node ACK of write (up to 4 ACK, then write sucess)
+	case mg.MsgType_WRITEACK:
+	// 	server get replicate message from master, then replicate a certain file
+	case mg.MsgType_REPLICA:
 
 	}
+
 }
 
 // send TCP message

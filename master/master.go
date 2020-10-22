@@ -75,7 +75,7 @@ func deleteFileRecord(sdfsFileName string) {
 }
 
 // find nodes to write to or read from
-func findNewNode(sdfsFileName string) []string {
+func FindNewNode(sdfsFileName string) []string {
 	storeList := fileNodeList[sdfsFileName]
 	nodeNum := config.REPLICA - len(storeList)
 	memberIdList := detector.GetMemberIDList()

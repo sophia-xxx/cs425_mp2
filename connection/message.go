@@ -4,7 +4,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"net"
 	//"strings"
-	mg "../ProtocolBuffers/MessagePackage"
+	pbm "../ProtocolBuffers/MessagePackage"
 	//"fmt"
 	"../config"
 	"../detector"
@@ -13,6 +13,7 @@ import (
 )
 
 var isMaster bool
+var quorum int
 
 // socket to listen TCP message
 func ListenMessage() {
@@ -38,6 +39,7 @@ func ListenMessage() {
 }
 
 func handleConnection(conn *net.TCPConn) {
+	defer conn.Close()
 	// read message data
 	buf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(buf)
@@ -45,22 +47,41 @@ func handleConnection(conn *net.TCPConn) {
 		logger.ErrorLogger.Println("Unable to read data!")
 	}
 	messageBytes := buf[0:n]
-	remoteMsg, _ := DecodeFileMessage(messageBytes)
-	// master return target node to write and read
-	if isMaster && remoteMsg.Type == mg.MsgType_SEARCH {
-		master.HandleSearchMessage(remoteMsg.FileInfo)
+	remoteMsg, _ := DecodeTCPMessage(messageBytes)
+	// master return target node to write
+	if isMaster && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
+		master.PutReplyMessage(remoteMsg.FileName,remoteMsg.SenderIP)
 	}
-	// client receive node list of search
-	if remoteMsg.Type == mg.MsgType_SEARCHREP {
+	if isMaster && remoteMsg.Type == pbm.MsgType_GET_MASTER {
+		master.GetReplyMessage(remoteMsg.FileName,remoteMsg.SenderIP)
+	}
+	/*todo: other message type*/
+	if remoteMsg.Type==pbm.MsgType_PUT_MASTER_REP{
+		// send file to target nodes
+		targetList:=remoteMsg.PayLoad
+		for _,target:=range targetList{
+			sendFile(remoteMsg.LocalPath,target,remoteMsg.FileName)
+		}
 
 	}
-	// client get node ACK of write (up to 4 ACK, then write sucess)
-	if remoteMsg.Type == mg.MsgType_WRITEACK {
+	if remoteMsg.Type==pbm.MsgType_WRITE_ACK{
+		// quorum determine whether the write is succeed
+		if quorum==4{
+			/*todo: if there is a failed write, how to deal with that?*/
+			logger.InfoLogger.Println("Write "+remoteMsg.FileName+" successfully!")
+		}else{
+			quorum++
+		}
 
 	}
-	// 	server get replicate message from master, then replicate a certain file
-	if remoteMsg.Type == mg.MsgType_REPLICA {
+	if remoteMsg.Type==pbm.MsgType_GET_MASTER_REP{
+		// receive file from target nodes
 
+
+	}
+
+	if remoteMsg.Type==pbm.MsgType_GET_P2P{
+		// start to send file
 	}
 
 }
@@ -75,13 +96,64 @@ func SendMessage(dest string, message []byte) {
 	_, err = conn.Write(message)
 }
 
-func EncodeFileMessage(fileMessage *mg.TCPMessage) ([]byte, error) {
+func EncodeTCPMessage(fileMessage *pbm.TCPMessage) ([]byte, error) {
 	message, err := proto.Marshal(fileMessage)
 	return message, err
 }
-func DecodeFileMessage(message []byte) (*mg.TCPMessage, error) {
-	list := &mg.TCPMessage{}
+func DecodeTCPMessage(message []byte) (*pbm.TCPMessage, error) {
+	list := &pbm.TCPMessage{}
 	err := proto.Unmarshal(message, list)
 
 	return list, err
 }
+
+
+
+// client send write request to target nodes
+func sendWriteReq(targetIp string, sdfsFileName string){
+	var fileMessage pbm.TCPMessage  //sch?
+	fileMessage.MsgType = "PUT_P2P" //sch?
+	fileMessage.FileInfo = sdfsFileName
+	fileMessage.senderIP = detector.GetLocalIPAddr().String()
+	//the payload is empty, should we do something to initial it?
+	message, _ := connection.EncodeTCPMessage(fileMessage)
+	connection.SendMessage(targetIp, message)
+}*/
+
+/*/*// client send read request to target node
+func sendReadReq(targetIp string, sdfsFileName string){
+	var fileMessage pbm.TCPMessage  //sch?
+	fileMessage.MsgType = "GET_P2P" //sch?
+	fileMessage.FileInfo = sdfsFileName
+	fileMessage.senderIP = detector.GetLocalIPAddr().String()
+	//the payload is empty, should we do something to initial it?
+	message, _ := connection.EncodeFileMessage(fileMessage)
+	connection.SendMessage(targetIp, message)
+}
+
+
+// target nodes reply "ACK" to client's write request
+func putFileCommandNodeACK(targetIp string, sdfsFileName string){
+	var fileMessage pbm.TCPMessage  //sch?
+	fileMessage.MsgType = "PUT_P2P_ACK" //sch?
+	fileMessage.FileInfo = sdfsFileName
+	fileMessage.senderIP = detector.GetLocalIPAddr().String()
+	//the payload is empty, should we do something to initial it?
+	message, _ := connection.EncodeFileMessage(fileMessage)
+	connection.SendMessage(targetIp, message)
+}
+
+
+
+// target nodes reply "ACK" to client's read request
+func getFileCommandNodeACK(targetIp string, sdfsFileName string, file_size int){
+	var fileMessage pbm.TCPMessage  //sch?
+	fileMessage.MsgType = "GET_P2P_ACK" //sch?
+	fileMessage.FileInfo = sdfsFileName
+	fileMessage.senderIP = detector.GetLocalIPAddr().String()
+	//the payload is empty, should we do something to initial it?
+	fileMessage.fileSize = file_size
+	message, _ := connection.EncodeFileMessage(fileMessage)
+	connection.SendMessage(targetIp, message)
+}
+*/

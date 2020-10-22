@@ -1,7 +1,7 @@
 package master
 
 import (
-	mg "../ProtocolBuffers/MessagePackage"
+	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../connection"
 	"../detector"
@@ -13,8 +13,6 @@ var (
 	fileList     []string
 	fileNodeList map[string][]string
 )
-
-/*todo: apart from the file-node map, send message to nodes*/
 
 // add or update record in file-node map
 func UpdateFileNode(sdfsFileName string, newNodeList []string) {
@@ -128,20 +126,40 @@ func findStoreNode(sdfsFileName string) []string {
 	return fileNodeList[sdfsFileName]
 }
 
-/*todo: send replicate message and target nodeList*/
+// send the replicate request to one existed file node
 func replicateFile(storeList []string, newList []string, filename string) {
 	// decide which node is the good file
 	sourceNode := storeList[0]
-	connection.SendMessage(sourceNode, []byte("replicate"))
+	repMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_PUT_MASTER_REP,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		PayLoad:  newList,
+	}
+	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
+	connection.SendMessage(sourceNode, msgBytes)
+
 }
 
-func HandleSearchMessage(fileInto string, sender string) {
-	ipList := FindNewNode(fileInto)
-	repMessage := &mg.TCPMessage{
-		Type:    mg.MsgType_SEARCHREP,
-		PayLoad: ipList,
+// master return target node to write
+func PutReplyMessage(fileName string, sender string) {
+	writeList := FindNewNode(fileName)
+	repMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_PUT_MASTER_REP,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		PayLoad:  writeList,
 	}
-	msgBytes, _ := connection.EncodeFileMessage(repMessage)
+	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
 	connection.SendMessage(sender, msgBytes)
+}
 
+/*todo: whether to reply one certain node to read? or reply multiple nodes then only connect one?*/
+func GetReplyMessage(filename string, sender string) {
+	readList := fileNodeList[filename]
+	repMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_GET_MASTER_REP,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		PayLoad:  readList,
+	}
+	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
+	connection.SendMessage(sender, msgBytes)
 }

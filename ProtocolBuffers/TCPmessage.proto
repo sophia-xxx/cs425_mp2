@@ -5,10 +5,11 @@ option go_package = "./MessagePackage";
 
 message TCPMessage {
   MsgType Type = 1;
-  string fileInfo=2;
+  string fileName=2;
   string senderIP = 3;
   repeated string PayLoad =4;
-  int fileSize = 5;
+  int32 fileSize = 5;
+  string localPath=6;
 
 }
 
@@ -23,5 +24,7 @@ enum MsgType {
   GET_P2P_ACK = 7; // Target ip send back ack (may require to tell back file size)
   GET_P2P_SIZE_ACK = 8; // The get request initiator tell file source ip that it get the file size info successfully, once this is received, start sending file
   REPLICA = 9;
+  WRITE_ACK=10;
+  READ_ACK=11;
 }
 

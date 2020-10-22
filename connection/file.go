@@ -5,6 +5,7 @@ import (
 	"net"
 	"os"
 
+	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../detector"
 	"../logger"
@@ -29,11 +30,13 @@ func ListenFile() {
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot open TCP connection!")
 	}
+
 	conn, err := listener.AcceptTCP()
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot open TCP connection!")
 	}
 	defer conn.Close()
+
 	// receive filename and create connection
 	nameBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(nameBuf)
@@ -64,7 +67,15 @@ func ListenFile() {
 		}
 		file.Write(buf[:n])
 	}
+	// finish reading file and send ACK
+	ackMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_WRITE_ACK,
+		SenderIP: detector.GetLocalIPAddr().String(),
+	}
+	msgBytes, _ := EncodeTCPMessage(ackMessage)
+	conn.Write(msgBytes)
 	return
+
 }
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
@@ -109,8 +120,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 
 }
 
-/*
 func deleteFile(filename string) {
 	os.Remove(filename)
 
-}*/
+}

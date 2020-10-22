@@ -1,5 +1,7 @@
 package detector
 
+/// Do I need to import connection here?
+
 // deal with "get connection" command
 func getFileCommand(sdfsFileName string, localFileName string) {
 	//send TCP message to master server
@@ -20,7 +22,9 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 func putFileCommand(localFileName string, sdfsFileName string) {
 	/*todo: send message to master server */
 	/*todo : send message to data server*/
-
+	cmd := "request_for_put_target " + localFileName + " " + sdfsFileName  //Is this ok for go?
+	message, _ := connection.EncodeFileCommandMessage(cmd)
+	connection.sendMessage(introducerIp, message)
 }
 
 //deal with "delete connection" command

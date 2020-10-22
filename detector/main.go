@@ -14,6 +14,7 @@ import (
 	"../logger"
 	"../membership"
 	"../networking"
+	"../connection"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -85,17 +86,22 @@ func sendLeaveRequest() {
 func handleCommands(input string) {
 	args := strings.Split(input, " ")
 	cmd := args[0]
-	param := ""
+	param1 := ""
+	param2 := ""
 
 	if len(args) > 1 {
-		param = args[1]
+		param1 = args[1]
+	}
+
+	if len(args) > 2 {
+		param2 = args[2]
 	}
 
 	switch cmd {
 	case "strat":
-		changeStrategy(param)
+		changeStrategy(param1)
 	case "list":
-		if param == "membership" {
+		if param1 == "membership" {
 			if localMessage != nil {
 				mux.Lock()
 				logger.PrintInfo("Printing membership list:\n", membership.GetMembershipListString(localMessage, failureList))
@@ -103,7 +109,7 @@ func handleCommands(input string) {
 			} else {
 				logger.PrintInfo("Membership list is nil")
 			}
-		} else if param == "self" {
+		} else if param1 == "self" {
 			if selfID == "" {
 				logger.PrintInfo("selfID is non-existent")
 			} else {
@@ -113,10 +119,10 @@ func handleCommands(input string) {
 			logger.PrintError("Invalid argument to 'list'")
 		}
 	case "join":
-		if param == "" {
+		if param1 == "" {
 			logger.PrintInfo("Please specify introducer IP address for joining")
 		} else if !isSending {
-			introducerIP = param
+			introducerIP = param1
 			initMembershipList(true)
 			isJoining = true
 			isSending = true
@@ -127,7 +133,10 @@ func handleCommands(input string) {
 		}
 	case "leave":
 		sendLeaveRequest()
-
+	case "put":
+		local_filename := param1;
+		sdfs_filename := param2;
+		go putFileCommand(local_filename, sdfs_filename)
 	default:
 		logger.PrintError("Invalid command")
 	}

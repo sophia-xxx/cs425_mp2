@@ -43,6 +43,15 @@ func handleConnection(conn *net.TCPConn) {
 	messageBytes := buf[0:n]
 	if len(messageBytes) == 0 {
 
+	}else{
+		args := strings.Split(input, " ")
+		cmd := args[0]
+		param1 := ""
+		param2 := ""
+		switch cmd{
+			case "request_for_put_target":
+				
+		}
 	}
 
 }
@@ -55,4 +64,9 @@ func SendMessage(dest string, message []byte) {
 		logger.ErrorLogger.Println("Cannot dial remote address!")
 	}
 	_, err = conn.Write(message)
+}
+
+func EncodeFileCommandMessage(fileMessage string) ([]byte, error) {
+	message, err := proto.Marshal(fileMessage)
+	return message, err
 }

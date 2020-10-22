@@ -50,37 +50,36 @@ func handleConnection(conn *net.TCPConn) {
 	remoteMsg, _ := DecodeTCPMessage(messageBytes)
 	// master return target node to write
 	if isMaster && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
-		master.PutReplyMessage(remoteMsg.FileName,remoteMsg.SenderIP)
+		master.PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
 	if isMaster && remoteMsg.Type == pbm.MsgType_GET_MASTER {
-		master.GetReplyMessage(remoteMsg.FileName,remoteMsg.SenderIP)
+		master.GetReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
 	/*todo: other message type*/
-	if remoteMsg.Type==pbm.MsgType_PUT_MASTER_REP{
+	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
 		// send file to target nodes
-		targetList:=remoteMsg.PayLoad
-		for _,target:=range targetList{
-			sendFile(remoteMsg.LocalPath,target,remoteMsg.FileName)
+		targetList := remoteMsg.PayLoad
+		for _, target := range targetList {
+			sendFile(remoteMsg.LocalPath, target, remoteMsg.FileName)
 		}
 
 	}
-	if remoteMsg.Type==pbm.MsgType_WRITE_ACK{
+	if remoteMsg.Type == pbm.MsgType_WRITE_ACK {
 		// quorum determine whether the write is succeed
-		if quorum==4{
+		if quorum == 4 {
 			/*todo: if there is a failed write, how to deal with that?*/
-			logger.InfoLogger.Println("Write "+remoteMsg.FileName+" successfully!")
-		}else{
+			logger.InfoLogger.Println("Write " + remoteMsg.FileName + " successfully!")
+		} else {
 			quorum++
 		}
 
 	}
-	if remoteMsg.Type==pbm.MsgType_GET_MASTER_REP{
+	if remoteMsg.Type == pbm.MsgType_GET_MASTER_REP {
 		// receive file from target nodes
-
 
 	}
 
-	if remoteMsg.Type==pbm.MsgType_GET_P2P{
+	if remoteMsg.Type == pbm.MsgType_GET_P2P {
 		// start to send file
 	}
 
@@ -107,10 +106,8 @@ func DecodeTCPMessage(message []byte) (*pbm.TCPMessage, error) {
 	return list, err
 }
 
-
-
 // client send write request to target nodes
-func sendWriteReq(targetIp string, sdfsFileName string){
+func sendWriteReq(targetIp string, sdfsFileName string) {
 	var fileMessage pbm.TCPMessage  //sch?
 	fileMessage.MsgType = "PUT_P2P" //sch?
 	fileMessage.FileInfo = sdfsFileName
@@ -118,10 +115,10 @@ func sendWriteReq(targetIp string, sdfsFileName string){
 	//the payload is empty, should we do something to initial it?
 	message, _ := connection.EncodeTCPMessage(fileMessage)
 	connection.SendMessage(targetIp, message)
-}*/
+}
 
-/*/*// client send read request to target node
-func sendReadReq(targetIp string, sdfsFileName string){
+// client send read request to target node
+func sendReadReq(targetIp string, sdfsFileName string) {
 	var fileMessage pbm.TCPMessage  //sch?
 	fileMessage.MsgType = "GET_P2P" //sch?
 	fileMessage.FileInfo = sdfsFileName
@@ -131,10 +128,9 @@ func sendReadReq(targetIp string, sdfsFileName string){
 	connection.SendMessage(targetIp, message)
 }
 
-
 // target nodes reply "ACK" to client's write request
-func putFileCommandNodeACK(targetIp string, sdfsFileName string){
-	var fileMessage pbm.TCPMessage  //sch?
+func putFileCommandNodeACK(targetIp string, sdfsFileName string) {
+	var fileMessage pbm.TCPMessage      //sch?
 	fileMessage.MsgType = "PUT_P2P_ACK" //sch?
 	fileMessage.FileInfo = sdfsFileName
 	fileMessage.senderIP = detector.GetLocalIPAddr().String()
@@ -143,11 +139,9 @@ func putFileCommandNodeACK(targetIp string, sdfsFileName string){
 	connection.SendMessage(targetIp, message)
 }
 
-
-
 // target nodes reply "ACK" to client's read request
-func getFileCommandNodeACK(targetIp string, sdfsFileName string, file_size int){
-	var fileMessage pbm.TCPMessage  //sch?
+func getFileCommandNodeACK(targetIp string, sdfsFileName string, file_size int) {
+	var fileMessage pbm.TCPMessage      //sch?
 	fileMessage.MsgType = "GET_P2P_ACK" //sch?
 	fileMessage.FileInfo = sdfsFileName
 	fileMessage.senderIP = detector.GetLocalIPAddr().String()
@@ -156,4 +150,3 @@ func getFileCommandNodeACK(targetIp string, sdfsFileName string, file_size int){
 	message, _ := connection.EncodeFileMessage(fileMessage)
 	connection.SendMessage(targetIp, message)
 }
-*/

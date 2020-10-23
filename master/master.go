@@ -31,7 +31,6 @@ func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 		// add new record
 		fileNodeList[sdfsFileName] = newNodeList
 	}
-
 }
 
 // should run continuously
@@ -75,6 +74,7 @@ func deleteFileRecord(sdfsFileName string) {
 
 // find nodes to write to or read from
 func FindNewNode(sdfsFileName string) []string {
+	// if key not exist in map, it will get nil
 	storeList := fileNodeList[sdfsFileName]
 	nodeNum := config.REPLICA - len(storeList)
 	memberIdList := detector.GetMemberIDList()
@@ -110,7 +110,7 @@ func FindNewNode(sdfsFileName string) []string {
 	return ipList
 }
 
-// master check whether to replicate files or not
+// master check whether to replicate files or not---should run continuously
 func CheckReplicate() {
 	for file, nodeList := range fileNodeList {
 		if len(nodeList) < config.REPLICA {
@@ -137,7 +137,13 @@ func replicateFile(storeList []string, newList []string, filename string) {
 
 // master return target node to write
 func PutReplyMessage(fileName string, sender string) {
-	writeList := FindNewNode(fileName)
+	// check if key exist in map
+	writeList := make([]string, 0)
+	if fileNodeList[fileName] == nil {
+		writeList = FindNewNode(fileName)
+	} else {
+		writeList = fileNodeList[fileName]
+	}
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_MASTER_REP,
 		SenderIP: detector.GetLocalIPAddr().String(),
@@ -150,6 +156,9 @@ func PutReplyMessage(fileName string, sender string) {
 /*todo: whether to reply one certain node to read? or reply multiple nodes then only connect one?*/
 func GetReplyMessage(filename string, sender string) {
 	readList := fileNodeList[filename]
+	if readList == nil {
+		/*todo: deal with non-existed file*/
+	}
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_MASTER_REP,
 		SenderIP: detector.GetLocalIPAddr().String(),

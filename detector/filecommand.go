@@ -4,7 +4,6 @@ import (
 	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../connection"
-	//"fmt"
 	"../logger"
 	"io/ioutil"
 )

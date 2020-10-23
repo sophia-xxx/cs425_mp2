@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	pbm "../ProtocolBuffers/MessagePackage"
+	//pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../detector"
 	"../logger"
@@ -68,12 +68,7 @@ func ListenFile(filePath string) {
 		file.Write(buf[:n])
 	}
 	// finish reading file and send ACK
-	ackMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_WRITE_ACK,
-		SenderIP: detector.GetLocalIPAddr().String(),
-	}
-	msgBytes, _ := EncodeTCPMessage(ackMessage)
-	conn.Write(msgBytes)
+	SendWriteACK(introducerIp, filename)
 	return
 
 }

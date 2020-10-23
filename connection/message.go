@@ -68,15 +68,17 @@ func handleConnection(conn *net.TCPConn) {
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
 		ListenFile(config.SDFS_DIR + remoteMsg.FileName)
 	}
-	// when write finish, client will receive write ACK to determine write success
-	if remoteMsg.Type == pbm.MsgType_WRITE_ACK {
+	// when write finish, master will receive write ACK to maintain file-node list
+	if isMaster && remoteMsg.Type == pbm.MsgType_WRITE_ACK {
 		// quorum determine whether the write is succeed
-		if quorum == 4 {
-			/*todo: if there is a failed write, how to deal with that?*/
+		/*if quorum == 4 {
 			logger.InfoLogger.Println("Write " + remoteMsg.FileName + " successfully!")
 		} else {
 			quorum++
-		}
+		}*/
+		ipList := make([]string, 0)
+		ipList = append(ipList, remoteMsg.SenderIP)
+		master.UpdateFileNode(remoteMsg.FileName, ipList)
 
 	}
 	// client send read request to target nodes
@@ -162,3 +164,14 @@ func getFileCommandNodeACK(targetIp string, sdfsFileName string, file_size int) 
 	message, _ := connection.EncodeFileMessage(fileMessage)
 	connection.SendMessage(targetIp, message)
 }*/
+
+func SendWriteACK(targetIp string, sdfsFileName string) {
+	fileMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_WRITE_ACK,
+		FileName: sdfsFileName,
+		SenderIP: detector.GetLocalIPAddr().String(),
+	}
+
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(targetIp, message)
+}

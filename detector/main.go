@@ -2,6 +2,7 @@ package detector
 
 import (
 	"bufio"
+	"go/scanner"
 	"net"
 	"os"
 	"sort"
@@ -12,12 +13,12 @@ import (
 	pb "../ProtocolBuffers/ProtoPackage"
 
 	"../config"
+	"../connection"
+	"../failure"
 	"../logger"
+	"../master"
 	"../membership"
 	"../networking"
-	//"../connection"
-	"../failure"
-	"../master"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -299,11 +300,14 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
 	go networking.Listen(config.PORT, readNewMessage)
 	go startHeartbeat()
+
 	// master node maintain file-node list
 	if isIntroducer {
 		go master.CheckReplicate()
 		go master.RemoveFailNode()
 	}
+	// listen TCP message
+	go connection.ListenMessage()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

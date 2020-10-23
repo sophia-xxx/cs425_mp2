@@ -18,18 +18,18 @@ enum MsgType {
   PUT_MASTER_REP = 1; // Master reply to put request, send back target ip
   PUT_P2P = 2; // Put request send to target ip
   PUT_P2P_ACK = 3; // Target ip get the file header successfully and send back ack, once this is received, start sending file
-  GET_MASTER = 4;  // Get request send to master
-  GET_MASTER_REP = 5; // Master reply to get request, send back target ip
-  GET_P2P = 6; // Get request send to target ip
-  GET_P2P_ACK = 7; // Target ip send back ack (may require to tell back file size)
-  GET_P2P_SIZE_ACK = 8; // The get request initiator tell file source ip that it get the file size info successfully, once this is received, start sending file
-  REPLICA = 9;
-  WRITE_ACK=10; // when finish write, send ACK to client
-  READ_ACK=11; // when finish read, send ACK to client
-  DELETE=12; // master send delete request to file node
-  DELETE_ACK=13; // server reply to DELETE message
-  DELETE_MASTER=14; // client send deletee request to master
-  LIST=15; // client send LIST request to master,
-  LIST_REP=16; // master send sdfsfilename list to server
+  WRITE_ACK=4; // when finish write, send ACK to client
+
+  GET_MASTER = 5;  // Get request send to master
+  GET_MASTER_REP = 6; // Master reply to get request, send back target ip
+  GET_P2P = 7; // Get request send to target ip
+  GET_P2P_ACK = 8; // Target ip send back ack (may require to tell back file size)
+  GET_P2P_SIZE_ACK = 9; // The get request initiator tell file source ip that it get the file size info successfully, once this is received, start sending file
+
+  DELETE=10; // master send delete request to file node
+  DELETE_ACK=11; // server reply to DELETE message
+  DELETE_MASTER=12; // client send deletee request to master
+  LIST=13; // client send LIST request to master,
+  LIST_REP=14; // master send sdfsfilename list to server
 }
 

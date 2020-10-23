@@ -18,7 +18,7 @@ var (
 )
 
 // socket to read filename and connection
-func ListenFile(filePath string) {
+func ListenFile(filePath string, fileSize int32, isPut bool) {
 	// open connection socket
 	addressString := detector.GetLocalIPAddr().String() + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
@@ -66,8 +66,17 @@ func ListenFile(filePath string) {
 		}
 		file.Write(buf[:n])
 	}
-	// finish reading file and send ACK
-	SendWriteACK(introducerIp, filename)
+	if isPut {
+		// finish reading file and check file size, then send ACK
+		fileInfo, _ := os.Stat(filePath)
+		if int32(fileInfo.Size()) == fileSize {
+			SendWriteACK(introducerIp, filename)
+		} else {
+			logger.PrintInfo("File is broken")
+			os.Remove(filePath)
+		}
+	}
+
 	return
 
 }
@@ -111,10 +120,5 @@ func sendFile(localFilePath string, dest string, filename string) {
 		conn.Write(buf[:n])
 	}
 	return
-
-}
-
-func deleteFile(filename string) {
-	os.Remove(filename)
 
 }

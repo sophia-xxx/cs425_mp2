@@ -32,6 +32,12 @@ const PERM_MODE = 0777
 
 const ACK_TIMEOUT = 1
 
+const PUT = 4
+
+const GET = 9
+
+const DELETE = 12
+
 func Hash(s string) uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(s))

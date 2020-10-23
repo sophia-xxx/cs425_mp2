@@ -5,6 +5,7 @@ import (
 	"../config"
 	"../connection"
 	"../detector"
+	"../logger"
 )
 
 var (
@@ -66,9 +67,22 @@ func getAllFile(nodeIp string) []string {
 }
 
 // delete record in file-node map
-func deleteFileRecord(sdfsFileName string) {
-	if _, exist := fileNodeList[sdfsFileName]; exist {
+func DeleteFileRecord(sdfsFileName string, nodeIP string) {
+	/*if _, exist := fileNodeList[sdfsFileName]; exist {
 		delete(fileNodeList, sdfsFileName)
+	}*/
+	nodeList := fileNodeList[sdfsFileName]
+	if nodeList == nil {
+		delete(fileNodeList, sdfsFileName)
+		logger.PrintInfo("File " + sdfsFileName + " has been deleted!")
+	} else {
+		for index, node := range nodeList {
+			if node == nodeIP {
+				nodeList = append(nodeList[:index], nodeList[index+1:]...)
+				break
+			}
+		}
+		fileNodeList[sdfsFileName] = nodeList
 	}
 }
 
@@ -136,7 +150,7 @@ func replicateFile(storeList []string, newList []string, filename string) {
 }
 
 // master return target node to write
-func PutReplyMessage(fileName string, sender string) {
+func PutReplyMessage(fileName string, sender string, fileSize int32) {
 	// check if key exist in map
 	writeList := make([]string, 0)
 	if fileNodeList[fileName] == nil {
@@ -148,12 +162,12 @@ func PutReplyMessage(fileName string, sender string) {
 		Type:     pbm.MsgType_PUT_MASTER_REP,
 		SenderIP: detector.GetLocalIPAddr().String(),
 		PayLoad:  writeList,
+		FileSize: fileSize,
 	}
 	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
 	connection.SendMessage(sender, msgBytes)
 }
 
-/*todo: whether to reply one certain node to read? or reply multiple nodes then only connect one?*/
 func GetReplyMessage(filename string, sender string) {
 	readList := fileNodeList[filename]
 	if readList == nil {
@@ -169,24 +183,29 @@ func GetReplyMessage(filename string, sender string) {
 }
 
 // master return target node with VM ip list that store the file
-func ListReplyMessage(filename string, storeipList []string, sender string) {
+func ListReplyMessage(filename string, targetIp string) {
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_LIST_REP,
 		FileName: filename,
 		SenderIP: detector.GetLocalIPAddr().String(),
-		PayLoad:  storeipList,
+		PayLoad:  fileNodeList[filename],
 	}
 	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
-	connection.SendMessage(sender, msgBytes)
+	connection.SendMessage(targetIp, msgBytes)
 }
 
 //master send delete request to file node
-func DeleteMessage(filename string, targetIp string){
+func DeleteMessage(filename string) {
+	ipList := fileNodeList[filename]
+	/*todo: have no such file*/
 	fileMessage := &pbm.TCPMessage{
-		Type:	  pbm.MsgType_DELETE,
-		SenderIP: GetLocalIPAddr().String(),
-		FileName: sdfsFileName,
+		Type:     pbm.MsgType_DELETE,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		FileName: filename,
 	}
 	message, _ := connection.EncodeTCPMessage(fileMessage)
-	connection.SendMessage(targetIp, message)
+	for _, target := range ipList {
+		connection.SendMessage(target, message)
+	}
+
 }

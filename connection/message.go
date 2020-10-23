@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
 
 	//"strings"
 	pbm "../ProtocolBuffers/MessagePackage"
@@ -16,6 +17,7 @@ import (
 
 var isMaster bool
 var quorum int
+var get_ack_received bool
 
 // socket to listen TCP message
 func ListenMessage() {
@@ -86,7 +88,23 @@ func handleConnection(conn *net.TCPConn) {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
+			get_ack_received = false
 			sendReadReq(target, remoteMsg.FileName)
+			startTime := float64(ptypes.TimestampNow().GetSeconds())
+			for {
+				if get_ack_received {
+					break
+				}
+				curTime := float64(ptypes.TimestampNow().GetSeconds())
+				if curTime-startTime > config.ACK_TIMEOUT {
+					break
+				} else {
+					continue
+				}
+			}
+			if !get_ack_received {
+				continue
+			}
 			ListenFile(config.LOCAL_DIR + remoteMsg.FileName)
 		}
 	}

@@ -30,6 +30,8 @@ const LOCAL_DIR = "./localFiles"
 
 const PERM_MODE = 0777
 
+const ACK_TIMEOUT = 1
+
 func Hash(s string) uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(s))

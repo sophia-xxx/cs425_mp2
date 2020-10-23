@@ -17,6 +17,7 @@ import (
 	"../networking"
 	//"../connection"
 	"../failure"
+	"../master"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -138,7 +139,19 @@ func handleCommands(input string) {
 	case "put":
 		local_filename := param1
 		sdfs_filename := param2
-		go putFileCommand(local_filename, sdfs_filename)
+		putFileCommand(local_filename, sdfs_filename)
+	case "get":
+		local_filename := param1
+		sdfs_filename := param2
+		getFileCommand(sdfs_filename, local_filename)
+	case "delete":
+		sdfs_filename := param1
+		deleteFileCommand(sdfs_filename)
+	case "ls":
+		sdfs_filename := param1
+		listFileCommand(sdfs_filename)
+	case "store":
+		StoreCommand()
 	default:
 		logger.PrintError("Invalid command")
 	}
@@ -250,36 +263,6 @@ func initMembershipList(isGossip bool) {
 	membership.AddMemberToMembershipList(localMessage, selfID, &selfMember)
 }
 
-func Run(isIntro bool, isGossip bool, introIP string) {
-	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIP:", introIP, "\nIs gossip:", isGossip)
-	isIntroducer = isIntro
-	introducerIP = introIP
-
-	isSending = true
-	isJoining = !isIntroducer
-
-	initMembershipList(isGossip)
-	failure.RemoveAllFile()
-	failureList = make(map[string]bool)
-
-	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
-	go networking.Listen(config.PORT, readNewMessage)
-	go startHeartbeat()
-
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		input := scanner.Text()
-
-		logger.InfoLogger.Println("Commandline input:", input)
-
-		handleCommands(input)
-	}
-
-	if scanner.Err() != nil {
-		logger.PrintError("Error reading input from commandline")
-	}
-}
-
 func GetMemberIDList() []string {
 	idList := make([]string, 0)
 	for k, member := range localMessage.MemberList {
@@ -299,4 +282,39 @@ func GetFailNodeList() []string {
 		}
 	}
 	return failNodes
+}
+
+func Run(isIntro bool, isGossip bool, introIP string) {
+	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIP:", introIP, "\nIs gossip:", isGossip)
+	isIntroducer = isIntro
+	introducerIP = introIP
+
+	isSending = true
+	isJoining = !isIntroducer
+
+	initMembershipList(isGossip)
+	failure.RemoveAllFile()
+	failureList = make(map[string]bool)
+
+	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
+	go networking.Listen(config.PORT, readNewMessage)
+	go startHeartbeat()
+	// master node maintain file-node list
+	if isIntroducer {
+		go master.CheckReplicate()
+		go master.RemoveFailNode()
+	}
+
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		input := scanner.Text()
+
+		logger.InfoLogger.Println("Commandline input:", input)
+
+		handleCommands(input)
+	}
+
+	if scanner.Err() != nil {
+		logger.PrintError("Error reading input from commandline")
+	}
 }

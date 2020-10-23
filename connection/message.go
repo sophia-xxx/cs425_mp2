@@ -61,6 +61,7 @@ func handleConnection(conn *net.TCPConn) {
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
 			sendWriteReq(target, remoteMsg.FileName)
+			/*todo: put/get_p2p_ack*/
 			sendFile(remoteMsg.LocalPath, target, remoteMsg.FileName)
 		}
 	}

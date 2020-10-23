@@ -5,7 +5,6 @@ import (
 	"net"
 	"os"
 
-	//pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../detector"
 	"../logger"

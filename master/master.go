@@ -158,3 +158,15 @@ func GetReplyMessage(filename string, sender string) {
 	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
 	connection.SendMessage(sender, msgBytes)
 }
+
+// master return target node with VM ip list that store the file
+func ListReplyMessage(filename string, storeipList []string) {
+	repMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_LIST_REP,
+		FileName: filename,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		PayLoad:  storeipList,
+	}
+	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
+	connection.SendMessage(sender, msgBytes)
+}

@@ -28,6 +28,7 @@ enum MsgType {
   READ_ACK=11; // when finish read, send ACK to client
   DELETE=12; // master send delete request to file node
   DELETE_ACK=13; // server reply to DELETE message
+  DELETE_MASTER = 
   LIST=14; // client send LIST request to master,
   LIST_REP=15; // master send sdfsfilename list to server
 }

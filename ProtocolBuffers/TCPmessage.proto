@@ -24,7 +24,11 @@ enum MsgType {
   GET_P2P_ACK = 7; // Target ip send back ack (may require to tell back file size)
   GET_P2P_SIZE_ACK = 8; // The get request initiator tell file source ip that it get the file size info successfully, once this is received, start sending file
   REPLICA = 9;
-  WRITE_ACK=10;
-  READ_ACK=11;
+  WRITE_ACK=10; // when finish write, send ACK to client
+  READ_ACK=11; // when finish read, send ACK to client
+  DELETE=12; // master send delete request to file node
+  DELETE_ACK=13; // server reply to DELETE message
+  LIST=14; // client send LIST request to master,
+  LIST_REP=15; // master send sdfsfilename list to server
 }
 

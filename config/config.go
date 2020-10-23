@@ -24,6 +24,12 @@ const GOSSIP_FANOUT = 4
 
 const REPLICA = 4
 
+const SDFS_DIR = "./sdfsFiles"
+
+const LOCAL_DIR = "./localFiles"
+
+const PERM_MODE = 0777
+
 func Hash(s string) uint32 {
 	h := fnv.New32a()
 	h.Write([]byte(s))

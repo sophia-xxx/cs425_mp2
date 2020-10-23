@@ -52,12 +52,12 @@ func handleConnection(conn *net.TCPConn) {
 	if isMaster && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
 		master.PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
+	// master return target node to read
 	if isMaster && remoteMsg.Type == pbm.MsgType_GET_MASTER {
 		master.GetReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
-	/*todo: other message type*/
+	// client send write file request to target nodes
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
-		// client send write file request to target nodes
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
 			sendWriteReq(target, remoteMsg.FileName)
@@ -66,7 +66,7 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	// server receive file and save it
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
-		ListenFile("./sdfsFile" + remoteMsg.FileName)
+		ListenFile(config.SDFS_DIR + remoteMsg.FileName)
 	}
 	// when write finish, client will receive write ACK to determine write success
 	if remoteMsg.Type == pbm.MsgType_WRITE_ACK {
@@ -85,13 +85,13 @@ func handleConnection(conn *net.TCPConn) {
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
 			sendReadReq(target, remoteMsg.FileName)
-			ListenFile("./localFile" + remoteMsg.FileName)
+			ListenFile(config.LOCAL_DIR + remoteMsg.FileName)
 		}
 	}
 	// server reply to get request and send file to client
 	/*todo: how to decide quorum for read??*/
 	if remoteMsg.Type == pbm.MsgType_GET_P2P {
-		sendFile("./sdfsFile"+remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileName)
+		sendFile(config.SDFS_DIR+remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileName)
 	}
 
 }

@@ -34,7 +34,7 @@ func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 
 }
 
-// remove node from  file-node map
+// should run continuously
 func RemoveFailNode() {
 	failNodes := detector.GetFailNodeList()
 	for _, node := range failNodes {
@@ -119,11 +119,6 @@ func CheckReplicate() {
 			replicateFile(storeList, ipList, file)
 		}
 	}
-}
-
-// find the node list for a certain file
-func findStoreNode(sdfsFileName string) []string {
-	return fileNodeList[sdfsFileName]
 }
 
 // send the replicate request to one existed file node

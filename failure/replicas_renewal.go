@@ -1,5 +1,0 @@
-package failure
-
-import (
-//"../detector"
-)

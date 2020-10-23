@@ -2,7 +2,11 @@ package detector
 
 import (
 	pbm "../ProtocolBuffers/MessagePackage"
+	"../config"
 	"../connection"
+	//"fmt"
+	"../logger"
+	"io/ioutil"
 )
 
 var introducerIp string
@@ -13,7 +17,7 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 		Type:      pbm.MsgType_PUT_MASTER,
 		SenderIP:  GetLocalIPAddr().String(),
 		FileName:  sdfsFileName,
-		LocalPath: "./localFile" + localFileName,
+		LocalPath: config.LOCAL_DIR + localFileName,
 	}
 	message, _ := connection.EncodeTCPMessage(fileMessage)
 	connection.SendMessage(introducerIp, message)
@@ -43,6 +47,10 @@ func listFileCommand() {
 }
 
 // deal with "store" command
-func storeCommand() {
+func StoreCommand() {
+	files, _ := ioutil.ReadDir(config.SDFS_DIR)
+	for _, f := range files {
+		logger.PrintInfo(f.Name())
+	}
 
 }

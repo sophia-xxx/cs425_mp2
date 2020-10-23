@@ -10,12 +10,13 @@ import (
 	"time"
 
 	pb "../ProtocolBuffers/ProtoPackage"
-	pbm "../ProtocolBuffers/MessagePackage" //sch?
+
 	"../config"
 	"../logger"
 	"../membership"
 	"../networking"
 	//"../connection"
+	"../failure"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -258,6 +259,7 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	isJoining = !isIntroducer
 
 	initMembershipList(isGossip)
+	failure.RemoveAllFile()
 	failureList = make(map[string]bool)
 
 	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)

@@ -37,12 +37,23 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 
 //deal with "delete" command
 func deleteFileCommand(sdfsFileName string) {
-
+	fileMessage := &pbm.TCPMessage{
+		Type:	  pbm.MsgType_DELETE,
+		SenderIP: GetLocalIPAddr().String(),
+		FileName: sdfsFileName,
+	}
+	message, _ := connection.EncodeTCPMessage(fileMessage)
+	connection.SendMessage(introducerIp, message)
 }
 
 // deal with "list" command
 func listFileCommand() {
-
+	fileMessage := &pbm.TCPMessage{
+		Type:	  pbm.MsgType_LIST,
+		SenderIP: GetLocalIPAddr().String(),
+	}
+	message, _ := connection.EncodeTCPMessage(fileMessage)
+	connection.SendMessage(introducerIp, message)
 }
 
 // deal with "store" command

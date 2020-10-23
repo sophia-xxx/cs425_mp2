@@ -1,8 +1,11 @@
 package connection
 
 import (
-	"github.com/golang/protobuf/proto"
 	"net"
+
+	"github.com/golang/protobuf/proto"
+	"github.com/golang/protobuf/ptypes"
+
 	//"strings"
 	pbm "../ProtocolBuffers/MessagePackage"
 	//"fmt"
@@ -14,6 +17,7 @@ import (
 
 var isMaster bool
 var quorum int
+var get_ack_received bool
 
 // socket to listen TCP message
 func ListenMessage() {
@@ -87,7 +91,23 @@ func handleConnection(conn *net.TCPConn) {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
+			get_ack_received = false
 			sendReadReq(target, remoteMsg.FileName)
+			startTime := float64(ptypes.TimestampNow().GetSeconds())
+			for {
+				if get_ack_received {
+					break
+				}
+				curTime := float64(ptypes.TimestampNow().GetSeconds())
+				if curTime-startTime > config.ACK_TIMEOUT {
+					break
+				} else {
+					continue
+				}
+			}
+			if !get_ack_received {
+				continue
+			}
 			ListenFile(config.LOCAL_DIR + remoteMsg.FileName)
 		}
 	}
@@ -121,11 +141,12 @@ func DecodeTCPMessage(message []byte) (*pbm.TCPMessage, error) {
 }
 
 // client send write request to target nodes
-func sendWriteReq(targetIp string, sdfsFileName string) {
+func sendWriteReq(targetIp string, sdfsFileName string, fileSize int32) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_P2P,
 		FileName: sdfsFileName,
 		SenderIP: detector.GetLocalIPAddr().String(),
+		FileSize: fileSize,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
 	SendMessage(targetIp, message)
@@ -135,6 +156,53 @@ func sendWriteReq(targetIp string, sdfsFileName string) {
 func sendReadReq(targetIp string, sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_P2P,
+		FileName: sdfsFileName,
+		SenderIP: detector.GetLocalIPAddr().String(),
+	}
+
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(targetIp, message)
+}
+
+// Send delete success message to master
+func DeleteMessage(sdfsFileName string) {
+	fileMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_DELETE_ACK,
+		SenderIP: GetLocalIPAddr().String(),
+		FileName: sdfsFileName,
+	}
+	message, _ := connection.EncodeTCPMessage(fileMessage)
+	connection.SendMessage(introducerIp, message)
+}
+
+// target tell client it receive the file header and file size successful
+func sendWriteReqAck(Sender string, sdfsFileName string) {
+	fileMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_PUT_P2P_ACK,
+		FileName: sdfsFileName,
+		SenderIP: detector.GetLocalIPAddr().String(),
+	}
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(Sender, message)
+}
+
+// target tell client it receive get request, and send back with file size
+func sendReadReqAck(Sender string, sdfsFileName string, fileSize int32) {
+	fileMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_GET_P2P_ACK,
+		FileName: sdfsFileName,
+		SenderIP: detector.GetLocalIPAddr().String(),
+		FileSize: fileSize,
+	}
+
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(Sender, message)
+}
+
+//The get request initiator tell file source ip that it get the file size info successfully
+func sendReadReqAckAck(targetIp string, sdfsFileName string) {
+	fileMessage := &pbm.TCPMessage{
+		Type:     pbm.MsgType_GET_P2P_SIZE_ACK,
 		FileName: sdfsFileName,
 		SenderIP: detector.GetLocalIPAddr().String(),
 	}

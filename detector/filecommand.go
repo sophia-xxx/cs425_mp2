@@ -4,6 +4,7 @@ import (
 	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
 	"../connection"
+	//"fmt"
 	"../logger"
 	"io/ioutil"
 )
@@ -38,7 +39,7 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 //deal with "delete" command
 func deleteFileCommand(sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_DELETE,
+		Type:	  pbm.MsgType_DELETE_MASTER,
 		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}
@@ -47,11 +48,10 @@ func deleteFileCommand(sdfsFileName string) {
 }
 
 // deal with "list" command
-func listFileCommand(sdfsFileName string) {
+func listFileCommand() {
 	fileMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_LIST,
+		Type:	  pbm.MsgType_LIST,
 		SenderIP: GetLocalIPAddr().String(),
-		FileName: sdfsFileName,
 	}
 	message, _ := connection.EncodeTCPMessage(fileMessage)
 	connection.SendMessage(introducerIp, message)

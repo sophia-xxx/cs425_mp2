@@ -169,7 +169,7 @@ func GetReplyMessage(filename string, sender string) {
 }
 
 // master return target node with VM ip list that store the file
-func ListReplyMessage(filename string, storeipList []string) {
+func ListReplyMessage(filename string, storeipList []string, sender string) {
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_LIST_REP,
 		FileName: filename,
@@ -178,4 +178,15 @@ func ListReplyMessage(filename string, storeipList []string) {
 	}
 	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
 	connection.SendMessage(sender, msgBytes)
+}
+
+//master send delete request to file node
+func DeleteMessage(filename string, targetIp string){
+	fileMessage := &pbm.TCPMessage{
+		Type:	  pbm.MsgType_DELETE,
+		SenderIP: GetLocalIPAddr().String(),
+		FileName: sdfsFileName,
+	}
+	message, _ := connection.EncodeTCPMessage(fileMessage)
+	connection.SendMessage(targetIp, message)
 }

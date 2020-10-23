@@ -39,7 +39,7 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 //deal with "delete" command
 func deleteFileCommand(sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
-		Type:	  pbm.MsgType_DELETE,
+		Type:	  pbm.MsgType_DELETE_MASTER,
 		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}

@@ -23,10 +23,9 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 // deal with "get" command
 func getFileCommand(sdfsFileName string, localFileName string) {
 	fileMessage := &pbm.TCPMessage{
-		Type:      pbm.MsgType_GET_MASTER,
-		SenderIP:  GetLocalIPAddr().String(),
-		FileName:  sdfsFileName,
-		LocalPath: "./sdfsFile" + localFileName,
+		Type:     pbm.MsgType_GET_MASTER,
+		SenderIP: GetLocalIPAddr().String(),
+		FileName: sdfsFileName,
 	}
 	message, _ := connection.EncodeTCPMessage(fileMessage)
 	connection.SendMessage(introducerIp, message)

@@ -19,7 +19,7 @@ var (
 )
 
 // socket to read filename and connection
-func ListenFile() {
+func ListenFile(filePath string) {
 	// open connection socket
 	addressString := detector.GetLocalIPAddr().String() + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
@@ -52,7 +52,7 @@ func ListenFile() {
 		}
 	}
 	// create sdfsfile
-	file, err := os.Create("./sdfsFile" + filename)
+	file, err := os.Create(filePath)
 	defer file.Close()
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot create connection!")

@@ -86,21 +86,17 @@ func DeleteFileRecord(sdfsFileName string, nodeIP string) {
 }
 
 // find nodes to write to or read from
-func FindNewNode(sdfsFileName string) []string {
+func FindNewNode(sdfsFileName string, sender string) []string {
 	// if key not exist in map, it will get nil
 	storeList := fileNodeList[sdfsFileName]
 	nodeNum := config.REPLICA - len(storeList)
 	memberIdList := GetMemberIDList()
-	// when member node is less than replica
-	if len(memberIdList) < nodeNum {
-		nodeNum = len(memberIdList)
-	}
 
 	ipList := make([]string, 0)
 	validIdList := memberIdList
 
 	for index, id := range validIdList {
-		if id == GetLocalIPAddr().String() {
+		if id == sender {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
 		}
 		for i, n := range storeList {
@@ -109,7 +105,10 @@ func FindNewNode(sdfsFileName string) []string {
 			}
 		}
 	}
-
+	// when member node is less than replica
+	if len(validIdList) < nodeNum {
+		nodeNum = len(validIdList)
+	}
 	// randomly pick servers in valid nodes to store the connection
 	count := 0
 	valid := true
@@ -164,7 +163,8 @@ func PutReplyMessage(fileName string, sender string, fileSize int32) {
 	// check if key exist in map
 	writeList := make([]string, 0)
 	if fileNodeList[fileName] == nil {
-		writeList = FindNewNode(fileName)
+		logger.PrintInfo("Find new node")
+		writeList = FindNewNode(fileName, sender)
 	} else {
 		writeList = fileNodeList[fileName]
 	}

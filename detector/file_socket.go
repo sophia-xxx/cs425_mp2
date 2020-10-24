@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"os"
+	"strconv"
 )
 
 // socket to read filename and connection
@@ -83,6 +84,10 @@ func sendFile(localFilePath string, dest string, filename string) {
 	}
 	// send filename and wait for reply
 	_, err = conn.Write([]byte(filename))
+	logger.PrintInfo("Send length of " + strconv.Itoa(_) + "filename")
+	if err != nil {
+		logger.Printlnfo("Cannot send filename")
+	}
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {

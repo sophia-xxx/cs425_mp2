@@ -262,15 +262,16 @@ func initMembershipList(isGossip bool) {
 	membership.AddMemberToMembershipList(localMessage, selfID, &selfMember)
 }
 
-func GetMemberIDList() []string {
-	idList := make([]string, 0)
+func GetMemberIPList() []string {
+	ipList := make([]string, 0)
 	for k, member := range localMessage.MemberList {
 		if !failureList[k] && !member.IsLeaving {
-			idList = append(idList, k)
+			ip := strings.Split(k, ":")[0]
+			ipList = append(ipList, ip)
 		}
 	}
-	sort.Strings(idList)
-	return idList
+	sort.Strings(ipList)
+	return ipList
 
 }
 func GetFailNodeList() []string {

@@ -55,6 +55,7 @@ func sendWriteReq(targetIp string, sdfsFileName string, fileSize int32) {
 		FileSize: fileSize,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
+	logger.PrintInfo("Send putp2p mes with filename:" + fileMessage.FileName)
 	SendMessage(targetIp, message)
 }
 

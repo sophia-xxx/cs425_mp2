@@ -91,6 +91,10 @@ func FindNewNode(sdfsFileName string) []string {
 	storeList := fileNodeList[sdfsFileName]
 	nodeNum := config.REPLICA - len(storeList)
 	memberIdList := GetMemberIDList()
+	// when member node is less than replica
+	if len(memberIdList) < nodeNum {
+		nodeNum = len(memberIdList)
+	}
 
 	ipList := make([]string, 0)
 	validIdList := make([]string, 0)

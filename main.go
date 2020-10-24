@@ -26,5 +26,5 @@ func main() {
 
 	logger.InfoLogger.Println("Starting the application...")
 	logger.PrintInfo("try to start")
-	go detector.Run(*isIntroducer, *isGossip, *introducerIP)
+	detector.Run(*isIntroducer, *isGossip, *introducerIP)
 }

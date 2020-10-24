@@ -4,6 +4,7 @@ import (
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"cs425_mp2/config"
 	"cs425_mp2/logger"
+	"strconv"
 	"strings"
 )
 
@@ -98,9 +99,12 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 
 	logger.PrintInfo(listToString(validIdList) + "   are valid list  ")
 
+	logger.PrintInfo("senderIP:" + sender)
+	logger.PrintInfo("Length of the initial validlist" + strconv.Itoa(len(validIdList)))
 	for index, id := range validIdList {
-		if id == sender {
+		if strings.Compare(id, sender) == 0 {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
+			logger.PrintInfo("Length of the modified validlist" + strconv.Itoa(len(validIdList)))
 		}
 		if len(storeList) == 0 {
 			break

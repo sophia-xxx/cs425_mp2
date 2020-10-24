@@ -50,7 +50,7 @@ func handleConnection(conn *net.TCPConn) {
 	if err != nil {
 		logger.PrintInfo("Cannot decode message!")
 	}
-	logger.PrintInfo("Received message with type:" + pbm.MsgType_name[remoteMsg.Type])
+	logger.PrintInfo("Received message with type:" + pbm.MsgType_name[int32(remoteMsg.Type)])
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
 		logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)

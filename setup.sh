@@ -13,7 +13,7 @@ if [ ! -d "pkg" ]; then
 fi
 
 export GOROOT=/usr/lib/golang
-export GOPATH=/home/chunhao3/go
+export GOPATH=/home/$USER/go
 
 go get github.com/jinzhu/copier
 go get github.com/golang/protobuf/proto

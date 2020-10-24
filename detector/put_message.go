@@ -31,9 +31,9 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	}
 	// client start sending file
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P_ACK {
-		logger.PrintInfo("Start sending file  ")
+		logger.PrintInfo("Start sending file whose filename is: " + remoteMsg.FileName)
 		sendFile(config.LOCAL_DIR+remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileName)
-		logger.PrintInfo("Finish sending file  ")
+		logger.PrintInfo("Finish sending file  " + remoteMsg.FileName)
 
 	}
 	// when write finish, master will receive write ACK to maintain file-node list

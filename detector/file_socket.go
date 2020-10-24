@@ -84,7 +84,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 	}
 	// send filename and wait for reply
 	sendlen, err := conn.Write([]byte(filename))
-	logger.PrintInfo("Send length of " + strconv.Itoa(sender) + "filename")
+	logger.PrintInfo("Send length of " + strconv.Itoa(sendlen) + "filename")
 	if err != nil {
 		logger.PrintInfo("Cannot send filename")
 	}

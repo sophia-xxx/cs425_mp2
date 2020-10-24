@@ -52,6 +52,7 @@ func handleConnection(conn *net.TCPConn) {
 
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
+		logger.PrintInfo("This is put message handler!")
 		putMessageHandler(remoteMsg)
 	}
 	// deal with all GET relevant message

@@ -9,6 +9,7 @@ import (
 func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to write
 	if isIntroducer && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
+		logger.PrintInfo("Master receive put request")
 		PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileSize)
 		logger.PrintInfo("Master reply")
 	}

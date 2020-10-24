@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./detector"
-	"./logger"
+	"cs425_mp2/detector"
+	"cs425_mp2/logger"
 	"flag"
 	"os"
 )
@@ -26,5 +26,5 @@ func main() {
 
 	logger.InfoLogger.Println("Starting the application...")
 	logger.PrintInfo("try to start")
-	go detector.Run(*isIntroducer, *isGossip, *introducerIP)
+	detector.Run(*isIntroducer, *isGossip, *introducerIP)
 }

@@ -9,12 +9,12 @@ import (
 	"sync"
 	"time"
 
-	pb "../ProtocolBuffers/ProtoPackage"
+	pb "cs425_mp2/ProtocolBuffers/ProtoPackage"
 
-	"../config"
-	"../logger"
-	"../membership"
-	"../networking"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
+	"cs425_mp2/membership"
+	"cs425_mp2/networking"
 	"github.com/golang/protobuf/ptypes"
 )
 

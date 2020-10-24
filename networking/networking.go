@@ -5,11 +5,11 @@ import (
 	"net"
 	"time"
 
-	pb "../ProtocolBuffers/ProtoPackage"
-	"../config"
-	"../logger"
-	"../membership"
-	proto "github.com/golang/protobuf/proto"
+	pb "cs425_mp2/ProtocolBuffers/ProtoPackage"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
+	"cs425_mp2/membership"
+	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/ptypes"
 )
 

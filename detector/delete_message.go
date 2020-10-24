@@ -1,7 +1,7 @@
 package detector
 
 import (
-	pbm "../ProtocolBuffers/MessagePackage"
+	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"os"
 )
 

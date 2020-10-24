@@ -3,8 +3,8 @@ package networking_test
 import (
 	"testing"
 
-	"../config"
-	"../networking"
+	"cs425_mp2/config"
+	"cs425_mp2/networking"
 )
 
 func TestSend(t *testing.T) {

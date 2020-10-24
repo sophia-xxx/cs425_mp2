@@ -5,11 +5,9 @@ import (
 	"net"
 	"strings"
 
-	//"strings"
-	pbm "../ProtocolBuffers/MessagePackage"
-	//"fmt"
-	"../config"
-	"../logger"
+	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
 )
 
 // socket to listen TCP message

@@ -14,16 +14,16 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	addressString := GetLocalIPAddr().String() + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot resolve connection TCP address!")
+		logger.PrintInfo("Cannot resolve connection file address!")
 	}
 	listener, err := net.ListenTCP("tcp4", localAddr)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot open TCP connection!")
+		logger.PrintInfo("Cannot listen file port!")
 	}
 
 	conn, err := listener.AcceptTCP()
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot open TCP connection!")
+		logger.PrintInfo("Cannot open file connection!")
 	}
 	defer conn.Close()
 
@@ -31,28 +31,28 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	nameBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(nameBuf)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot receive filename")
+		logger.PrintInfo("Cannot receive filename")
 	}
 	filename := string(nameBuf[:n])
-	logger.InfoLogger.Println("Receive filename")
+	logger.PrintInfo("Receive filename  " + filename)
 	if filename != "" {
 		_, err = conn.Write([]byte("ACK"))
 		if err != nil {
-			logger.ErrorLogger.Println("Cannot send ACK")
+			logger.PrintInfo("Cannot send ACK")
 		}
 	}
 	// create sdfsfile
 	file, err := os.Create(filePath)
 	defer file.Close()
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot create connection!")
+		logger.PrintInfo("Cannot create file!")
 	}
 	// read data from connection
 	buf := make([]byte, 4096)
 	for {
 		n, err := conn.Read(buf)
 		if err == io.EOF {
-			logger.InfoLogger.Println("Complete connection reading!")
+			logger.PrintInfo("Complete connection reading!")
 			break
 		}
 		file.Write(buf[:n])

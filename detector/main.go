@@ -2,6 +2,7 @@ package detector
 
 import (
 	"bufio"
+	"cs425_mp2/failure"
 	"net"
 	"os"
 	"sort"
@@ -291,20 +292,20 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	isJoining = !isIntroducer
 
 	initMembershipList(isGossip)
-	//failure.RemoveAllFile()
+	failure.RemoveAllFile()
 	failureList = make(map[string]bool)
 
 	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
 	go networking.Listen(config.PORT, readNewMessage)
 	go startHeartbeat()
 
-	/*// master node maintain file-node list
+	// master node maintain file-node list
 	if isIntroducer {
 		go CheckReplicate()
 		go RemoveFailNode()
 	}
 	// listen TCP message
-	go ListenMessage()*/
+	go ListenMessage()
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

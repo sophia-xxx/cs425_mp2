@@ -47,6 +47,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	if err != nil {
 		logger.PrintInfo("Cannot create file!")
 	}
+	logger.PrintInfo("Create SDFS file  " + filename)
 	// read data from connection
 	buf := make([]byte, 4096)
 	for {
@@ -57,6 +58,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		}
 		file.Write(buf[:n])
 	}
+	logger.PrintInfo("Finish receiving file!")
 	if isPut {
 		// finish reading file and check file size, then send ACK
 		fileInfo, _ := os.Stat(filePath)
@@ -110,6 +112,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 		//  send connection
 		conn.Write(buf[:n])
 	}
+	logger.PrintInfo("Finish sending file!")
 	return
 
 }

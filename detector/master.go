@@ -170,8 +170,10 @@ func replicateFile(storeList []string, newList []string, filename string) {
 		Type:     pbm.MsgType_PUT_MASTER_REP,
 		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  newList,
+		FileName = fileName,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
+	
 	SendMessage(sourceNode, msgBytes)
 
 }
@@ -190,6 +192,7 @@ func PutReplyMessage(fileName string, sender string, fileSize int32) {
 		Type:     pbm.MsgType_PUT_MASTER_REP,
 		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  writeList,
+		FileName = fileName,
 		FileSize: fileSize,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
@@ -205,6 +208,7 @@ func GetReplyMessage(filename string, sender string) {
 		Type:     pbm.MsgType_GET_MASTER_REP,
 		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  readList,
+		FileName = fileName,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
 	SendMessage(sender, msgBytes)

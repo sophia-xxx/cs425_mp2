@@ -15,7 +15,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	}
 	// client send write file request to target nodes
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
-		logger.PrintInfo("Got reply from master! ")
+		logger.PrintInfo("Got PUT_MASTER_REP from master with filename: "+ remoteMsg.FileName)
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
 			sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)

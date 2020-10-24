@@ -102,15 +102,15 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 	logger.PrintInfo("senderIP:" + sender)
 	logger.PrintInfo("Length of the initial validlist" + strconv.Itoa(len(validIdList)))
 	for index, id := range validIdList {
-		logger.PrintInfo(id + "*")
-		logger.PrintInfo(sender + "*")
+		// logger.PrintInfo(id + "*")
+		// logger.PrintInfo(sender + "*")
 		if strings.Compare(id, sender) == 0 {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
 			logger.PrintInfo("Length of the modified validlist" + strconv.Itoa(len(validIdList)))
 		}
-		if len(storeList) == 0 {
-			break
-		}
+		// if len(storeList) == 0 {
+		// 	break
+		// }
 		for i, n := range storeList {
 			if id == n {
 				validIdList = append(validIdList[:i], validIdList[i+1:]...)

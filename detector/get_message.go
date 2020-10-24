@@ -4,6 +4,7 @@ import (
 
 	//"strings"
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
+	"cs425_mp2/logger"
 	"os"
 
 	//"fmt"
@@ -40,7 +41,12 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 				continue
 			}
 		}*/
-		sendReadReq(targetList[1], remoteMsg.FileName)
+		if targetList == nil {
+			logger.PrintInfo(remoteMsg.FileName + "  has no record!")
+		} else {
+			sendReadReq(targetList[1], remoteMsg.FileName)
+		}
+
 	}
 	// server reply to get request and send file to client
 	if remoteMsg.Type == pbm.MsgType_GET_P2P {

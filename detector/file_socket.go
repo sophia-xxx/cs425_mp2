@@ -11,7 +11,7 @@ import (
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
 	// open connection socket
-	addressString := GetLocalIPAddr().String() + config.FILEPORT
+	addressString := GetLocalIPAddr().String() + ":" + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot resolve connection file address!")
@@ -74,7 +74,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func sendFile(localFilePath string, dest string, filename string) {
-	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+config.FILEPORT)
+	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FILEPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot dial remote connection socket!")

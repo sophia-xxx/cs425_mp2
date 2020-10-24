@@ -12,10 +12,10 @@ import (
 
 // socket to listen TCP message
 func ListenMessage() {
-	addressString := GetLocalIPAddr().String() + config.TCPPORT
+	addressString := GetLocalIPAddr().String() + ":" + config.TCPPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
-		logger.PrintInfo("Cannot resolve TCP address!")
+		logger.PrintInfo("Cannot resolve TCP address!  " + addressString)
 	}
 	listener, err := net.ListenTCP("tcp4", localAddr)
 	if err != nil {
@@ -77,7 +77,7 @@ func handleConnection(conn *net.TCPConn) {
 
 // send TCP message
 func SendMessage(dest string, message []byte) {
-	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+config.TCPPORT)
+	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.TCPPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
 	if err != nil {
 		logger.PrintInfo("Cannot dial remote address!")

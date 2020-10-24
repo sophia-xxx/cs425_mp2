@@ -1,21 +1,18 @@
-package connection
+package detector
 
 import (
 	pbm "../ProtocolBuffers/MessagePackage"
-	"../detector"
-	"../logger"
-	"../master"
 	"os"
 )
 
 func deleteMessageHandle(remoteMsg *pbm.TCPMessage) {
 	// master send DELETE message to target nodes
-	if isMaster && remoteMsg.Type == pbm.MsgType_DELETE_MASTER {
-		master.DeleteMessage(remoteMsg.FileName)
+	if isIntroducer && remoteMsg.Type == pbm.MsgType_DELETE_MASTER {
+		DeleteMessage(remoteMsg.FileName)
 	}
 	// master get delete ACK then update file-node list
-	if isMaster && remoteMsg.Type == pbm.MsgType_DELETE_ACK {
-		master.DeleteFileRecord(remoteMsg.FileName, remoteMsg.SenderIP)
+	if isIntroducer && remoteMsg.Type == pbm.MsgType_DELETE_ACK {
+		DeleteFileRecord(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
 
 	if remoteMsg.Type == pbm.MsgType_DELETE {
@@ -33,7 +30,7 @@ func deleteFile(filename string) {
 func sendDeleteACK(sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_DELETE_ACK,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)

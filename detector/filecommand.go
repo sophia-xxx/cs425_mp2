@@ -3,15 +3,10 @@ package detector
 import (
 	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
-	"../connection"
-	"os"
-
-	//"fmt"
 	"../logger"
 	"io/ioutil"
+	"os"
 )
-
-var introducerIp string
 
 // deal with "put" command
 func putFileCommand(localFileName string, sdfsFileName string) {
@@ -23,8 +18,8 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 		LocalPath: config.LOCAL_DIR + localFileName,
 		FileSize:  int32(fileInfo.Size()),
 	}
-	message, _ := connection.EncodeTCPMessage(fileMessage)
-	connection.SendMessage(introducerIp, message)
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(introducerIP, message)
 
 }
 
@@ -35,8 +30,8 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}
-	message, _ := connection.EncodeTCPMessage(fileMessage)
-	connection.SendMessage(introducerIp, message)
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(introducerIP, message)
 
 }
 
@@ -47,8 +42,8 @@ func deleteFileCommand(sdfsFileName string) {
 		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}
-	message, _ := connection.EncodeTCPMessage(fileMessage)
-	connection.SendMessage(introducerIp, message)
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(introducerIP, message)
 }
 
 // deal with "list" command
@@ -58,8 +53,8 @@ func listFileCommand(sdfsFileName string) {
 		SenderIP: GetLocalIPAddr().String(),
 		FileName: sdfsFileName,
 	}
-	message, _ := connection.EncodeTCPMessage(fileMessage)
-	connection.SendMessage(introducerIp, message)
+	message, _ := EncodeTCPMessage(fileMessage)
+	SendMessage(introducerIP, message)
 }
 
 // deal with "store" command

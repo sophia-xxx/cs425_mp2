@@ -1,4 +1,4 @@
-package connection
+package detector
 
 import (
 	"github.com/golang/protobuf/proto"
@@ -9,18 +9,12 @@ import (
 	pbm "../ProtocolBuffers/MessagePackage"
 	//"fmt"
 	"../config"
-	"../detector"
 	"../logger"
-	"../master"
 )
-
-var isMaster bool
-var quorum int
-var get_ack_received bool
 
 // socket to listen TCP message
 func ListenMessage() {
-	addressString := detector.GetLocalIPAddr().String() + config.TCPPORT
+	addressString := GetLocalIPAddr().String() + config.TCPPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot resolve TCP address!")
@@ -51,18 +45,23 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	messageBytes := buf[0:n]
 	remoteMsg, _ := DecodeTCPMessage(messageBytes)
+
+	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
 		putMessageHandler(remoteMsg)
 	}
+	// deal with all GET relevant message
 	if remoteMsg.Type > config.PUT && remoteMsg.Type <= config.GET {
 		getMessageHandler(remoteMsg)
 	}
+	// deal with all DELETE relevant message
 	if remoteMsg.Type > config.GET && remoteMsg.Type <= config.DELETE {
 		deleteMessageHandle(remoteMsg)
 	}
+	// deal with other message
 	if remoteMsg.Type > config.DELETE {
-		if isMaster && remoteMsg.Type == pbm.MsgType_LIST {
-			master.ListReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
+		if isIntroducer && remoteMsg.Type == pbm.MsgType_LIST {
+			ListReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 		}
 		if remoteMsg.Type == pbm.MsgType_LIST_REP {
 			nodeList := remoteMsg.PayLoad

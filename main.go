@@ -17,8 +17,6 @@ func main() {
 	isGossip := flag.Bool("gossip", false, "flag for whether this machine uses gossip heartbeating for dissemination")
 	introducerIP := flag.String("introIp", "", "the string of the introducer to connect to")
 
-	//port:=flag.String("port", "8001", "the string of the port")
-
 	flag.Parse()
 
 	if (!*isIntroducer && *introducerIP == "") || (*isIntroducer && *introducerIP != "") {
@@ -27,5 +25,6 @@ func main() {
 	}
 
 	logger.InfoLogger.Println("Starting the application...")
+	logger.PrintInfo("try to start")
 	go detector.Run(*isIntroducer, *isGossip, *introducerIP)
 }

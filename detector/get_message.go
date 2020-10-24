@@ -1,4 +1,4 @@
-package connection
+package detector
 
 import (
 
@@ -9,15 +9,12 @@ import (
 
 	//"fmt"
 	"../config"
-	"../detector"
-	"../logger"
-	"../master"
 )
 
 func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to read
-	if isMaster && remoteMsg.Type == pbm.MsgType_GET_MASTER {
-		master.GetReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
+	if isIntroducer && remoteMsg.Type == pbm.MsgType_GET_MASTER {
+		GetReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
 
 	/*todo: read timeout*/
@@ -62,7 +59,7 @@ func sendReadReq(targetIp string, sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_P2P,
 		FileName: sdfsFileName,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 	}
 
 	message, _ := EncodeTCPMessage(fileMessage)
@@ -73,7 +70,7 @@ func sendReadReply(targetIp string, sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_P2P_ACK,
 		FileName: sdfsFileName,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		FileSize: int32(fileInfo.Size()),
 	}
 	message, _ := EncodeTCPMessage(fileMessage)

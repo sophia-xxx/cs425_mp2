@@ -1,26 +1,17 @@
-package connection
+package detector
 
 import (
+	"../config"
+	"../logger"
 	"io"
 	"net"
 	"os"
-
-	"../config"
-	"../detector"
-	"../logger"
-)
-
-var (
-	introducerIp string
-	//localIp string
-	fileList     []string
-	fileNodeList map[string][]string
 )
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
 	// open connection socket
-	addressString := detector.GetLocalIPAddr().String() + config.FILEPORT
+	addressString := GetLocalIPAddr().String() + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot resolve connection TCP address!")

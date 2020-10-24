@@ -2,7 +2,6 @@ package detector
 
 import (
 	"bufio"
-	"go/scanner"
 	"net"
 	"os"
 	"sort"
@@ -13,24 +12,22 @@ import (
 	pb "../ProtocolBuffers/ProtoPackage"
 
 	"../config"
-	"../connection"
-	"../failure"
 	"../logger"
-	"../master"
 	"../membership"
 	"../networking"
 	"github.com/golang/protobuf/ptypes"
 )
 
 var (
-	localMessage *pb.MembershipServiceMessage
-	mux          sync.Mutex
-	failureList  map[string]bool
-	selfID       string
-	introducerIP string
-	isSending    bool
-	isIntroducer bool
-	isJoining    bool
+	localMessage     *pb.MembershipServiceMessage
+	mux              sync.Mutex
+	failureList      map[string]bool
+	selfID           string
+	introducerIP     string
+	isSending        bool
+	isIntroducer     bool
+	isJoining        bool
+	get_ack_received bool
 )
 
 func GetLocalIPAddr() net.IP {
@@ -294,20 +291,20 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	isJoining = !isIntroducer
 
 	initMembershipList(isGossip)
-	failure.RemoveAllFile()
+	//failure.RemoveAllFile()
 	failureList = make(map[string]bool)
 
 	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
 	go networking.Listen(config.PORT, readNewMessage)
 	go startHeartbeat()
 
-	// master node maintain file-node list
+	/*// master node maintain file-node list
 	if isIntroducer {
-		go master.CheckReplicate()
-		go master.RemoveFailNode()
+		go CheckReplicate()
+		go RemoveFailNode()
 	}
 	// listen TCP message
-	go connection.ListenMessage()
+	go ListenMessage()*/
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

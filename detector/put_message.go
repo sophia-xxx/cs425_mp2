@@ -1,20 +1,15 @@
-package connection
+package detector
 
 import (
-
-	//"strings"
 	pbm "../ProtocolBuffers/MessagePackage"
 	//"fmt"
 	"../config"
-	"../detector"
-	"../logger"
-	"../master"
 )
 
 func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to write
-	if isMaster && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
-		master.PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileSize)
+	if isIntroducer && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
+		PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileSize)
 	}
 	// client send write file request to target nodes
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
@@ -34,11 +29,11 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 		sendFile(config.LOCAL_DIR+remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileName)
 	}
 	// when write finish, master will receive write ACK to maintain file-node list
-	if isMaster && remoteMsg.Type == pbm.MsgType_WRITE_ACK {
+	if isIntroducer && remoteMsg.Type == pbm.MsgType_WRITE_ACK {
 		// quorum determine whether the write is succeed
 		ipList := make([]string, 0)
 		ipList = append(ipList, remoteMsg.SenderIP)
-		master.UpdateFileNode(remoteMsg.FileName, ipList)
+		UpdateFileNode(remoteMsg.FileName, ipList)
 	}
 }
 
@@ -47,7 +42,7 @@ func sendWriteReq(targetIp string, sdfsFileName string, fileSize int32) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_P2P,
 		FileName: sdfsFileName,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		FileSize: fileSize,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
@@ -58,7 +53,7 @@ func sendWriteReply(targetIp string, sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_P2P_ACK,
 		FileName: sdfsFileName,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
 	SendMessage(targetIp, message)
@@ -69,7 +64,7 @@ func SendWriteACK(targetIp string, sdfsFileName string) {
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_WRITE_ACK,
 		FileName: sdfsFileName,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 	}
 
 	message, _ := EncodeTCPMessage(fileMessage)

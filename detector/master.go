@@ -1,10 +1,9 @@
-package master
+package detector
 
 import (
 	pbm "../ProtocolBuffers/MessagePackage"
 	"../config"
-	"../connection"
-	"../detector"
+
 	"../logger"
 )
 
@@ -36,7 +35,7 @@ func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 
 // should run continuously
 func RemoveFailNode() {
-	failNodes := detector.GetFailNodeList()
+	failNodes := GetFailNodeList()
 	for _, node := range failNodes {
 		if getAllFile(node) == nil {
 			continue
@@ -91,12 +90,12 @@ func FindNewNode(sdfsFileName string) []string {
 	// if key not exist in map, it will get nil
 	storeList := fileNodeList[sdfsFileName]
 	nodeNum := config.REPLICA - len(storeList)
-	memberIdList := detector.GetMemberIDList()
+	memberIdList := GetMemberIDList()
 
 	ipList := make([]string, 0)
 	validIdList := make([]string, 0)
 	for _, id := range memberIdList {
-		if id == detector.GetLocalIPAddr().String() {
+		if id == GetLocalIPAddr().String() {
 			continue
 		}
 		for _, n := range storeList {
@@ -141,11 +140,11 @@ func replicateFile(storeList []string, newList []string, filename string) {
 	sourceNode := storeList[0]
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_MASTER_REP,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  newList,
 	}
-	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
-	connection.SendMessage(sourceNode, msgBytes)
+	msgBytes, _ := EncodeTCPMessage(repMessage)
+	SendMessage(sourceNode, msgBytes)
 
 }
 
@@ -160,12 +159,12 @@ func PutReplyMessage(fileName string, sender string, fileSize int32) {
 	}
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_PUT_MASTER_REP,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  writeList,
 		FileSize: fileSize,
 	}
-	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
-	connection.SendMessage(sender, msgBytes)
+	msgBytes, _ := EncodeTCPMessage(repMessage)
+	SendMessage(sender, msgBytes)
 }
 
 func GetReplyMessage(filename string, sender string) {
@@ -175,11 +174,11 @@ func GetReplyMessage(filename string, sender string) {
 	}
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_MASTER_REP,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  readList,
 	}
-	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
-	connection.SendMessage(sender, msgBytes)
+	msgBytes, _ := EncodeTCPMessage(repMessage)
+	SendMessage(sender, msgBytes)
 }
 
 // master return target node with VM ip list that store the file
@@ -187,11 +186,11 @@ func ListReplyMessage(filename string, targetIp string) {
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_LIST_REP,
 		FileName: filename,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		PayLoad:  fileNodeList[filename],
 	}
-	msgBytes, _ := connection.EncodeTCPMessage(repMessage)
-	connection.SendMessage(targetIp, msgBytes)
+	msgBytes, _ := EncodeTCPMessage(repMessage)
+	SendMessage(targetIp, msgBytes)
 }
 
 //master send delete request to file node
@@ -200,12 +199,12 @@ func DeleteMessage(filename string) {
 	/*todo: have no such file*/
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_DELETE,
-		SenderIP: detector.GetLocalIPAddr().String(),
+		SenderIP: GetLocalIPAddr().String(),
 		FileName: filename,
 	}
-	message, _ := connection.EncodeTCPMessage(fileMessage)
+	message, _ := EncodeTCPMessage(fileMessage)
 	for _, target := range ipList {
-		connection.SendMessage(target, message)
+		SendMessage(target, message)
 	}
 
 }

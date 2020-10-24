@@ -4,6 +4,7 @@ import (
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"cs425_mp2/config"
 	"cs425_mp2/logger"
+	"strings"
 )
 
 var (
@@ -96,17 +97,19 @@ func FindNewNode(sdfsFileName string) []string {
 	}
 
 	ipList := make([]string, 0)
-	validIdList := make([]string, 0)
-	for _, id := range memberIdList {
+	validIdList := memberIdList
+
+	for index, id := range validIdList {
 		if id == GetLocalIPAddr().String() {
-			continue
+			validIdList = append(validIdList[:index], validIdList[index+1:]...)
 		}
-		for _, n := range storeList {
-			if id != n {
-				validIdList = append(validIdList, id)
+		for i, n := range storeList {
+			if id == n {
+				validIdList = append(validIdList[:i], validIdList[i+1:]...)
 			}
 		}
 	}
+
 	// randomly pick servers in valid nodes to store the connection
 	count := 0
 	valid := true
@@ -123,6 +126,11 @@ func FindNewNode(sdfsFileName string) []string {
 		}
 		count++
 	}
+	var targetString strings.Builder
+	for _, ip := range ipList {
+		targetString.WriteString(ip + "\t")
+	}
+	logger.PrintInfo("Target nodes are  " + targetString.String())
 	return ipList
 }
 

@@ -1,8 +1,8 @@
 package detector
 
 import (
-	"../config"
-	"../logger"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
 	"io"
 	"net"
 	"os"

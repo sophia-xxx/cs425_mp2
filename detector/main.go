@@ -9,13 +9,12 @@ import (
 	"sync"
 	"time"
 
-	pb "../ProtocolBuffers/ProtoPackage"
+	pb "cs425_mp2/ProtocolBuffers/ProtoPackage"
 
-	"../config"
-	"../failure"
-	"../logger"
-	"../membership"
-	"../networking"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
+	"cs425_mp2/membership"
+	"cs425_mp2/networking"
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -284,7 +283,6 @@ func GetFailNodeList() []string {
 }
 
 func Run(isIntro bool, isGossip bool, introIP string) {
-	logger.InfoLogger.Println("start now")
 	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIP:", introIP, "\nIs gossip:", isGossip)
 	isIntroducer = isIntro
 	introducerIP = introIP
@@ -293,20 +291,20 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	isJoining = !isIntroducer
 
 	initMembershipList(isGossip)
-	failure.RemoveAllFile()
+	//failure.RemoveAllFile()
 	failureList = make(map[string]bool)
 
 	logger.PrintInfo("Starting server with id", selfID, "on port", config.PORT)
 	go networking.Listen(config.PORT, readNewMessage)
 	go startHeartbeat()
 
-	// master node maintain file-node list
+	/*// master node maintain file-node list
 	if isIntroducer {
 		go CheckReplicate()
 		go RemoveFailNode()
 	}
 	// listen TCP message
-	go ListenMessage()
+	go ListenMessage()*/
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {

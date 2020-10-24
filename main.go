@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./detector"
-	"./logger"
+	"cs425_mp2/detector"
+	"cs425_mp2/logger"
 	"flag"
 	"os"
 )

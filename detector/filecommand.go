@@ -1,9 +1,9 @@
 package detector
 
 import (
-	pbm "../ProtocolBuffers/MessagePackage"
-	"../config"
-	"../logger"
+	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
 	"io/ioutil"
 	"os"
 )

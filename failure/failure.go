@@ -1,7 +1,7 @@
 package failure
 
 import (
-	"../config"
+	"cs425_mp2/config"
 	"os"
 )
 

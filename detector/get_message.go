@@ -3,12 +3,12 @@ package detector
 import (
 
 	//"strings"
-	pbm "../ProtocolBuffers/MessagePackage"
+	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"github.com/golang/protobuf/ptypes"
 	"os"
 
 	//"fmt"
-	"../config"
+	"cs425_mp2/config"
 )
 
 func getMessageHandler(remoteMsg *pbm.TCPMessage) {

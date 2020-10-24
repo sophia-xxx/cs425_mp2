@@ -5,9 +5,9 @@ import (
 	"strconv"
 	"strings"
 
-	pb "../ProtocolBuffers/ProtoPackage"
-	"../config"
-	"../logger"
+	pb "cs425_mp2/ProtocolBuffers/ProtoPackage"
+	"cs425_mp2/config"
+	"cs425_mp2/logger"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/jinzhu/copier"
 )

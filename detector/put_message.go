@@ -1,9 +1,8 @@
 package detector
 
 import (
-	pbm "../ProtocolBuffers/MessagePackage"
-	//"fmt"
-	"../config"
+	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
+	"cs425_mp2/config"
 )
 
 func putMessageHandler(remoteMsg *pbm.TCPMessage) {

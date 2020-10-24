@@ -1,9 +1,10 @@
 package detector
 
 import (
-	"github.com/golang/protobuf/proto"
 	"net"
 	"strings"
+
+	"github.com/golang/protobuf/proto"
 
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"cs425_mp2/config"
@@ -52,6 +53,7 @@ func handleConnection(conn *net.TCPConn) {
 
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
+		logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)
 		putMessageHandler(remoteMsg)
 	}
 	// deal with all GET relevant message

@@ -15,7 +15,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	}
 	// client send write file request to target nodes
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
-		logger.PrintInfo("Got PUT_MASTER_REP from master with filename: "+ remoteMsg.FileName)
+		logger.PrintInfo("Got  " + pbm.MsgType_name[int32(remoteMsg.Type)] + "  from master with filename: " + remoteMsg.FileName)
 		targetList := remoteMsg.PayLoad
 		for _, target := range targetList {
 			sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
@@ -25,7 +25,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
 		sendWriteReply(remoteMsg.SenderIP, remoteMsg.FileName)
-		logger.PrintInfo("Got ACK from target  ")
+		logger.PrintInfo("Got put request from client  ")
 		ListenFile(config.SDFS_DIR+remoteMsg.FileName, remoteMsg.FileSize, true)
 		logger.PrintInfo("Finish receiving file  ")
 	}

@@ -35,7 +35,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		logger.PrintInfo("Cannot receive filename")
 	}
 	filename := string(nameBuf[:n])
-	logger.PrintInfo("Receive filename  " + filename)
+
 	if filename != "" {
 		_, err = conn.Write([]byte("ACK"))
 		if err != nil {
@@ -48,7 +48,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	if err != nil {
 		logger.PrintInfo("Cannot create file!")
 	}
-	logger.PrintInfo("Create SDFS file  " + filename)
+
 	// read data from connection
 	buf := make([]byte, 4096)
 	for {

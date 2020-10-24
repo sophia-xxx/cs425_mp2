@@ -28,7 +28,7 @@ func ListenMessage() {
 		if err != nil {
 			logger.PrintInfo("Cannot open TCP connection!")
 		}
-		logger.PrintInfo("Start new TCP connection!")
+		//logger.PrintInfo("Start new TCP connection!")
 
 		go handleConnection(conn)
 	}
@@ -50,10 +50,10 @@ func handleConnection(conn *net.TCPConn) {
 	if err != nil {
 		logger.PrintInfo("Cannot decode message!")
 	}
-	logger.PrintInfo("Received message with type:" + pbm.MsgType_name[int32(remoteMsg.Type)])
+	//logger.PrintInfo("Received message with type:" + pbm.MsgType_name[int32(remoteMsg.Type)])
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
-		logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)
+		//logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)
 		putMessageHandler(remoteMsg)
 	}
 	// deal with all GET relevant message
@@ -84,7 +84,7 @@ func handleConnection(conn *net.TCPConn) {
 func SendMessage(dest string, message []byte) {
 	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.TCPPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
-	logger.PrintInfo("Set connection!")
+	//logger.PrintInfo("Set connection!")
 	if err != nil {
 		logger.PrintInfo("Cannot dial remote address!")
 	}

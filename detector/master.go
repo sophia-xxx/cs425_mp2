@@ -89,15 +89,21 @@ func DeleteFileRecord(sdfsFileName string, nodeIP string) {
 func FindNewNode(sdfsFileName string, sender string) []string {
 	// if key not exist in map, it will get nil
 	storeList := fileNodeList[sdfsFileName]
+	logger.PrintInfo(listToString(storeList) + "   has stored file  " + sdfsFileName)
 	nodeNum := config.REPLICA - len(storeList)
 	memberIdList := GetMemberIDList()
 
 	ipList := make([]string, 0)
 	validIdList := memberIdList
 
+	logger.PrintInfo(listToString(validIdList) + "   are valid list  ")
+
 	for index, id := range validIdList {
 		if id == sender {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
+		}
+		if len(storeList) == 0 {
+			break
 		}
 		for i, n := range storeList {
 			if id == n {
@@ -111,8 +117,8 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 	}
 	// randomly pick servers in valid nodes to store the connection
 	count := 0
-	valid := true
 	for len(ipList) != nodeNum {
+		valid := true
 		num := int(config.Hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
 		ip := validIdList[num]
 		for _, i := range ipList {
@@ -122,15 +128,21 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 		}
 		if valid {
 			ipList = append(ipList, ip)
+			logger.PrintInfo("New target has been chosen  " + ip)
 		}
 		count++
 	}
-	var targetString strings.Builder
-	for _, ip := range ipList {
-		targetString.WriteString(ip + "\t")
-	}
-	logger.PrintInfo("Target nodes are  " + targetString.String())
+
+	logger.PrintInfo("Target nodes are  " + listToString(ipList))
 	return ipList
+}
+
+func listToString(list []string) string {
+	var targetString strings.Builder
+	for _, e := range list {
+		targetString.WriteString(e + " ; ")
+	}
+	return targetString.String()
 }
 
 // master check whether to replicate files or not---should run continuously

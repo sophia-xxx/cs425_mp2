@@ -24,9 +24,9 @@ const GOSSIP_FANOUT = 4
 
 const REPLICA = 4
 
-const SDFS_DIR = "./sdfsFiles"
+const SDFS_DIR = "./sdfsFiles/"
 
-const LOCAL_DIR = "./localFiles"
+const LOCAL_DIR = "./localFiles/"
 
 const PERM_MODE = 0777
 

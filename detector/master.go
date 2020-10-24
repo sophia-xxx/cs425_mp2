@@ -138,7 +138,7 @@ func CheckReplicate() {
 	for file, nodeList := range fileNodeList {
 		if len(nodeList) < config.REPLICA {
 			storeList := fileNodeList[file]
-			ipList := FindNewNode(file)
+			ipList := FindNewNode(file, introducerIp)
 			replicateFile(storeList, ipList, file)
 		}
 	}

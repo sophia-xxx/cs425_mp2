@@ -4,7 +4,6 @@ import (
 
 	//"strings"
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
-	"github.com/golang/protobuf/ptypes"
 	"os"
 
 	//"fmt"
@@ -22,7 +21,7 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_GET_MASTER_REP {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad
-		for _, target := range targetList {
+		/*for _, target := range targetList {
 			get_ack_received = false
 			sendReadReq(target, remoteMsg.FileName)
 			startTime := float64(ptypes.TimestampNow().GetSeconds())
@@ -40,7 +39,8 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 			if !get_ack_received {
 				continue
 			}
-		}
+		}*/
+		sendReadReq(targetList[1], remoteMsg.FileName)
 	}
 	// server reply to get request and send file to client
 	if remoteMsg.Type == pbm.MsgType_GET_P2P {

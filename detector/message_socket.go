@@ -15,17 +15,17 @@ func ListenMessage() {
 	addressString := GetLocalIPAddr().String() + config.TCPPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot resolve TCP address!")
+		logger.PrintInfo("Cannot resolve TCP address!")
 	}
 	listener, err := net.ListenTCP("tcp4", localAddr)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot open TCP connection!")
+		logger.PrintInfo("Cannot listen TCP!")
 	}
 
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
-			logger.ErrorLogger.Println("Cannot open TCP connection!")
+			logger.PrintInfo("Cannot open TCP connection!")
 		}
 
 		go handleConnection(conn)
@@ -39,10 +39,13 @@ func handleConnection(conn *net.TCPConn) {
 	buf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(buf)
 	if err != nil {
-		logger.ErrorLogger.Println("Unable to read data!")
+		logger.PrintInfo("Unable to read data!")
 	}
 	messageBytes := buf[0:n]
-	remoteMsg, _ := DecodeTCPMessage(messageBytes)
+	remoteMsg, err := DecodeTCPMessage(messageBytes)
+	if err != nil {
+		logger.PrintInfo("Cannot decode message!")
+	}
 
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
@@ -77,13 +80,19 @@ func SendMessage(dest string, message []byte) {
 	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+config.TCPPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot dial remote address!")
+		logger.PrintInfo("Cannot dial remote address!")
 	}
 	_, err = conn.Write(message)
+	if err != nil {
+		logger.PrintInfo("Cannot send message!")
+	}
 }
 
 func EncodeTCPMessage(fileMessage *pbm.TCPMessage) ([]byte, error) {
 	message, err := proto.Marshal(fileMessage)
+	if err != nil {
+		logger.PrintInfo("Serialize error!")
+	}
 	return message, err
 }
 func DecodeTCPMessage(message []byte) (*pbm.TCPMessage, error) {

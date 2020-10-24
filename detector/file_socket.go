@@ -82,13 +82,15 @@ func sendFile(localFilePath string, dest string, filename string) {
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot dial remote connection socket!")
 	}
+	defer conn.Close()
 	// send filename and wait for reply
 	logger.PrintInfo("filename is " + filename)
 	sendlen, err := conn.Write([]byte(filename))
-	logger.PrintInfo("Send length of " + strconv.Itoa(sendlen) + " filename")
 	if err != nil {
-		logger.PrintInfo("Cannot send filename")
+		logger.PrintInfo(err)
 	}
+	logger.PrintInfo("Send length of " + strconv.Itoa(sendlen) + " filename")
+
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {
@@ -99,7 +101,6 @@ func sendFile(localFilePath string, dest string, filename string) {
 		return
 	}
 
-	defer conn.Close()
 	// set directory and send connection
 	fs, err := os.Open(localFilePath)
 	defer fs.Close()

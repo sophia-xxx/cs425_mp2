@@ -27,6 +27,7 @@ func ListenMessage() {
 		if err != nil {
 			logger.PrintInfo("Cannot open TCP connection!")
 		}
+		logger.PrintInfo("Start new TCP connection!")
 
 		go handleConnection(conn)
 	}
@@ -35,6 +36,8 @@ func ListenMessage() {
 
 func handleConnection(conn *net.TCPConn) {
 	defer conn.Close()
+
+	logger.PrintInfo("Get new message!")
 	// read message data
 	buf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(buf)
@@ -79,6 +82,7 @@ func handleConnection(conn *net.TCPConn) {
 func SendMessage(dest string, message []byte) {
 	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.TCPPORT)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
+	logger.PrintInfo("Set connection!")
 	if err != nil {
 		logger.PrintInfo("Cannot dial remote address!")
 	}

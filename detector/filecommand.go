@@ -6,11 +6,13 @@ import (
 	"cs425_mp2/logger"
 	"io/ioutil"
 	"os"
+	"strconv"
 )
 
 // deal with "put" command
 func putFileCommand(localFileName string, sdfsFileName string) {
 	fileInfo, err := os.Stat(config.LOCAL_DIR + localFileName)
+	logger.PrintInfo("Local file size is " + strconv.FormatInt(fileInfo.Size(), 10))
 	if err != nil {
 		logger.PrintInfo("No such file!")
 	}
@@ -25,6 +27,7 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 	if err != nil {
 		logger.PrintInfo("Encode error!")
 	}
+	logger.PrintInfo("Send message to master!")
 	SendMessage(introducerIP, message)
 
 }

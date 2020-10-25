@@ -20,7 +20,7 @@ import (
 func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 	// open connection socket
-	addressString := util.GetLocalIPAddr().String() + ":" + config.FILEPORT
+	addressString := util.GetLocalIPAddr().String() + ":" + config.FileTransferPort
 	/*localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot resolve connection file address!")
@@ -94,8 +94,8 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
-	remoteAddress := dest + ":" + config.FILEPORT
-	localAddr := util.GetLocalIPAddr().String() + ":" + config.PORT
+	remoteAddress := dest + ":" + config.FileTransferPort
+	localAddr := util.GetLocalIPAddr().String() + ":" + config.FileServicePort
 	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+global.FILEPORT)
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {

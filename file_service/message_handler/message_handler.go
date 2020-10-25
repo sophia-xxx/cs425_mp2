@@ -16,7 +16,7 @@ import (
 
 // socket to listen TCP message
 func HandleFileMessage() {
-	addressString := util.GetLocalIPAddr().String() + ":" + config.TCPPORT
+	addressString := util.GetLocalIPAddr().String() + ":" + config.FileServicePort
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot resolve TCP address!  " + addressString)

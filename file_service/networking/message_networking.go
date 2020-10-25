@@ -16,7 +16,7 @@ import (
 
 // send TCP message
 func SendMessageViaTCP(dest string, message []byte) {
-	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.TCPPORT)
+	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FileServicePort)
 	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
 	//logger.PrintInfo("Set connection!")
 	if err != nil || conn == nil {

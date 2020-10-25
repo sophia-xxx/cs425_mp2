@@ -45,8 +45,8 @@ func RunService(isMaster bool, isGossip bool, MasterIP string) {
 	initMembershipList(isGossip)
 	failureList = make(map[string]bool)
 
-	logger.PrintInfo("Member service is now running with id", selfID, "on port", config.PORT)
-	go Listen(config.PORT, readNewMessage)
+	logger.PrintInfo("Member service is now running with id", selfID, "on port", config.MemberServicePort)
+	go Listen(config.MemberServicePort, readNewMessage)
 	go startHeartbeat()
 }
 
@@ -137,16 +137,15 @@ func initMembershipList(isGossip bool) {
 // interface:
 
 
-func GetOtherMemberIPList() []string {
+func GetOtherAliveMemberIPList() []string {
 	ipList := make([]string, 0)
-	for k, member := range localMessage.MemberList {
-		if !failureList[k] && !member.IsLeaving {
-			tokens := strings.Split(k, ":")
-			ip := tokens[0]
-			id := tokens[1]
-			if id != selfID {
-				ipList = append(ipList, ip)
+	for machineID, member := range localMessage.MemberList {
+		if !failureList[machineID] && !member.IsLeaving {
+			if machineID == selfID {
+				continue
 			}
+			ip := strings.Split(machineID, ":")[0]
+			ipList = append(ipList, ip)
 		}
 	}
 	sort.Strings(ipList)

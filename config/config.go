@@ -2,11 +2,12 @@ package config
 
 import "hash/fnv"
 
-const PORT string = "6789"
+const (
+	MemberServicePort 	= "6234"
+	FileTransferPort 	= "6235"
+	FileServicePort 	= "6236"
+)
 
-const FILEPORT string = "5004"
-
-const TCPPORT string = "5005"
 
 const BUFFER_SIZE int = 32768
 

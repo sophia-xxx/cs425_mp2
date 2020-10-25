@@ -74,6 +74,7 @@ func CheckAndRemoveMembershipListFailures(message *protocol_buffer.MembershipSer
 			Failures++
 			(*failureList)[machineID] = true
 			logger.PrintInfo("Marking machine", machineID, "as failed")
+			HandleMemberFailure(machineID)
 		}
 	}
 }

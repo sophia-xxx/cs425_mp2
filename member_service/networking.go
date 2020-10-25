@@ -100,7 +100,7 @@ func Send(dest string, message []byte) error {
 
 	rand.NewSource(time.Now().UnixNano())
 	if rand.Float64() > MessageLossRate {
-		addr, err := net.ResolveUDPAddr("udp", dest+":"+config.PORT)
+		addr, err := net.ResolveUDPAddr("udp", dest+":"+config.MemberServicePort)
 		if err != nil {
 			return err
 		}

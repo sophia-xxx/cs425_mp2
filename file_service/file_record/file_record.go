@@ -92,7 +92,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 	storeList := FileNodeList[sdfsFileName]
 	logger.PrintInfo(util.ListToString(storeList) + "   has stored file  " + sdfsFileName)
 	nodeNum := config.REPLICA - len(storeList)
-	memberIdList := member_service.GetOtherMemberIPList()
+	memberIdList := member_service.GetOtherAliveMemberIPList()
 
 	ipList := make([]string, 0)
 	validIdList := memberIdList

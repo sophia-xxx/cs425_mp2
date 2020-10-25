@@ -99,8 +99,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 		// logger.ErrorLogger.Println("Cannot read response")
 		logger.PrintInfo("Cannot read response")
 	}
-	logger.PrintInfo("Received file ack with length" + strconv.Itoa(n))
-	if string(responseBuf[:n]) != "ok" {
+	if string(responseBuf[:n]) != "ACK" {
 		// logger.ErrorLogger.Println("Cannot set up connection transfer connection")
 		logger.PrintInfo("Cannot set up connection transfer connection")
 		return

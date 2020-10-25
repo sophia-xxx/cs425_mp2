@@ -18,7 +18,7 @@ import (
 func HandlePutCommand(localFileName string, sdfsFileName string) {
 	fileInfo, err := os.Stat(config.LOCAL_DIR + localFileName)
 	if err != nil {
-		logger.PrintInfo("\n No such file in local file directory!")
+		logger.PrintWarning("No such file in local file directory!")
 		return
 	}
 
@@ -32,11 +32,10 @@ func HandlePutCommand(localFileName string, sdfsFileName string) {
 	}
 	message, err := networking.EncodeTCPMessage(fileMessage)
 	if err != nil {
-		logger.PrintInfo("Encode error!")
+		logger.PrintWarning("Encode error!")
 	}
-	logger.PrintInfo("\nSend message to master!")
+	logger.PrintInfo("Sent message to master!")
 	networking.SendMessageViaTCP(member_service.GetMasterIP(), message)
-
 }
 
 // deal with "get" command
@@ -48,7 +47,6 @@ func HandleGetCommand(sdfsFileName string, localFileName string) {
 	}
 	message, _ := networking.EncodeTCPMessage(fileMessage)
 	networking.SendMessageViaTCP(member_service.GetMasterIP(), message)
-
 }
 
 //deal with "delete" command
@@ -75,16 +73,16 @@ func HandleListCommand(sdfsFileName string) {
 
 // deal with "store" command
 func HandleStoreCommand() {
-	logger.PrintInfo("\nLocal file directory: \n")
+	logger.PrintToConsole("\nLocal file directory:")
 	localFile, _ := ioutil.ReadDir(config.LOCAL_DIR)
 	// change file to string
 	for _, file := range localFile {
-		logger.PrintInfo(file.Name() + ":  " + strconv.FormatInt(file.Size(), 10) + "B")
+		logger.PrintToConsole(file.Name() + ":  " + strconv.FormatInt(file.Size(), 10) + "B")
 	}
-	logger.PrintInfo("\nSDFS file directory: \n")
+	logger.PrintToConsole("\nSDFS file directory:")
 	files, _ := ioutil.ReadDir(config.SDFS_DIR)
 	for _, f := range files {
-		logger.PrintInfo(f.Name() + ":  " + strconv.FormatInt(f.Size(), 10) + "B")
+		logger.PrintToConsole(f.Name() + ":  " + strconv.FormatInt(f.Size(), 10) + "B")
 	}
 
 }

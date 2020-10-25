@@ -8,6 +8,9 @@ import (
 )
 
 var (
+	// console
+	ConsoleLogger *log.Logger
+
 	// InfoLogger : logging for info messages
 	InfoLogger *log.Logger
 
@@ -27,10 +30,15 @@ func init() {
 		log.Fatal(err)
 	}
 
+	ConsoleLogger = log.New(os.Stdout, "", 0)
 	InfoLogger = log.New(file, "[INFO]", log.Ldate|log.Ltime|log.Lshortfile)
 	WarningLogger = log.New(file, "[WARNING]", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrorLogger = log.New(file, "[ERROR]", log.Ldate|log.Ltime|log.Lshortfile)
 	DebugLogger = log.New(file, "[DEBUG]", log.Ldate|log.Ltime|log.Lshortfile)
+}
+
+func PrintToConsole(args ...interface{}) {
+	ConsoleLogger.Println(args)
 }
 
 func PrintInfo(args ...interface{}) {

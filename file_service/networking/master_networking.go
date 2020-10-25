@@ -50,18 +50,16 @@ func PutReplyMessage(remoteMsg *protocl_buffer.TCPMessage) {
 
 func GetReplyMessage(filename string, sender string) {
 	readList := file_record.FileNodeList[filename]
-	if readList == nil {
-		/*todo: deal with non-existed file*/
-	}
-	for i, node := range readList {
-		if strings.Compare(node, sender) == 0 {
-			readList = append(readList[:i], readList[i+1:]...)
+	validList := make([]string, 0)
+	for _, node := range readList {
+		if strings.Compare(node, sender) != 0 {
+			validList = append(validList, node)
 		}
 	}
 	repMessage := &protocl_buffer.TCPMessage{
 		Type:     protocl_buffer.MsgType_GET_MASTER_REP,
 		SenderIP: util.GetLocalIPAddr().String(),
-		PayLoad:  readList,
+		PayLoad:  validList,
 		FileName: filename,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
@@ -110,4 +108,3 @@ func CheckReplicate() {
 		}
 	}
 }
-

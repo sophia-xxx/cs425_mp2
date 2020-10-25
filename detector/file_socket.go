@@ -42,6 +42,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 			logger.PrintInfo("Cannot send ACK")
 		}
 	}
+	logger.PrintInfo("Received filename as: " + filename)
 	// create sdfsfile
 	file, err := os.Create(filePath)
 	defer file.Close()
@@ -50,9 +51,10 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	}
 
 	// read data from connection
-	buf := make([]byte, 4096)
+	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		n, err := conn.Read(buf)
+		logger.PrintInfo("This time we read:" + strconv.Itoa(n) + " bytes")
 		if err == io.EOF {
 			logger.PrintInfo("Complete connection reading!")
 			break
@@ -94,10 +96,12 @@ func sendFile(localFilePath string, dest string, filename string) {
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot read response")
+		// logger.ErrorLogger.Println("Cannot read response")
+		logger.PrintInfo("Cannot read response")
 	}
-	if string(responseBuf[:n]) != "ok" {
-		logger.ErrorLogger.Println("Cannot set up connection transfer connection")
+	if string(responseBuf[:n]) != "ACK" {
+		// logger.ErrorLogger.Println("Cannot set up connection transfer connection")
+		logger.PrintInfo("Cannot set up connection transfer connection")
 		return
 	}
 
@@ -105,13 +109,14 @@ func sendFile(localFilePath string, dest string, filename string) {
 	fs, err := os.Open(localFilePath)
 	defer fs.Close()
 	if err != nil {
-		logger.ErrorLogger.Println("File path error!")
+		logger.PrintInfo("File path error!")
 	}
 	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		// open connection
 		n, err := fs.Read(buf)
-		if err == io.EOF {
+		logger.PrintInfo("This time we write " + strconv.Itoa(n) + " bytes into buffer")
+		if err == io.EOF || n == 0 {
 			logger.InfoLogger.Println("Compete connection reading!")
 			break
 		}

@@ -42,6 +42,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 			logger.PrintInfo("Cannot send ACK")
 		}
 	}
+	logger.PrintInfo("Received filename as: " + filename)
 	// create sdfsfile
 	file, err := os.Create(filePath)
 	defer file.Close()
@@ -53,6 +54,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	buf := make([]byte, 4096)
 	for {
 		n, err := conn.Read(buf)
+		logger.PrintInfo("This time we read:" + strconv.Itoa(n) + " bytes")
 		if err == io.EOF {
 			logger.PrintInfo("Complete connection reading!")
 			break

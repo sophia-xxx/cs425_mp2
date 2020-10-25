@@ -221,7 +221,11 @@ func ListReplyMessage(filename string, targetIp string) {
 //master send delete request to file node
 func DeleteMessage(filename string) {
 	ipList := fileNodeList[filename]
-	/*todo: have no such file*/
+	if ipList == nil {
+		logger.PrintInfo("No such file in SDFS")
+		return
+	}
+
 	fileMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_DELETE,
 		SenderIP: GetLocalIPAddr().String(),

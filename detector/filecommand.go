@@ -12,10 +12,12 @@ import (
 // deal with "put" command
 func putFileCommand(localFileName string, sdfsFileName string) {
 	fileInfo, err := os.Stat(config.LOCAL_DIR + localFileName)
-	logger.PrintInfo("Local file size is " + strconv.FormatInt(fileInfo.Size(), 10))
 	if err != nil {
-		logger.PrintInfo("No such file!")
+		logger.PrintInfo("\n No such file in local file directory!")
+		return
 	}
+
+	logger.PrintInfo("\nLocal file size is " + strconv.FormatInt(fileInfo.Size(), 10))
 	fileMessage := &pbm.TCPMessage{
 		Type:      pbm.MsgType_PUT_MASTER,
 		SenderIP:  GetLocalIPAddr().String(),
@@ -27,7 +29,7 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 	if err != nil {
 		logger.PrintInfo("Encode error!")
 	}
-	logger.PrintInfo("Send message to master!")
+	logger.PrintInfo("\nSend message to master!")
 	SendMessage(introducerIp, message)
 
 }

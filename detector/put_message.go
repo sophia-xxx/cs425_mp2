@@ -21,9 +21,9 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 		// 	sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
 		// 	logger.PrintInfo("Send write request to target  " + target)
 		// }
-		target := targetList[0] 
+		target := targetList[0]
 		sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
-		logger.PrintInfo("Send write request to target  " + target)}
+		logger.PrintInfo("Send write request to target  " + target)
 	}
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {

@@ -1,6 +1,8 @@
 package file_service
 
 import (
+	"time"
+
 	"cs425_mp2/command_util"
 	"cs425_mp2/config"
 	"cs425_mp2/file_service/command_handler"
@@ -12,7 +14,6 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
-	"time"
 )
 
 func HandleCommand(command command_util.Command) {

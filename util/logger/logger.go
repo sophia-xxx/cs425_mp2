@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"cs425_mp2/config"
 	"fmt"
 	"log"
 	"os"
@@ -15,6 +16,9 @@ var (
 
 	// ErrorLogger : logging for error messages
 	ErrorLogger *log.Logger
+
+	// ErrorLogger : logging for error messages
+	DebugLogger *log.Logger
 )
 
 func init() {
@@ -26,6 +30,7 @@ func init() {
 	InfoLogger = log.New(file, "[INFO]", log.Ldate|log.Ltime|log.Lshortfile)
 	WarningLogger = log.New(file, "[WARNING]", log.Ldate|log.Ltime|log.Lshortfile)
 	ErrorLogger = log.New(file, "[ERROR]", log.Ldate|log.Ltime|log.Lshortfile)
+	DebugLogger = log.New(file, "[DEBUG]", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 func PrintInfo(args ...interface{}) {
@@ -47,4 +52,13 @@ func PrintError(args ...interface{}) {
 
 	fmt.Print("[ERROR] ")
 	fmt.Println(args...)
+}
+
+func PrintDebug(args ...interface{}) {
+	ErrorLogger.Println(args)
+	if config.DebugMode {
+		fmt.Print("[DEBUG] ")
+		fmt.Println(args...)
+	}
+
 }

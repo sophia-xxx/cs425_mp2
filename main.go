@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cs425_mp2/config"
 	"flag"
 	"fmt"
 	"os"
@@ -23,9 +24,10 @@ func main() {
 	isMaster := flag.Bool("master", false, "flag for whether this machine is the master")
 	isGossip := flag.Bool("gossip", false, "flag for whether this machine uses gossip heartbeating for dissemination")
 	masterIP := flag.String("masterIp", "", "the ip of master to connect to")
-
+	debugMode := flag.Bool("debug", false, "debug mode")
 	flag.Parse()
 
+	config.DebugMode = *debugMode
 	if (!*isMaster && *masterIP == "") || (*isMaster && *masterIP != "") {
 		logger.PrintError("Machine must either be introducer or have IP address of the introducer to connect to, but not both.\nUse the following flags: -gossip -intro -introIp=<ip>")
 		os.Exit(1)

@@ -2,6 +2,8 @@ package config
 
 import "hash/fnv"
 
+var DebugMode = false
+
 const (
 	MemberServicePort 	= "6234"
 	FileTransferPort 	= "6235"

@@ -233,7 +233,6 @@ func readNewMessage(message []byte) error {
 		}
 
 		dests := GetOtherMembershipListIPs(remoteMessage, selfID)
-		logger.PrintWarning("Sending", dests[0], " ", message)
 		Send(dests[0], message)
 	}
 

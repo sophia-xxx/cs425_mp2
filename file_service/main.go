@@ -42,8 +42,6 @@ func HandleCommand(command command_util.Command) {
 func RunService() {
 	file_manager.RemoveAllSDFSFile()
 
-	logger.PrintInfo("Starting file_service on", util.GetLocalIPAddr().String() + ":" + config.FileServicePort)
-
 	// master node maintain file-node list
 	if member_service.IsMaster() {
 		go func(){
@@ -62,4 +60,11 @@ func RunService() {
 	
 	// listen TCP message
 	go message_handler.HandleFileMessage()
+
+	logger.PrintInfo(
+		"File service is now running:\n",
+		"\tIPv4:", util.GetLocalIPAddr().String(),
+		"\tFile Service Port:", config.FileServicePort,
+		"\tFile Transfer Port:", config.FileTransferPort,
+	)
 }

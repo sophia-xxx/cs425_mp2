@@ -36,21 +36,23 @@ func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
 	isMaster = isMasterBool
 	masterIP = MasterIPString
 
-	logger.PrintInfo(
-		"Starting detector\n",
-		"\tIs Master:", isMaster,
-		"\tintroducerIP:", masterIP,
-		"\tIs gossip:", isGossipBool)
-
 	isSending = true
 	isJoining = !isMaster
 
 	initMembershipList(isGossipBool)
 	failureList = make(map[string]bool)
 
-	logger.PrintInfo("Member service is now running with id", selfID, "on port", config.MemberServicePort)
 	go Listen(config.MemberServicePort, readNewMessage)
 	go startHeartbeat()
+
+	logger.PrintInfo(
+		"Starting detector is now Running\n",
+		"\tPort:", config.MemberServicePort,
+		"\tIs Master:", isMaster,
+		"\tMasterIP:", masterIP,
+		"\tIs gossip:", isGossipBool,
+		"\n",
+		"\tMember Self ID:", selfID)
 }
 
 func HandleCommand(command command_util.Command) {

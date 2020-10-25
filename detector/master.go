@@ -9,8 +9,6 @@ import (
 )
 
 var (
-	//introducerIp string
-	//localIp string
 	//fileList     []string
 	fileNodeList map[string][]string
 )

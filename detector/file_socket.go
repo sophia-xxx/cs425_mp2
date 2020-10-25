@@ -90,10 +90,11 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func sendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FILEPORT
+	localAddr := GetLocalIPAddr().String() + ":" + config.PORT
 	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FILEPORT)
-	conn, err := greuse.Dial("tcp4", "", remoteAddress)
+	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot dial remote connection socket!")
+		logger.PrintError(err)
 	}
 	defer conn.Close()
 	// send filename and wait for reply

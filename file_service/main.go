@@ -60,16 +60,23 @@ func RunService() {
 	// master node maintain file-node list
 	if member_service.IsMaster() {
 		go func(){
-			time.Sleep(config.FileCheckGapSeconds)
-			file_record.RemoveFailedNodes()
+			for {
+				time.Sleep(config.FileCheckGapSeconds)
+				file_record.RemoveFailedNodes()
+			}
 		}()
 		go func(){
-			time.Sleep(config.FileCheckGapSeconds)
-			networking.CheckReplicate()
+			for {
+				time.Sleep(config.FileCheckGapSeconds)
+				networking.CheckReplicate()
+			}
+
 		}()
 		go func(){
-			time.Sleep(config.FileCheckGapSeconds)
-			failure_handler.HandleMasterFailure()
+			for {
+				time.Sleep(config.FileCheckGapSeconds)
+				failure_handler.HandleMasterFailure()
+			}
 		}()
 	}
 	

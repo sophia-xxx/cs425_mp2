@@ -15,7 +15,7 @@ func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 		oldFileNodeList := fileNodeList[sdfsFileName]
 		for _, node := range oldFileNodeList {
 			for _, newNode := range newNodeList {
-				if newNode != node {
+				if strings.Compare(newNode, node) != 0 {
 					oldFileNodeList = append(oldFileNodeList, newNode)
 				}
 			}
@@ -37,7 +37,7 @@ func RemoveFailNode() {
 		for _, file := range getAllFile(node) {
 			newNodeList := make([]string, 0)
 			for _, n := range fileNodeList[file] {
-				if n != node {
+				if strings.Compare(n, node) != 0 {
 					newNodeList = append(newNodeList, n)
 				}
 			}
@@ -51,7 +51,7 @@ func getAllFile(nodeIp string) []string {
 	files := make([]string, 0)
 	for file, nodeList := range fileNodeList {
 		for _, node := range nodeList {
-			if node == nodeIp {
+			if strings.Compare(node, nodeIp) == 0 {
 				files = append(files, file)
 			}
 		}
@@ -70,7 +70,7 @@ func DeleteFileRecord(sdfsFileName string, nodeIP string) {
 		logger.PrintInfo("File " + sdfsFileName + " has been deleted!")
 	} else {
 		for index, node := range nodeList {
-			if node == nodeIP {
+			if strings.Compare(node, nodeIP) == 0 {
 				nodeList = append(nodeList[:index], nodeList[index+1:]...)
 				break
 			}
@@ -103,7 +103,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 		// 	break
 		// }
 		for i, n := range storeList {
-			if id == n {
+			if strings.Compare(id, n) == 0 {
 				validIdList = append(validIdList[:i], validIdList[i+1:]...)
 			}
 		}
@@ -119,7 +119,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 		num := int(config.Hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
 		ip := validIdList[num]
 		for _, i := range ipList {
-			if ip == i {
+			if strings.Compare(ip, i) != 0 {
 				valid = false
 			}
 		}

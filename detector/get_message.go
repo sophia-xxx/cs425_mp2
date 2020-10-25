@@ -20,25 +20,7 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_GET_MASTER_REP {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad
-		/*for _, target := range targetList {
-			get_ack_received = false
-			sendReadReq(target, remoteMsg.FileName)
-			startTime := float64(ptypes.TimestampNow().GetSeconds())
-			for {
-				if get_ack_received {
-					break
-				}
-				curTime := float64(ptypes.TimestampNow().GetSeconds())
-				if curTime-startTime > config.ACK_TIMEOUT {
-					break
-				} else {
-					continue
-				}
-			}
-			if !get_ack_received {
-				continue
-			}
-		}*/
+
 		if targetList == nil {
 			logger.PrintInfo(remoteMsg.FileName + "  has no record!")
 		} else {

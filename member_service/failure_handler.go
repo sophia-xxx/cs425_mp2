@@ -28,6 +28,7 @@ func Election() {
 	newMasterID := getLargestAliveServer()
 	if selfID == newMasterID {
 		logger.PrintInfo("This server has been elected as the new master.")
+		isMaster = true
 	} else {
 		logger.PrintInfo("New master is selected:", newMasterID)
 	}

@@ -13,9 +13,11 @@ const (
 
 const BUFFER_SIZE int = 32768
 
-const T_TIMEOUT = 5
-
-const T_CLEANUP = 5
+const (
+	T_TIMEOUT = 5
+	T_CLEANUP = 5
+	WaitTimeForElection = 5
+)
 
 const STRAT_GOSSIP = "gossip"
 

@@ -291,6 +291,9 @@ func Run(isIntro bool, isGossip bool, introIP string) {
 	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIp:", introIP, "\nIs gossip:", isGossip)
 	isIntroducer = isIntro
 	introducerIp = introIP
+	if isIntro {
+		introducerIp = GetLocalIPAddr().String()
+	}
 	logger.PrintInfo("**" + introducerIp + "**")
 
 	isSending = true

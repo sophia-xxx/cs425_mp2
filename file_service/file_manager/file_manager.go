@@ -1,10 +1,10 @@
 package file_manager
 
 import (
-	config2 "cs425_mp2/config"
-	"cs425_mp2_remastered/config"
 	"io/ioutil"
 	"os"
+
+	"cs425_mp2/config"
 )
 
 func GetSDFSFilePath(filename string) string {
@@ -21,12 +21,12 @@ func WhetherFileExist(filepath string) bool {
 
 // when failed node rejoin the system, it will remove all sdfs files
 func RemoveAllSDFSFile() {
-	os.RemoveAll(config2.SDFS_DIR)
-	os.MkdirAll(config2.SDFS_DIR, config2.PERM_MODE)
+	os.RemoveAll(config.SDFS_DIR)
+	os.MkdirAll(config.SDFS_DIR, config.PERM_MODE)
 }
 
 func RemoveSDFSFile(filename string) {
-	os.Remove(config2.SDFS_DIR + filename)
+	os.Remove(config.SDFS_DIR + filename)
 }
 
 func GetAllSDFSFiles() []os.FileInfo {

@@ -4,9 +4,9 @@ import "hash/fnv"
 
 const PORT string = "6789"
 
-const FILEPORT string = "8001"
+const FILEPORT string = "5004"
 
-const TCPPORT string = "8002"
+const TCPPORT string = "5005"
 
 const BUFFER_SIZE int = 32768
 

@@ -53,15 +53,17 @@ func handleConnection(conn *net.TCPConn) {
 
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
-		//logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)
+		logger.PrintInfo("Received Put message about:", remoteMsg.FileName, "from", remoteMsg.SenderIP)
 		putMessageHandler(remoteMsg)
 	}
 	// deal with all GET relevant message
 	if remoteMsg.Type > config.PUT && remoteMsg.Type <= config.GET {
+		logger.PrintInfo("Received Get message about:", remoteMsg.FileName, "from", remoteMsg.SenderIP)
 		getMessageHandler(remoteMsg)
 	}
 	// deal with all DELETE relevant message
 	if remoteMsg.Type > config.GET && remoteMsg.Type <= config.DELETE {
+		logger.PrintInfo("Received Delete message about:", remoteMsg.FileName, "from", remoteMsg.SenderIP)
 		deleteMessageHandler(remoteMsg)
 	}
 	// deal with other message
@@ -75,6 +77,7 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	// deal with restore
 	if remoteMsg.Type == pbm.MsgType_RESTORE {
+		logger.PrintInfo("Received Restore message from", remoteMsg.SenderIP)
 		restoreMessageHandler(remoteMsg)
 	}
 }

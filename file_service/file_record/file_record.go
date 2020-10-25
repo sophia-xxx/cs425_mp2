@@ -90,9 +90,11 @@ func DeleteFileRecord(sdfsFileName string, nodeIP string) {
 func FindNewNode(sdfsFileName string, sender string) []string {
 	// if key not exist in map, it will get nil
 	storeList := FileNodeList[sdfsFileName]
-	logger.PrintInfo(util.ListToString(storeList) + "   has stored file  " + sdfsFileName)
+	if len(storeList) > 0 {
+		logger.PrintInfo(util.ListToString(storeList), "has stored file", sdfsFileName)
+	}
 	nodeNum := config.REPLICA - len(storeList)
-	memberIdList := member_service.GetOtherAliveMemberIPList()
+	memberIdList := member_service.GetAliveMemberIPList()
 
 	ipList := make([]string, 0)
 	validIdList := memberIdList
@@ -104,11 +106,9 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 
 		if strings.Compare(id, sender) == 0 {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
-			logger.PrintInfo("Length of the modified validlist" + strconv.Itoa(len(validIdList)))
+			logger.PrintInfo("\tLength of the modified validlist", strconv.Itoa(len(validIdList)))
 		}
-		// if len(storeList) == 0 {
-		// 	break
-		// }
+
 		for i, n := range storeList {
 			if id == n {
 				validIdList = append(validIdList[:i], validIdList[i+1:]...)
@@ -137,7 +137,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 		count++
 	}
 
-	logger.PrintInfo("Target nodes are  " + util.ListToString(ipList))
+	logger.PrintInfo("\tTarget nodes are  " + util.ListToString(ipList))
 	return ipList
 }
 

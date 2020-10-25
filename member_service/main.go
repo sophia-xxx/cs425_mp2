@@ -137,13 +137,13 @@ func initMembershipList(isGossip bool) {
 // interface:
 
 
-func GetOtherAliveMemberIPList() []string {
+func GetAliveMemberIPList() []string {
 	ipList := make([]string, 0)
 	for machineID, member := range localMessage.MemberList {
 		if !failureList[machineID] && !member.IsLeaving {
-			if machineID == selfID {
-				continue
-			}
+			//if machineID == selfID {
+			//	continue
+			//}
 			ip := strings.Split(machineID, ":")[0]
 			ipList = append(ipList, ip)
 		}

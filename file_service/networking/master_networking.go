@@ -30,7 +30,7 @@ func PutReplyMessage(remoteMsg *protocl_buffer.TCPMessage) {
 	// check if key exist in map
 	writeList := make([]string, 0)
 	if file_record.FileNodeList[remoteMsg.FileName] == nil {
-		logger.PrintInfo("Find new node")
+		logger.PrintInfo("\tFinding nodes to store the file.")
 		writeList = file_record.FindNewNode(remoteMsg.FileName, remoteMsg.SenderIP)
 	} else {
 		writeList = file_record.FileNodeList[remoteMsg.FileName]

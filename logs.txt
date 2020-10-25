@@ -2,7 +2,7 @@ INFO: 2020/10/24 10:16:21 main.go:27: Starting the application...
 INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [try to start]
 INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Starting detector
 Is introducer: true 
-introducerIP:  
+introducerIp:  
 Is gossip: false]
 INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Adding machine 198.18.0.1:2020-10-24T02:16:21.133182Z to membership list]
 INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Starting server with id 198.18.0.1:2020-10-24T02:16:21.133182Z on port 6789]

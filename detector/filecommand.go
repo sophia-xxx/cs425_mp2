@@ -28,7 +28,7 @@ func putFileCommand(localFileName string, sdfsFileName string) {
 		logger.PrintInfo("Encode error!")
 	}
 	logger.PrintInfo("Send message to master!")
-	SendMessage(introducerIP, message)
+	SendMessage(introducerIp, message)
 
 }
 
@@ -40,7 +40,7 @@ func getFileCommand(sdfsFileName string, localFileName string) {
 		FileName: sdfsFileName,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
-	SendMessage(introducerIP, message)
+	SendMessage(introducerIp, message)
 
 }
 
@@ -52,7 +52,7 @@ func deleteFileCommand(sdfsFileName string) {
 		FileName: sdfsFileName,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
-	SendMessage(introducerIP, message)
+	SendMessage(introducerIp, message)
 }
 
 // deal with "list" command
@@ -63,7 +63,7 @@ func listFileCommand(sdfsFileName string) {
 		FileName: sdfsFileName,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
-	SendMessage(introducerIP, message)
+	SendMessage(introducerIp, message)
 }
 
 // deal with "store" command

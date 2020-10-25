@@ -69,7 +69,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		logger.PrintInfo("Is put = true")
 		fileInfo, _ := os.Stat(filePath)
 		logger.PrintInfo(GetLocalIPAddr().String() + "*")
-		logger.PrintInfo(introducerIP + "*")
+		logger.PrintInfo(introducerIp + "*")
 		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
 			logger.PrintInfo("Master write file")
 			UpdateFileNode(filename, []string{introducerIp})

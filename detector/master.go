@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	introducerIp string
+	//introducerIp string
 	//localIp string
 	fileList     []string
 	fileNodeList map[string][]string

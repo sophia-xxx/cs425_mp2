@@ -73,7 +73,7 @@ func HandleListCommand(sdfsFileName string) {
 
 // deal with "store" command
 func HandleStoreCommand() {
-	logger.PrintToConsole("\nLocal file directory:")
+	logger.PrintToConsole("Local file directory:")
 	localFile, _ := ioutil.ReadDir(config.LOCAL_DIR)
 	// change file to string
 	for _, file := range localFile {

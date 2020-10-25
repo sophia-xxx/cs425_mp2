@@ -4,7 +4,7 @@
 // 	protoc        v3.13.0
 // source: tcpmessage.proto
 
-package MessagePackage
+package protocl_buffer
 
 import (
 	proto "github.com/golang/protobuf/proto"

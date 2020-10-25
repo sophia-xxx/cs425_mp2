@@ -23,22 +23,28 @@ func init() {
 		log.Fatal(err)
 	}
 
-	InfoLogger = log.New(file, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	WarningLogger = log.New(file, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrorLogger = log.New(file, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
+	InfoLogger = log.New(file, "[INFO]", log.Ldate|log.Ltime|log.Lshortfile)
+	WarningLogger = log.New(file, "[WARNING]", log.Ldate|log.Ltime|log.Lshortfile)
+	ErrorLogger = log.New(file, "[ERROR]", log.Ldate|log.Ltime|log.Lshortfile)
 }
 
 func PrintInfo(args ...interface{}) {
-	InfoLogger.Println("INFO: ", args)
+	InfoLogger.Println(args)
+
+	fmt.Print("[INFO] ")
 	fmt.Println(args...)
 }
 
 func PrintWarning(args ...interface{}) {
-	WarningLogger.Println("WARNING: ", args)
+	WarningLogger.Println(args)
+
+	fmt.Print("[WARNING] ")
 	fmt.Println(args...)
 }
 
 func PrintError(args ...interface{}) {
-	ErrorLogger.Println("ERROR: ", args)
+	ErrorLogger.Println(args)
+
+	fmt.Print("[ERROR] ")
 	fmt.Println(args...)
 }

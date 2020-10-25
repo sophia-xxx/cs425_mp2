@@ -1,7 +1,7 @@
 syntax = "proto3";
 package tutorial;
 
-option go_package = "./MessagePackage";
+option go_package = "./protocl_buffer";
 
 message TCPMessage {
   MsgType Type = 1;

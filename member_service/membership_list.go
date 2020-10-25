@@ -1,21 +1,22 @@
-package membership
+package member_service
 
 import (
 	"sort"
 	"strconv"
 	"strings"
 
-	pb "cs425_mp2/ProtocolBuffers/ProtoPackage"
-	"cs425_mp2/config"
-	"cs425_mp2/logger"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/jinzhu/copier"
+
+	"cs425_mp2/config"
+	"cs425_mp2/member_service/protocol_buffer"
+	"cs425_mp2/util/logger"
 )
 
 var Failures int = 0
 
 // MergeMembershipLists : merge remote membership list into local membership list
-func MergeMembershipLists(localMessage, remoteMessage *pb.MembershipServiceMessage, failureList map[string]bool) *pb.MembershipServiceMessage {
+func mergeMembershipLists(localMessage, remoteMessage *protocol_buffer.MembershipServiceMessage, failureList map[string]bool) *protocol_buffer.MembershipServiceMessage {
 	if remoteMessage.StrategyCounter > localMessage.StrategyCounter {
 		localMessage.Strategy = remoteMessage.Strategy
 		localMessage.StrategyCounter = remoteMessage.StrategyCounter
@@ -28,7 +29,7 @@ func MergeMembershipLists(localMessage, remoteMessage *pb.MembershipServiceMessa
 				break
 			}
 
-			memberCpy := pb.Member{}
+			memberCpy := protocol_buffer.Member{}
 			copier.Copy(&memberCpy, &member)
 			AddMemberToMembershipList(localMessage, machineID, &memberCpy)
 			continue
@@ -48,7 +49,7 @@ func MergeMembershipLists(localMessage, remoteMessage *pb.MembershipServiceMessa
 }
 
 // GetOtherMembershipListIPs : Expecting MachineID to be in format IP:timestamp
-func GetOtherMembershipListIPs(message *pb.MembershipServiceMessage, selfID string) []string {
+func GetOtherMembershipListIPs(message *protocol_buffer.MembershipServiceMessage, selfID string) []string {
 	ips := make([]string, 0, len(message.MemberList))
 
 	for machineID := range message.MemberList {
@@ -62,7 +63,7 @@ func GetOtherMembershipListIPs(message *pb.MembershipServiceMessage, selfID stri
 }
 
 // CheckAndRemoveMembershipListFailures : Upon sending of membership list mark failures and remove failed machines
-func CheckAndRemoveMembershipListFailures(message *pb.MembershipServiceMessage, failureList *map[string]bool) {
+func CheckAndRemoveMembershipListFailures(message *protocol_buffer.MembershipServiceMessage, failureList *map[string]bool) {
 	for machineID, member := range message.MemberList {
 		timeElapsedSinceLastSeen := float64(ptypes.TimestampNow().GetSeconds() - member.LastSeen.GetSeconds())
 
@@ -78,18 +79,18 @@ func CheckAndRemoveMembershipListFailures(message *pb.MembershipServiceMessage, 
 }
 
 // AddMemberToMembershipList : add new member to membership list
-func AddMemberToMembershipList(message *pb.MembershipServiceMessage, machineID string, member *pb.Member) {
+func AddMemberToMembershipList(message *protocol_buffer.MembershipServiceMessage, machineID string, member *protocol_buffer.Member) {
 	message.MemberList[machineID] = member
 	logger.PrintInfo("Adding machine", machineID, "to membership list")
 }
 
 // RemoveMemberFromMembershipList : remove member from membership list
-func RemoveMemberFromMembershipList(message *pb.MembershipServiceMessage, machineID string) {
+func RemoveMemberFromMembershipList(message *protocol_buffer.MembershipServiceMessage, machineID string) {
 	delete(message.MemberList, machineID)
 	logger.PrintInfo("Removing machine", machineID, "from membership list")
 }
 
-func GetMembershipListString(message *pb.MembershipServiceMessage, failureList map[string]bool) string {
+func GetMembershipListString(message *protocol_buffer.MembershipServiceMessage, failureList map[string]bool) string {
 	var sb strings.Builder
 
 	machineIDs := make([]string, 0)

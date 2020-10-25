@@ -4,7 +4,7 @@
 // 	protoc        v3.13.0
 // source: memberlist.proto
 
-package ProtoPackage
+package protocol_buffer
 
 import (
 	proto "github.com/golang/protobuf/proto"

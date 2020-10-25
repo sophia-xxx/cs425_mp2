@@ -1,21 +1,26 @@
-package detector
+package networking
 
 import (
 	"cs425_mp2/config"
-	"cs425_mp2/logger"
+	"cs425_mp2/member_service"
 	"io"
-	//"net"
-	"github.com/gogf/greuse"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/gogf/greuse"
+
+	"cs425_mp2/util"
+	"cs425_mp2/util/logger"
+
+	"cs425_mp2/file_service/file_record"
 )
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 	// open connection socket
-	addressString := GetLocalIPAddr().String() + ":" + config.FILEPORT
+	addressString := util.GetLocalIPAddr().String() + ":" + config.FILEPORT
 	/*localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot resolve connection file address!")
@@ -70,13 +75,13 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		// finish reading file and check file size, then send ACK
 		fileInfo, _ := os.Stat(filePath)
 
-		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
+		if strings.Compare(util.GetLocalIPAddr().String(), member_service.GetMasterIP()) == 0 {
 			//logger.PrintInfo("Master write file")
-			UpdateFileNode(filename, []string{introducerIp})
+			file_record.UpdateFileNode(filename, []string{member_service.GetMasterIP()})
 			return
 		}
 		if int32(fileInfo.Size()) == fileSize {
-			SendWriteACK(introducerIp, filename)
+			SendWriteACK(member_service.GetMasterIP(), filename)
 		} else {
 			logger.PrintInfo("File is broken")
 			os.Remove(filePath)
@@ -88,10 +93,10 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 }
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
-func sendFile(localFilePath string, dest string, filename string) {
+func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FILEPORT
-	localAddr := GetLocalIPAddr().String() + ":" + config.PORT
-	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FILEPORT)
+	localAddr := util.GetLocalIPAddr().String() + ":" + config.PORT
+	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+global.FILEPORT)
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
 		logger.PrintError(err)

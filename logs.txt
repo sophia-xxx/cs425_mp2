@@ -1,57 +1,77 @@
-INFO: 2020/10/24 10:16:21 main.go:27: Starting the application...
-INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [try to start]
-INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Starting detector
-Is introducer: true 
-introducerIp:  
-Is gossip: false]
-INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Adding machine 198.18.0.1:2020-10-24T02:16:21.133182Z to membership list]
-INFO: 2020/10/24 10:16:21 logger.go:32: INFO:  [Starting server with id 198.18.0.1:2020-10-24T02:16:21.133182Z on port 6789]
-INFO: 2020/10/24 10:16:21 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 2, LastSeen: 2020-10-24T02:16:21.133487Z }
+[INFO]2020/10/25 23:05:18 main.go:35: Starting the application...
+[INFO]2020/10/25 23:05:18 logger.go:32: [Starting detector
+ Is introducer: true introducerIP:  Is gossip: false]
+[INFO]2020/10/25 23:05:18 logger.go:32: [Adding machine 198.18.0.1:2020-10-25T15:05:18.551721Z to membership list]
+[INFO]2020/10/25 23:05:18 logger.go:32: [Member service is now running with id 198.18.0.1:2020-10-25T15:05:18.551721Z on port 6789]
+[INFO]2020/10/25 23:05:18 logger.go:32: [Starting file_service on 198.18.0.1:5005]
+[INFO]2020/10/25 23:05:18 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 2, LastSeen: 2020-10-25T15:05:18.552076Z }
 
  
 
-INFO: 2020/10/24 10:16:21 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 3, LastSeen: 2020-10-24T02:16:21.637535Z }
+[INFO]2020/10/25 23:05:18 logger.go:32: [Starting file service on port 6789]
+[INFO]2020/10/25 23:05:19 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 3, LastSeen: 2020-10-25T15:05:19.054479Z }
 
  
 
-INFO: 2020/10/24 10:16:22 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 4, LastSeen: 2020-10-24T02:16:22.140775Z }
+[INFO]2020/10/25 23:05:19 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 4, LastSeen: 2020-10-25T15:05:19.555827Z }
 
  
 
-INFO: 2020/10/24 10:16:22 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 5, LastSeen: 2020-10-24T02:16:22.645913Z }
+[INFO]2020/10/25 23:05:20 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 5, LastSeen: 2020-10-25T15:05:20.056168Z }
 
  
 
-INFO: 2020/10/24 10:16:23 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 6, LastSeen: 2020-10-24T02:16:23.149131Z }
+[INFO]2020/10/25 23:05:20 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 6, LastSeen: 2020-10-25T15:05:20.556802Z }
 
  
 
-INFO: 2020/10/24 10:16:23 main.go:313: Commandline input: list
-ERROR: 2020/10/24 10:16:23 logger.go:42: ERROR:  [Invalid argument to 'list']
-INFO: 2020/10/24 10:16:23 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 7, LastSeen: 2020-10-24T02:16:23.65397Z }
+[INFO]2020/10/25 23:05:21 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 7, LastSeen: 2020-10-25T15:05:21.057259Z }
 
  
 
-INFO: 2020/10/24 10:16:24 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 8, LastSeen: 2020-10-24T02:16:24.159201Z }
+[INFO]2020/10/25 23:05:21 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 8, LastSeen: 2020-10-25T15:05:21.557947Z }
 
  
 
-INFO: 2020/10/24 10:16:24 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 9, LastSeen: 2020-10-24T02:16:24.660037Z }
+[INFO]2020/10/25 23:05:22 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 9, LastSeen: 2020-10-25T15:05:22.058942Z }
 
  
 
-INFO: 2020/10/24 10:16:25 main.go:208: Current memlist:
- 198.18.0.1:2020-10-24T02:16:21.133182Z - { HeartbeatCounter: 10, LastSeen: 2020-10-24T02:16:25.160277Z }
+[INFO]2020/10/25 23:05:22 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 10, LastSeen: 2020-10-25T15:05:22.559852Z }
 
  
 
-INFO: 2020/10/24 10:16:25 main.go:313: Commandline input: ls
-ERROR: 2020/10/24 10:16:25 message_socket.go:80: Cannot dial remote address!
+[INFO]2020/10/25 23:05:23 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 11, LastSeen: 2020-10-25T15:05:23.060442Z }
+
+ 
+
+[INFO]2020/10/25 23:05:23 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 12, LastSeen: 2020-10-25T15:05:23.561903Z }
+
+ 
+
+[INFO]2020/10/25 23:05:24 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 13, LastSeen: 2020-10-25T15:05:24.063164Z }
+
+ 
+
+[INFO]2020/10/25 23:05:24 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 14, LastSeen: 2020-10-25T15:05:24.563921Z }
+
+ 
+
+[INFO]2020/10/25 23:05:25 networking.go:248: Current memlist:
+ 198.18.0.1:2020-10-25T15:05:18.551721Z - { HeartbeatCounter: 15, LastSeen: 2020-10-25T15:05:25.064494Z }
+
+ 
+

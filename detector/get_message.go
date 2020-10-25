@@ -44,7 +44,7 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 		if targetList == nil {
 			logger.PrintInfo(remoteMsg.FileName + "  has no record!")
 		} else {
-			sendReadReq(targetList[1], remoteMsg.FileName)
+			sendReadReq(targetList[0], remoteMsg.FileName)
 		}
 
 	}

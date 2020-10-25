@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	//"github.com/gogf/greuse"
 )
 
 // socket to read filename and connection
@@ -65,6 +66,11 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	if isPut {
 		// finish reading file and check file size, then send ACK
 		fileInfo, _ := os.Stat(filePath)
+		if GetLocalIPAddr().String() == introducerIp {
+			logger.PrintInfo("Master write file")
+			UpdateFileNode(filename, []string{introducerIp})
+			return
+		}
 		if int32(fileInfo.Size()) == fileSize {
 			SendWriteACK(introducerIp, filename)
 		} else {

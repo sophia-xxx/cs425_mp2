@@ -60,7 +60,7 @@ func HandleCommand(command command_util.Command) {
 	}
 
 	switch cmd {
-	case "strat":
+	case command_util.CommandSwitch:
 		ChangeStrategy(param)
 	case command_util.CommandDisplay:
 		if param == "membership" {
@@ -95,8 +95,6 @@ func HandleCommand(command command_util.Command) {
 		}
 	case command_util.CommandLeave:
 		sendLeaveRequest()
-	default:
-		logger.PrintError("Invalid command_util")
 	}
 }
 
@@ -133,9 +131,7 @@ func initMembershipList(isGossip bool) {
 }
 
 
-
 // interface:
-
 
 func GetAliveMemberIPList() []string {
 	ipList := make([]string, 0)

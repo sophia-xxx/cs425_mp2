@@ -68,6 +68,8 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		// finish reading file and check file size, then send ACK
 		logger.PrintInfo("Is put = true")
 		fileInfo, _ := os.Stat(filePath)
+		logger.PrintInfo(GetLocalIPAddr().String() + "*")
+		logger.PrintInfo(introducerIP + "*")
 		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
 			logger.PrintInfo("Master write file")
 			UpdateFileNode(filename, []string{introducerIp})

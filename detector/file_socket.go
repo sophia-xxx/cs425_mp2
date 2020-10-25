@@ -51,7 +51,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	}
 
 	// read data from connection
-	buf := make([]byte, 4096)
+	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		n, err := conn.Read(buf)
 		logger.PrintInfo("This time we read:" + strconv.Itoa(n) + " bytes")

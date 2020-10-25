@@ -107,7 +107,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 	fs, err := os.Open(localFilePath)
 	defer fs.Close()
 	if err != nil {
-		logger.ErrorLogger.Println("File path error!")
+		logger.Println("File path error!")
 	}
 	buf := make([]byte, config.BUFFER_SIZE)
 	for {

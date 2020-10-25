@@ -66,6 +66,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	logger.PrintInfo("Finish receiving file!")
 	if isPut {
 		// finish reading file and check file size, then send ACK
+		logger.PrintInfo("Is put = true")
 		fileInfo, _ := os.Stat(filePath)
 		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
 			logger.PrintInfo("Master write file")

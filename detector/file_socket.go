@@ -7,6 +7,7 @@ import (
 	"net"
 	"os"
 	"strconv"
+	"strings"
 	//"github.com/gogf/greuse"
 )
 
@@ -66,7 +67,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	if isPut {
 		// finish reading file and check file size, then send ACK
 		fileInfo, _ := os.Stat(filePath)
-		if GetLocalIPAddr().String() == introducerIp {
+		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
 			logger.PrintInfo("Master write file")
 			UpdateFileNode(filename, []string{introducerIp})
 			return

@@ -4,27 +4,27 @@ import (
 	"cs425_mp2/config"
 	"cs425_mp2/logger"
 	"io"
-	"net"
+	//"net"
+	"github.com/gogf/greuse"
 	"os"
 	"strconv"
 	"strings"
-	//"github.com/gogf/greuse"
 )
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
 	// open connection socket
 	addressString := GetLocalIPAddr().String() + ":" + config.FILEPORT
-	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
+	/*localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot resolve connection file address!")
-	}
-	listener, err := net.ListenTCP("tcp4", localAddr)
+	}*/
+	listener, err := greuse.Listen("tcp4", addressString)
 	if err != nil {
 		logger.PrintInfo("Cannot listen file port!")
 	}
 
-	conn, err := listener.AcceptTCP()
+	conn, err := listener.Accept()
 	if err != nil {
 		logger.PrintInfo("Cannot open file connection!")
 	}
@@ -89,8 +89,9 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func sendFile(localFilePath string, dest string, filename string) {
-	remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FILEPORT)
-	conn, err := net.DialTCP("tcp4", nil, remoteAddress)
+	remoteAddress := dest + ":" + config.FILEPORT
+	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+config.FILEPORT)
+	conn, err := greuse.Dial("tcp4", "", remoteAddress)
 	if err != nil {
 		logger.ErrorLogger.Println("Cannot dial remote connection socket!")
 	}

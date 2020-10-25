@@ -17,10 +17,13 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
 		logger.PrintInfo("Got  " + pbm.MsgType_name[int32(remoteMsg.Type)] + "  from master with filename: " + remoteMsg.FileName)
 		targetList := remoteMsg.PayLoad
-		for _, target := range targetList {
-			sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
-			logger.PrintInfo("Send write request to target  " + target)
-		}
+		// for _, target := range targetList {
+		// 	sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
+		// 	logger.PrintInfo("Send write request to target  " + target)
+		// }
+		target := targetList[0] 
+		sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
+		logger.PrintInfo("Send write request to target  " + target)}
 	}
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {

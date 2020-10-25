@@ -16,6 +16,7 @@ import (
 	"cs425_mp2/logger"
 	"cs425_mp2/membership"
 	"cs425_mp2/networking"
+
 	"github.com/golang/protobuf/ptypes"
 )
 
@@ -24,7 +25,7 @@ var (
 	mux              sync.Mutex
 	failureList      map[string]bool
 	selfID           string
-	introducerIP     string
+	introducerIp     string
 	isSending        bool
 	isIntroducer     bool
 	isJoining        bool
@@ -124,7 +125,7 @@ func handleCommands(input string) {
 		if param1 == "" {
 			logger.PrintInfo("Please specify introducer IP address for joining")
 		} else if !isSending {
-			introducerIP = param1
+			introducerIp = param1
 			initMembershipList(true)
 			isJoining = true
 			isSending = true
@@ -210,7 +211,7 @@ func startHeartbeat() {
 
 		if isJoining {
 			message, _ := networking.EncodeMembershipServiceMessage(localMessage)
-			networking.Send(introducerIP, message)
+			networking.Send(introducerIp, message)
 		} else {
 			if localMessage.Strategy == config.STRAT_GOSSIP {
 				networking.HeartbeatGossip(localMessage, config.GOSSIP_FANOUT, selfID)
@@ -285,9 +286,9 @@ func GetFailNodeList() []string {
 }
 
 func Run(isIntro bool, isGossip bool, introIP string) {
-	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIP:", introIP, "\nIs gossip:", isGossip)
+	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIp:", introIP, "\nIs gossip:", isGossip)
 	isIntroducer = isIntro
-	introducerIP = introIP
+	introducerIp = introIP
 
 	isSending = true
 	isJoining = !isIntroducer

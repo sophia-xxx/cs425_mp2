@@ -96,10 +96,12 @@ func sendFile(localFilePath string, dest string, filename string) {
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {
-		logger.ErrorLogger.Println("Cannot read response")
+		// logger.ErrorLogger.Println("Cannot read response")
+		logger.PrintInfo("Cannot read response")
 	}
 	if string(responseBuf[:n]) != "ok" {
-		logger.ErrorLogger.Println("Cannot set up connection transfer connection")
+		// logger.ErrorLogger.Println("Cannot set up connection transfer connection")
+		logger.PrintInfo("Cannot set up connection transfer connection")
 		return
 	}
 

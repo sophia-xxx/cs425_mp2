@@ -177,24 +177,25 @@ func replicateFile(storeList []string, newList []string, filename string) {
 }
 
 // master return target node to write
-func PutReplyMessage(fileName string, sender string, fileSize int32) {
+func PutReplyMessage(remoteMsg *pbm.TCPMessage) {
 	// check if key exist in map
 	writeList := make([]string, 0)
-	if fileNodeList[fileName] == nil {
+	if fileNodeList[remoteMsg.FileName] == nil {
 		logger.PrintInfo("Find new node")
-		writeList = FindNewNode(fileName, sender)
+		writeList = FindNewNode(remoteMsg.FileName, remoteMsg.SenderIP)
 	} else {
-		writeList = fileNodeList[fileName]
+		writeList = fileNodeList[remoteMsg.FileName]
 	}
 	repMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_PUT_MASTER_REP,
-		SenderIP: GetLocalIPAddr().String(),
-		PayLoad:  writeList,
-		FileName: fileName,
-		FileSize: fileSize,
+		Type:      pbm.MsgType_PUT_MASTER_REP,
+		SenderIP:  GetLocalIPAddr().String(),
+		PayLoad:   writeList,
+		FileName:  remoteMsg.FileName,
+		FileSize:  remoteMsg.FileSize,
+		LocalPath: remoteMsg.LocalPath,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
-	SendMessage(sender, msgBytes)
+	SendMessage(remoteMsg.SenderIP, msgBytes)
 }
 
 func GetReplyMessage(filename string, sender string) {

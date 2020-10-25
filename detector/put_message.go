@@ -10,7 +10,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to write
 	if isIntroducer && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
 		logger.PrintInfo("Master receive put request")
-		PutReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileSize)
+		PutReplyMessage(remoteMsg)
 		logger.PrintInfo("Master reply")
 	}
 	// client send write file request to target nodes
@@ -22,12 +22,12 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 		// 	logger.PrintInfo("Send write request to target  " + target)
 		// }
 		target := targetList[0]
-		sendWriteReq(target, remoteMsg.FileName, remoteMsg.FileSize)
+		sendWriteReq(target, remoteMsg)
 		logger.PrintInfo("Send write request to target  " + target)
 	}
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
-		sendWriteReply(remoteMsg.SenderIP, remoteMsg.FileName)
+		sendWriteReply(remoteMsg)
 		logger.PrintInfo("Got put request from client  ")
 		ListenFile(config.SDFS_DIR+remoteMsg.FileName, remoteMsg.FileSize, true)
 		logger.PrintInfo("Finish receiving file  ")
@@ -35,7 +35,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// client start sending file
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P_ACK {
 		logger.PrintInfo("Start sending file whose filename is: " + remoteMsg.FileName)
-		sendFile(config.LOCAL_DIR+remoteMsg.FileName, remoteMsg.SenderIP, remoteMsg.FileName)
+		sendFile(remoteMsg.LocalPath, remoteMsg.SenderIP, remoteMsg.FileName)
 		logger.PrintInfo("Finish sending file  " + remoteMsg.FileName)
 
 	}
@@ -50,26 +50,29 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 }
 
 // client send write request to target nodes
-func sendWriteReq(targetIp string, sdfsFileName string, fileSize int32) {
+func sendWriteReq(targetIp string, remoteMsg *pbm.TCPMessage) {
 	fileMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_PUT_P2P,
-		FileName: sdfsFileName,
-		SenderIP: GetLocalIPAddr().String(),
-		FileSize: fileSize,
+		Type:      pbm.MsgType_PUT_P2P,
+		FileName:  remoteMsg.FileName,
+		SenderIP:  GetLocalIPAddr().String(),
+		FileSize:  remoteMsg.FileSize,
+		LocalPath: remoteMsg.LocalPath,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
 	logger.PrintInfo("Send putp2p mes with filename:" + fileMessage.FileName)
 	SendMessage(targetIp, message)
 }
 
-func sendWriteReply(targetIp string, sdfsFileName string) {
+func sendWriteReply(remoteMsg *pbm.TCPMessage) {
 	fileMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_PUT_P2P_ACK,
-		FileName: sdfsFileName,
-		SenderIP: GetLocalIPAddr().String(),
+		Type:      pbm.MsgType_PUT_P2P_ACK,
+		FileName:  remoteMsg.FileName,
+		SenderIP:  GetLocalIPAddr().String(),
+		FileSize:  remoteMsg.FileSize,
+		LocalPath: remoteMsg.LocalPath,
 	}
 	message, _ := EncodeTCPMessage(fileMessage)
-	SendMessage(targetIp, message)
+	SendMessage(remoteMsg.SenderIP, message)
 }
 
 // when server finish put file, send ACK to master

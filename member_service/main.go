@@ -23,26 +23,26 @@ var (
 
 // vars that are accessible for other packages
 var (
-	failureList  map[string]bool
-	selfID       string
-	masterIP 	string
-	isMaster 	bool
+	failureList  	map[string]bool
+	selfID      	string
+	masterIP 		string
+	isMaster 		bool
 )
 
-func RunService(isMaster bool, isGossip bool, MasterIP string) {
+func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
+	isMaster = isMasterBool
+	masterIP = MasterIPString
+
 	logger.PrintInfo(
 		"Starting detector\n",
 		"\tIs Master:", isMaster,
-		"\tintroducerIP:", MasterIP,
-		"\tIs gossip:", isGossip)
-
-	isMaster = isMaster
-	MasterIP = MasterIP
+		"\tintroducerIP:", masterIP,
+		"\tIs gossip:", isGossipBool)
 
 	isSending = true
 	isJoining = !isMaster
 
-	initMembershipList(isGossip)
+	initMembershipList(isGossipBool)
 	failureList = make(map[string]bool)
 
 	logger.PrintInfo("Member service is now running with id", selfID, "on port", config.MemberServicePort)

@@ -254,7 +254,7 @@ func startHeartbeat() {
 		if isJoining {
 			message, _ := EncodeMembershipServiceMessage(localMessage)
 			Send(masterIP, message)
-			logger.PrintDebug("Member service sent Message:", message, "to", masterIP)
+			logger.PrintDebug("Member service sent Message:", localMessage, "to", masterIP)
 		} else {
 			if localMessage.Strategy == config.STRAT_GOSSIP {
 				HeartbeatGossip(localMessage, config.GOSSIP_FANOUT, selfID)

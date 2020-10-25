@@ -1,86 +1,87 @@
-[INFO]2020/10/26 00:00:21 main.go:35: Starting the application...
-[INFO]2020/10/26 00:00:21 logger.go:32: [Starting detector
- Is introducer: true introducerIP:  Is gossip: false]
-[INFO]2020/10/26 00:00:21 logger.go:32: [Starting file_service on 198.18.0.1:6236]
-[INFO]2020/10/26 00:00:21 logger.go:32: [Adding machine 198.18.0.1:2020-10-25T16:00:21.480802Z to membership list]
-[INFO]2020/10/26 00:00:21 logger.go:32: [Member service is now running with id 198.18.0.1:2020-10-25T16:00:21.480802Z on port 6234]
-[INFO]2020/10/26 00:00:21 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 2, LastSeen: 2020-10-25T16:00:21.481173Z }
+[INFO]2020/10/26 00:40:52 main.go:37: Starting the application...
+[INFO]2020/10/26 00:40:52 logger.go:37: [Starting detector
+ 	Is Master: true 	introducerIP:  	Is gossip: false]
+[INFO]2020/10/26 00:40:52 logger.go:37: [Adding machine 198.18.0.1:2020-10-25T16:40:52.463986Z to membership list]
+[INFO]2020/10/26 00:40:52 logger.go:37: [Member service is now running with id 198.18.0.1:2020-10-25T16:40:52.463986Z on port 6234]
+[INFO]2020/10/26 00:40:52 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 2, LastSeen: 2020-10-25T16:40:52.464369Z }
 
  
 
-[INFO]2020/10/26 00:00:21 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 3, LastSeen: 2020-10-25T16:00:21.981897Z }
+[INFO]2020/10/26 00:40:52 logger.go:37: [Starting file_service on 198.18.0.1:6236]
+[INFO]2020/10/26 00:40:52 logger.go:37: [Member service beginning listen udp on :6234]
+[INFO]2020/10/26 00:40:52 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 3, LastSeen: 2020-10-25T16:40:52.964786Z }
 
  
 
-[INFO]2020/10/26 00:00:22 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 4, LastSeen: 2020-10-25T16:00:22.482345Z }
+[INFO]2020/10/26 00:40:53 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 4, LastSeen: 2020-10-25T16:40:53.466226Z }
 
  
 
-[INFO]2020/10/26 00:00:22 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 5, LastSeen: 2020-10-25T16:00:22.982492Z }
+[INFO]2020/10/26 00:40:53 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 5, LastSeen: 2020-10-25T16:40:53.966619Z }
 
  
 
-[INFO]2020/10/26 00:00:23 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 6, LastSeen: 2020-10-25T16:00:23.484159Z }
+[INFO]2020/10/26 00:40:54 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 6, LastSeen: 2020-10-25T16:40:54.466888Z }
 
  
 
-[INFO]2020/10/26 00:00:23 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 7, LastSeen: 2020-10-25T16:00:23.984513Z }
+[INFO]2020/10/26 00:40:54 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 7, LastSeen: 2020-10-25T16:40:54.967239Z }
 
  
 
-[INFO]2020/10/26 00:00:24 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 8, LastSeen: 2020-10-25T16:00:24.485447Z }
+[INFO]2020/10/26 00:40:55 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 8, LastSeen: 2020-10-25T16:40:55.467574Z }
 
  
 
-[INFO]2020/10/26 00:00:24 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 9, LastSeen: 2020-10-25T16:00:24.986148Z }
+[INFO]2020/10/26 00:40:55 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 9, LastSeen: 2020-10-25T16:40:55.969098Z }
 
  
 
-[INFO]2020/10/26 00:00:25 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 10, LastSeen: 2020-10-25T16:00:25.486685Z }
+[INFO]2020/10/26 00:40:56 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 10, LastSeen: 2020-10-25T16:40:56.469291Z }
 
  
 
-[INFO]2020/10/26 00:00:25 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 11, LastSeen: 2020-10-25T16:00:25.989315Z }
+[INFO]2020/10/26 00:40:56 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 11, LastSeen: 2020-10-25T16:40:56.971697Z }
 
  
 
-[INFO]2020/10/26 00:00:26 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 12, LastSeen: 2020-10-25T16:00:26.491545Z }
+[INFO]2020/10/26 00:40:57 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 12, LastSeen: 2020-10-25T16:40:57.472326Z }
 
  
 
-[INFO]2020/10/26 00:00:26 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 13, LastSeen: 2020-10-25T16:00:26.991996Z }
+[INFO]2020/10/26 00:40:57 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 13, LastSeen: 2020-10-25T16:40:57.972624Z }
 
  
 
-[INFO]2020/10/26 00:00:27 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 14, LastSeen: 2020-10-25T16:00:27.492237Z }
+[INFO]2020/10/26 00:40:58 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 14, LastSeen: 2020-10-25T16:40:58.473644Z }
 
  
 
-[INFO]2020/10/26 00:00:27 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 15, LastSeen: 2020-10-25T16:00:27.993635Z }
+[INFO]2020/10/26 00:40:58 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 15, LastSeen: 2020-10-25T16:40:58.974494Z }
 
  
 
-[INFO]2020/10/26 00:00:28 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 16, LastSeen: 2020-10-25T16:00:28.49432Z }
+[INFO]2020/10/26 00:40:59 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 16, LastSeen: 2020-10-25T16:40:59.477162Z }
 
  
 
-[INFO]2020/10/26 00:00:28 networking.go:248: Current memlist:
- 198.18.0.1:2020-10-25T16:00:21.480802Z - { HeartbeatCounter: 17, LastSeen: 2020-10-25T16:00:28.994934Z }
+[INFO]2020/10/26 00:40:59 networking.go:252: Current memlist:
+ 198.18.0.1:2020-10-25T16:40:52.463986Z - { HeartbeatCounter: 17, LastSeen: 2020-10-25T16:40:59.978189Z }
 
  
 

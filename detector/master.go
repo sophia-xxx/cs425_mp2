@@ -8,11 +8,6 @@ import (
 	"strings"
 )
 
-var (
-	//fileList     []string
-	fileNodeList map[string][]string
-)
-
 // add or update record in file-node map
 func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 	// update existed record

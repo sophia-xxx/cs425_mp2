@@ -30,6 +30,7 @@ var (
 	isIntroducer     bool
 	isJoining        bool
 	get_ack_received bool
+	fileNodeList     map[string][]string
 )
 
 func GetLocalIPAddr() net.IP {

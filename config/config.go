@@ -7,7 +7,7 @@ import (
 
 var DebugMode = false
 
-const (
+var (
 	MemberServicePort 	= "8234"
 	FileTransferPort 	= "8235"
 	FileServicePort 	= "8236"

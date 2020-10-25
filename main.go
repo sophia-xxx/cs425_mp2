@@ -24,10 +24,16 @@ func main() {
 	isMaster := flag.Bool("master", false, "flag for whether this machine is the master")
 	isGossip := flag.Bool("gossip", false, "flag for whether this machine uses gossip heartbeating for dissemination")
 	masterIP := flag.String("masterIp", "", "the ip of master to connect to")
+	port := flag.Int("port", 0, "the port for the server")
 	debugMode := flag.Bool("debug", false, "debug mode")
 	flag.Parse()
 
 	config.DebugMode = *debugMode
+	if *port != 0 {
+		config.MemberServicePort 	= string(*port)
+		config.FileServicePort 		= string(*port + 1)
+		config.FileTransferPort		= string(*port + 2)
+	}
 	if (!*isMaster && *masterIP == "") || (*isMaster && *masterIP != "") {
 		logger.PrintError("Machine must either be introducer or have IP address of the introducer to connect to, but not both.\nUse the following flags: -gossip -intro -introIp=<ip>")
 		os.Exit(1)

@@ -102,6 +102,9 @@ func CheckReplicate() {
 	for file, nodeList := range file_record.FileNodeList {
 		if len(nodeList) < config.REPLICA {
 			storeList := file_record.FileNodeList[file]
+			if len(storeList) == 0 {
+				return
+			}
 			ipList := file_record.FindNewNode(file, member_service.GetMasterIP())
 			ReplicateFile(storeList, ipList, file)
 		}

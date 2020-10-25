@@ -34,7 +34,7 @@ func init() {
 }
 
 func PrintToConsole(args ...interface{}) {
-	fmt.Println(args)
+	fmt.Println(args...)
 }
 
 func PrintInfo(args ...interface{}) {

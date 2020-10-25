@@ -57,9 +57,9 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		n, err := conn.Read(buf)
-		logger.PrintInfo("This time we read:" + strconv.Itoa(n) + " bytes")
+		logger.PrintDebug("This time we read:" + strconv.Itoa(n) + " bytes")
 		if err == io.EOF {
-			logger.PrintError("Complete connection reading!")
+			logger.PrintInfo("Complete connection reading!")
 			break
 		}
 		file.Write(buf[:n])
@@ -89,8 +89,6 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
-	//localAddr := ":" + config.FileServicePort
-	//localAddr := ":" + config.MemberServicePort
 	localAddr := ":0"
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
@@ -120,15 +118,15 @@ func SendFile(localFilePath string, dest string, filename string) {
 
 	defer fs.Close()
 	if err != nil {
-		logger.PrintInfo("File path error!    " + localFilePath)
+		logger.PrintWarning("File path error!    " + localFilePath)
 	}
 	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		// open connection
 		n, err := fs.Read(buf)
-		logger.PrintInfo("This time we write " + strconv.Itoa(n) + " bytes into buffer")
+		logger.PrintDebug("This time we write " + strconv.Itoa(n) + " bytes into buffer")
 		if err == io.EOF || n == 0 {
-			logger.InfoLogger.Println("Complete connection reading!")
+			logger.PrintInfo("Complete connection reading!")
 			break
 		}
 

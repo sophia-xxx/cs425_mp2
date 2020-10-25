@@ -106,7 +106,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 
 		if strings.Compare(id, sender) == 0 {
 			validIdList = append(validIdList[:index], validIdList[index+1:]...)
-			logger.PrintInfo("\tLength of the modified validlist", strconv.Itoa(len(validIdList)))
+			logger.PrintDebug("Length of the modified validlist", strconv.Itoa(len(validIdList)))
 		}
 
 		for i, n := range storeList {
@@ -132,12 +132,12 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 		}
 		if valid {
 			ipList = append(ipList, ip)
-			logger.PrintInfo("New target has been chosen  " + ip)
+			logger.PrintDebug("New target has been chosen", ip)
 		}
 		count++
 	}
 
-	logger.PrintInfo("\tTarget nodes are  " + util.ListToString(ipList))
+	logger.PrintInfo("Chosen hosts to store the file are", util.ListToString(ipList))
 	return ipList
 }
 

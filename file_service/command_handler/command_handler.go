@@ -77,7 +77,7 @@ func HandleStoreCommand() {
 	localFile, _ := ioutil.ReadDir(config.LOCAL_DIR)
 	// change file to string
 	for _, file := range localFile {
-		logger.PrintToConsole("\t", file.Name(), "\t:\t", strconv.FormatInt(file.Size(), 10), "bytes")
+		logger.PrintToConsole("\t", file.Name(), ":", strconv.FormatInt(file.Size(), 10), "bytes")
 	}
 	logger.PrintToConsole("\nSDFS file directory:")
 	files, _ := ioutil.ReadDir(config.SDFS_DIR)

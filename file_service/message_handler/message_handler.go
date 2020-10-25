@@ -3,9 +3,9 @@ package message_handler
 import (
 	"cs425_mp2/config"
 	"cs425_mp2/member_service"
+	"cs425_mp2/util"
 	"net"
 
-	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
 
 	"cs425_mp2/file_service/file_manager"
@@ -50,7 +50,7 @@ func handleConnection(conn *net.TCPConn) {
 		logger.PrintInfo("Cannot decode message!")
 		return
 	}
-	//logger.PrintInfo("Received message with type:" + pbm.MsgType_name[int32(remoteMsg.Type)])
+
 	// deal with all PUT relevant message
 	if remoteMsg.Type <= config.PUT {
 		//logger.PrintInfo("Received message, mes filename is:" + remoteMsg.FileName)
@@ -70,13 +70,7 @@ func handleConnection(conn *net.TCPConn) {
 			networking.ListReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 		}
 		if remoteMsg.Type == pbm.MsgType_LIST_REP {
-			nodeList := remoteMsg.PayLoad
-			if nodeList == nil {
-				logger.PrintInfo("No such file!")
-			} else {
-				fileString := util.ListToString(nodeList)
-				logger.PrintInfo(remoteMsg.FileName + " is stored in machine : " + fileString)
-			}
+			listMessageHandler(remoteMsg)
 		}
 	}
 	// deal with restore
@@ -84,18 +78,6 @@ func handleConnection(conn *net.TCPConn) {
 		restoreMessageHandler(remoteMsg)
 	}
 }
-
-/*//The get request initiator tell file source ip that it get the file size info successfully
-func sendReadReqAckAck(targetIp string, sdfsFileName string) {
-	fileMessage := &pbm.TCPMessage{
-		Type:     pbm.MsgType_GET_P2P_SIZE_ACK,
-		FileName: sdfsFileName,
-		SenderIP: file_service.GetLocalIPAddr().String(),
-	}
-
-	message, _ := EncodeTCPMessage(fileMessage)
-	SendMessage(targetIp, message)
-}*/
 
 func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to read
@@ -106,25 +88,6 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_GET_MASTER_REP {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad
-		/*for _, target := range targetList {
-			get_ack_received = false
-			sendReadReq(target, remoteMsg.FileName)
-			startTime := float64(ptypes.TimestampNow().GetSeconds())
-			for {
-				if get_ack_received {
-					break
-				}
-				curTime := float64(ptypes.TimestampNow().GetSeconds())
-				if curTime-startTime > global.ACK_TIMEOUT {
-					break
-				} else {
-					continue
-				}
-			}
-			if !get_ack_received {
-				continue
-			}
-		}*/
 		if targetList == nil {
 			logger.PrintInfo(remoteMsg.FileName + "  has no record!")
 		} else {
@@ -182,16 +145,22 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	}
 }
 
+func listMessageHandler(remoteMsg *pbm.TCPMessage) {
+	nodeList := remoteMsg.PayLoad
+	if nodeList == nil {
+		logger.PrintInfo("No such file!")
+	} else {
+		fileString := util.ListToString(nodeList)
+		logger.PrintInfo(remoteMsg.FileName + " is stored in machine : " + fileString)
+	}
+}
 
 func deleteMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if member_service.IsMaster() {
 		// master send DELETE message to target nodes
 		if remoteMsg.Type == pbm.MsgType_DELETE_MASTER {
 			networking.DeleteMessage(remoteMsg.FileName)
-		}
-		// master get delete ACK then update file-node list
-		if remoteMsg.Type == pbm.MsgType_DELETE_ACK {
-			file_record.DeleteFileRecord(remoteMsg.FileName, remoteMsg.SenderIP)
+			file_record.DeleteFileInAllNodes(remoteMsg.FileName)
 		}
 	} else {
 		if remoteMsg.Type == pbm.MsgType_DELETE {

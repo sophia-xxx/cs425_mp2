@@ -25,21 +25,14 @@ func NewMasterInit() {
 }
 
 // add or update record in file-node map
-func UpdateFileNode(sdfsFileName string, newNodeList []string) {
+func UpdateFileNode(sdfsFileName FileName, newNodeList []NodeIP) {
 	// update existed record
-	if _, exist := FileNodeList[sdfsFileName]; exist {
-		oldFileNodeList := FileNodeList[sdfsFileName]
-		for _, node := range oldFileNodeList {
-			for _, newNode := range newNodeList {
-				if strings.Compare(newNode, node) != 0 {
-					oldFileNodeList = append(oldFileNodeList, newNode)
-				}
-			}
-		}
-		FileNodeList[sdfsFileName] = oldFileNodeList
-	} else {
-		// add new record
+	oldNodeList, exist := FileNodeList[sdfsFileName]
+
+	if !exist {
 		FileNodeList[sdfsFileName] = newNodeList
+	} else {
+		FileNodeList[sdfsFileName] = util.Merge(oldNodeList, newNodeList)
 	}
 }
 
@@ -89,10 +82,7 @@ func FindAllFilesInNode(nodeIp NodeIP) []FileName {
 }
 
 // delete record in file-node map
-func DeleteFileRecord(sdfsFileName string, nodeIP string) {
-	/*if _, exist := fileNodeList[sdfsFileName]; exist {
-		delete(fileNodeList, sdfsFileName)
-	}*/
+func DeleteFileInNodeRecord(sdfsFileName string, nodeIP string) {
 	nodeList := FileNodeList[sdfsFileName]
 	if nodeList == nil {
 		delete(FileNodeList, sdfsFileName)
@@ -106,6 +96,11 @@ func DeleteFileRecord(sdfsFileName string, nodeIP string) {
 		}
 		FileNodeList[sdfsFileName] = nodeList
 	}
+}
+
+// delete a file completely
+func DeleteFileInAllNodes(sdfsFileName string) {
+	delete(FileNodeList, sdfsFileName)
 }
 
 // find nodes to write to or read from

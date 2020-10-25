@@ -13,8 +13,13 @@ const (
 	FileServicePort 	= "8236"
 )
 
+const (
+	SDFS_DIR = "./FileDir/sdfsFiles/"
+	LOCAL_DIR = "./FileDir/localFiles/"
+)
 
 const BUFFER_SIZE int = 32768
+const REPLICA = 4
 
 const (
 	T_TIMEOUT = 5
@@ -31,22 +36,14 @@ const PULSE_TIME = 500
 
 const GOSSIP_FANOUT = 5
 
-const REPLICA = 4
-
-const (
-	SDFS_DIR = "./sdfsFiles/"
-	LOCAL_DIR = "./localFiles/"
-)
 
 const PERM_MODE = 0777
 
-const ACK_TIMEOUT = 1
-
-const PUT = 4
-
-const GET = 9
-
-const DELETE = 12
+const (
+	PUT = 4
+	GET = 9
+	DELETE = 12
+)
 
 func Hash(s string) uint32 {
 	h := fnv.New32a()

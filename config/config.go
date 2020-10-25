@@ -15,8 +15,8 @@ const BUFFER_SIZE int = 32768
 
 const (
 	T_TIMEOUT = 5
-	T_CLEANUP = 5
-	WaitTimeForElection = 5
+	T_CLEANUP = 10
+	WaitTimeForElection = 8
 )
 
 const STRAT_GOSSIP = "gossip"
@@ -25,13 +25,14 @@ const STRAT_ALL = "all"
 
 const PULSE_TIME = 500
 
-const GOSSIP_FANOUT = 4
+const GOSSIP_FANOUT = 5
 
 const REPLICA = 4
 
-const SDFS_DIR = "./sdfsFiles/"
-
-const LOCAL_DIR = "./localFiles/"
+const (
+	SDFS_DIR = "./sdfsFiles/"
+	LOCAL_DIR = "./localFiles/"
+)
 
 const PERM_MODE = 0777
 

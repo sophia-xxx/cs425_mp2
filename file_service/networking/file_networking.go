@@ -4,7 +4,6 @@ import (
 	"cs425_mp2/config"
 	"cs425_mp2/member_service"
 	"io"
-	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -90,8 +89,8 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
-	//localAddr := util.GetLocalIPAddr().String() + ":" + config.MemberServicePort
-	conn, err := net.Dial("tcp4", remoteAddress)
+	localAddr := util.GetLocalIPAddr().String() + ":" + config.MemberServicePort
+	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
 		logger.PrintError(err)
 	}

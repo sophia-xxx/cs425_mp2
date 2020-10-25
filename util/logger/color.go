@@ -1,6 +1,6 @@
 package logger
 /*
-A package used to add color for log.
+This file used to add color for log.
 Credit: codes come from https://toutiao.io/posts/2889gp/preview.
 */
 import "fmt"

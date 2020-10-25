@@ -54,16 +54,19 @@ func RestoreFileNode(nodeIP NodeIP, filenames []FileName) {
 }
 
 // should run continuously
-func RemoveFailNode() {
+func RemoveFailedNodes() {
 	failNodes := member_service.GetFailNodeList()
-	for _, node := range failNodes {
-		if FindAllFilesInNode(node) == nil {
+	for _, failedNode := range failNodes {
+		filesInNode := FindAllFilesInNode(failedNode)
+		// if the failed does not store any file
+		if filesInNode == nil {
 			continue
 		}
-		for _, file := range FindAllFilesInNode(node) {
+		// otherwise, remove the node from its fileNode
+		for _, file := range filesInNode {
 			newNodeList := make([]string, 0)
 			for _, n := range FileNodeList[file] {
-				if strings.Compare(n, node) != 0 {
+				if strings.Compare(n, failedNode) != 0 {
 					newNodeList = append(newNodeList, n)
 				}
 			}

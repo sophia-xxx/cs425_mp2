@@ -23,7 +23,6 @@ func ReplicateFile(storeList []string, newList []string, filename string) {
 	msgBytes, _ := EncodeTCPMessage(repMessage)
 
 	SendMessageViaTCP(sourceNode, msgBytes)
-
 }
 
 // master return target node to write

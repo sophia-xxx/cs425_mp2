@@ -1,3 +1,6 @@
+/*
+This package contains logger-related utility.
+*/
 package logger
 
 import (

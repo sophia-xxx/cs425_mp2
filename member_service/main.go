@@ -1,3 +1,11 @@
+/*
+This package provides member service, including:
+	1. membership list
+	2. failure detector
+	3. simple master election
+
+Credit: This package is adapted from CS425 Fall Recommended MP1 Solutions.
+*/
 package member_service
 
 import (
@@ -5,12 +13,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/golang/protobuf/ptypes"
-
 	"cs425_mp2/command_util"
 	"cs425_mp2/config"
 	"cs425_mp2/member_service/protocol_buffer"
-	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
 )
 
@@ -32,6 +37,7 @@ var (
 // used for election
 var MasterChanged = make(chan int)
 
+// the entry point of the package, run the member service
 func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
 	isMaster = isMasterBool
 	masterIP = MasterIPString
@@ -55,6 +61,7 @@ func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
 		"\tMember Self ID:", selfID)
 }
 
+// input a user command and let the service handle it
 func HandleCommand(command command_util.Command) {
 	cmd := command.Method
 	var param string
@@ -104,39 +111,9 @@ func HandleCommand(command command_util.Command) {
 }
 
 
-
-func initMembershipList(isGossip bool) {
-	selfMember := protocol_buffer.Member{
-		HeartbeatCounter: 1,
-		LastSeen:         ptypes.TimestampNow(),
-	}
-
-	strat := config.STRAT_GOSSIP
-
-	if !isGossip {
-		strat = config.STRAT_ALL
-	}
-
-	localMessage = &protocol_buffer.MembershipServiceMessage{
-		MemberList:      make(map[string]*protocol_buffer.Member),
-		Strategy:        strat,
-		StrategyCounter: 1,
-	}
-
-	if isMaster {
-		localMessage.Type = protocol_buffer.MessageType_STANDARD
-	} else {
-		localMessage.Type = protocol_buffer.MessageType_JOINREQ
-	}
-
-	localIP := util.GetLocalIPAddr().String()
-	selfID = localIP + ":" + ptypes.TimestampString(selfMember.LastSeen)
-
-	AddMemberToMembershipList(localMessage, selfID, &selfMember)
-}
-
-
-// interface:
+/*
+	Following methods are exported for other packages so that they can access the membership list
+ */
 
 func GetAliveMemberIPList() []string {
 	ipList := make([]string, 0)

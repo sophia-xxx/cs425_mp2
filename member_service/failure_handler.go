@@ -1,5 +1,11 @@
 package member_service
 
+/*
+This file is used to handle a failure of node, especially, the failure of the master.
+Once the master is detected to be failed, the member service would wait and then begin an election.
+The election is implemented simply by choosing the node with biggest unique ID.
+ */
+
 import (
 	"cs425_mp2/config"
 	"cs425_mp2/util/logger"
@@ -19,9 +25,14 @@ func HandleMemberFailure(machineID string) {
 func Election() {
 	time.Sleep(config.WaitTimeForElection * time.Second)
 	logger.PrintInfo("Begin electing a new master:")
-	newMaster := getLargestAliveServer()
-	logger.PrintInfo("New master is selected:", newMaster)
-	masterIP = strings.Split(newMaster, ":")[0]
+	newMasterID := getLargestAliveServer()
+	if selfID == newMasterID {
+		logger.PrintInfo("This server has been elected as the new master.")
+	} else {
+		logger.PrintInfo("New master is selected:", newMasterID)
+	}
+	masterIP = strings.Split(newMasterID, ":")[0]
+	// notify the file service
 	MasterChanged <- 1
 }
 

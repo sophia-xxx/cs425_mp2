@@ -1,3 +1,18 @@
+/*
+This package provides file service, including:
+	1. file transfer
+	2. file record: the master would keep a file record about how files are replicated across nodes
+	3. failure-related handle
+
+SubPackages:
+	- command_handler: handle commands from user
+	- failure_handler: handle the failure of master
+	- file_manager: manage local files
+	- file_record: manage file record
+	- message_handler: handle the incoming message from other nodes
+	- networking: networking-related function
+	- protocol_buffer: protocol buffer files for file service
+*/
 package file_service
 
 import (
@@ -46,7 +61,7 @@ func RunService() {
 	if member_service.IsMaster() {
 		go func(){
 			time.Sleep(config.FileCheckGapSeconds)
-			file_record.RemoveFailNode()
+			file_record.RemoveFailedNodes()
 		}()
 		go func(){
 			time.Sleep(config.FileCheckGapSeconds)

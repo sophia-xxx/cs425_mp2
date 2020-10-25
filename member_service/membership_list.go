@@ -10,10 +10,41 @@ import (
 
 	"cs425_mp2/config"
 	"cs425_mp2/member_service/protocol_buffer"
+	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
 )
 
 var Failures int = 0
+
+func initMembershipList(isGossip bool) {
+	selfMember := protocol_buffer.Member{
+		HeartbeatCounter: 1,
+		LastSeen:         ptypes.TimestampNow(),
+	}
+
+	strat := config.STRAT_GOSSIP
+
+	if !isGossip {
+		strat = config.STRAT_ALL
+	}
+
+	localMessage = &protocol_buffer.MembershipServiceMessage{
+		MemberList:      make(map[string]*protocol_buffer.Member),
+		Strategy:        strat,
+		StrategyCounter: 1,
+	}
+
+	if isMaster {
+		localMessage.Type = protocol_buffer.MessageType_STANDARD
+	} else {
+		localMessage.Type = protocol_buffer.MessageType_JOINREQ
+	}
+
+	localIP := util.GetLocalIPAddr().String()
+	selfID = localIP + ":" + ptypes.TimestampString(selfMember.LastSeen)
+
+	AddMemberToMembershipList(localMessage, selfID, &selfMember)
+}
 
 // MergeMembershipLists : merge remote membership list into local membership list
 func mergeMembershipLists(localMessage, remoteMessage *protocol_buffer.MembershipServiceMessage, failureList map[string]bool) *protocol_buffer.MembershipServiceMessage {

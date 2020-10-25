@@ -1,3 +1,6 @@
+/*
+This package contains some general utilities
+*/
 package util
 
 import (

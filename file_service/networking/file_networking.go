@@ -18,14 +18,9 @@ import (
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
-
 	// open connection socket
-	addressString := util.GetLocalIPAddr().String() + ":" + config.FileTransferPort
-	/*localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
-	if err != nil {
-		logger.PrintInfo("Cannot resolve connection file address!")
-	}*/
-	listener, err := greuse.Listen("tcp4", addressString)
+	listenAddr := ":" + config.FileTransferPort
+	listener, err := greuse.Listen("tcp4", listenAddr)
 	if err != nil {
 		logger.PrintInfo("Cannot listen file port!")
 	}
@@ -40,14 +35,14 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	nameBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(nameBuf)
 	if err != nil {
-		logger.PrintInfo("Cannot receive filename")
+		logger.PrintError("Cannot receive filename")
 	}
 	filename := string(nameBuf[:n])
 
 	if filename != "" {
 		_, err = conn.Write([]byte("ACK"))
 		if err != nil {
-			logger.PrintInfo("Cannot send ACK")
+			logger.PrintError("Cannot send ACK")
 		}
 	}
 	//logger.PrintInfo("Received filename as: " + filename)
@@ -55,7 +50,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	file, err := os.Create(filePath)
 	defer file.Close()
 	if err != nil {
-		logger.PrintInfo("Cannot create file!")
+		logger.PrintError("Cannot create file!")
 	}
 
 	// read data from connection
@@ -64,7 +59,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		n, err := conn.Read(buf)
 		logger.PrintInfo("This time we read:" + strconv.Itoa(n) + " bytes")
 		if err == io.EOF {
-			logger.PrintInfo("Complete connection reading!")
+			logger.PrintError("Complete connection reading!")
 			break
 		}
 		file.Write(buf[:n])
@@ -89,14 +84,13 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	}
 
 	return
-
 }
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
-	localAddr := util.GetLocalIPAddr().String() + ":" + config.FileServicePort
-	//remoteAddress, _ := net.ResolveTCPAddr("tcp4", dest+":"+global.FILEPORT)
+	//localAddr := ":" + config.FileServicePort
+	localAddr := ":" + config.MemberServicePort
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
 		logger.PrintError(err)

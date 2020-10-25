@@ -10,7 +10,7 @@ import (
 func HandleMemberFailure(machineID string) {
 	ip := strings.Split(machineID, ":")[0]
 	if ip == masterIP {
-		logger.PrintInfo("Master has failed. Waiting for electing a new Master:")
+		logger.PrintInfo("Master is down. Please waiting for electing a new Master...")
 		Election()
 	}
 }
@@ -19,7 +19,7 @@ func Election() {
 
 }
 
-func getOldestServer() {
+func getOldestAliveServer() string {
 	ipList := make([]string, 0)
 	for machineID, member := range localMessage.MemberList {
 		if !failureList[machineID] && !member.IsLeaving {
@@ -31,4 +31,5 @@ func getOldestServer() {
 		}
 	}
 	sort.Strings(ipList)
+	return "hello"
 }

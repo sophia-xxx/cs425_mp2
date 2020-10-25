@@ -17,8 +17,6 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 		GetReplyMessage(remoteMsg.FileName, remoteMsg.SenderIP)
 	}
 
-	/*todo: read timeout*/
-	// client send read request to target nodes
 	if remoteMsg.Type == pbm.MsgType_GET_MASTER_REP {
 		// receive file from target nodes
 		targetList := remoteMsg.PayLoad

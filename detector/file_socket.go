@@ -13,7 +13,7 @@ import (
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
-	logger.PrintInfo("Introducer in listen file is: " + introducerIp)
+
 	// open connection socket
 	addressString := GetLocalIPAddr().String() + ":" + config.FILEPORT
 	/*localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
@@ -45,7 +45,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 			logger.PrintInfo("Cannot send ACK")
 		}
 	}
-	logger.PrintInfo("Received filename as: " + filename)
+	//logger.PrintInfo("Received filename as: " + filename)
 	// create sdfsfile
 	file, err := os.Create(filePath)
 	defer file.Close()
@@ -64,15 +64,14 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 		}
 		file.Write(buf[:n])
 	}
-	logger.PrintInfo("Finish receiving file!")
+	logger.InfoLogger.Println("Finish receiving file!")
+	// write operation will send ACK to client to guarantee quorum write
 	if isPut {
 		// finish reading file and check file size, then send ACK
-		logger.PrintInfo("Is put = true")
 		fileInfo, _ := os.Stat(filePath)
-		logger.PrintInfo(GetLocalIPAddr().String() + "*")
-		logger.PrintInfo(introducerIp + "*")
+
 		if strings.Compare(GetLocalIPAddr().String(), introducerIp) == 0 {
-			logger.PrintInfo("Master write file")
+			//logger.PrintInfo("Master write file")
 			UpdateFileNode(filename, []string{introducerIp})
 			return
 		}
@@ -104,16 +103,14 @@ func sendFile(localFilePath string, dest string, filename string) {
 	if err != nil {
 		logger.PrintInfo(err)
 	}
-	logger.PrintInfo("Send length of " + strconv.Itoa(sendlen) + " filename")
+	logger.InfoLogger.Println("Send length of " + strconv.Itoa(sendlen) + " filename")
 
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {
-		// logger.ErrorLogger.Println("Cannot read response")
 		logger.PrintInfo("Cannot read response")
 	}
 	if string(responseBuf[:n]) != "ACK" {
-		// logger.ErrorLogger.Println("Cannot set up connection transfer connection")
 		logger.PrintInfo("Cannot set up connection transfer connection")
 		return
 	}
@@ -131,14 +128,14 @@ func sendFile(localFilePath string, dest string, filename string) {
 		n, err := fs.Read(buf)
 		logger.PrintInfo("This time we write " + strconv.Itoa(n) + " bytes into buffer")
 		if err == io.EOF || n == 0 {
-			logger.InfoLogger.Println("Compete connection reading!")
+			logger.InfoLogger.Println("Complete connection reading!")
 			break
 		}
 
 		//  send connection
 		conn.Write(buf[:n])
 	}
-	logger.PrintInfo("Finish sending file!")
+	logger.PrintInfo("\nFinish sending file!")
 	return
 
 }

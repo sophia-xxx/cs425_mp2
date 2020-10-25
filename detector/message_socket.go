@@ -1,10 +1,8 @@
 package detector
 
 import (
-	"net"
-	"strings"
-
 	"github.com/golang/protobuf/proto"
+	"net"
 
 	pbm "cs425_mp2/ProtocolBuffers/MessagePackage"
 	"cs425_mp2/config"
@@ -38,7 +36,6 @@ func ListenMessage() {
 func handleConnection(conn *net.TCPConn) {
 	defer conn.Close()
 
-	logger.PrintInfo("Get new message!")
 	// read message data
 	buf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(buf)
@@ -71,11 +68,13 @@ func handleConnection(conn *net.TCPConn) {
 		}
 		if remoteMsg.Type == pbm.MsgType_LIST_REP {
 			nodeList := remoteMsg.PayLoad
-			var fileString strings.Builder
-			for _, node := range nodeList {
-				fileString.WriteString(node + "\t")
+			if nodeList == nil {
+				logger.PrintInfo("No such file!")
+			} else {
+				fileString := listToString(nodeList)
+				logger.PrintInfo(remoteMsg.FileName + " is stored in machine : " + fileString)
 			}
-			logger.PrintInfo(remoteMsg.FileName + " : " + fileString.String())
+
 		}
 	}
 }

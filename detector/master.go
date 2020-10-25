@@ -137,7 +137,7 @@ func FindNewNode(sdfsFileName string, sender string) []string {
 func listToString(list []string) string {
 	var targetString strings.Builder
 	for _, e := range list {
-		targetString.WriteString(e + " ; ")
+		targetString.WriteString(e + " ;  ")
 	}
 	return targetString.String()
 }

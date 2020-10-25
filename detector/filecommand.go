@@ -70,9 +70,16 @@ func listFileCommand(sdfsFileName string) {
 
 // deal with "store" command
 func StoreCommand() {
+	logger.PrintInfo("\nLocal file directory: \n")
+	localFile, _ := ioutil.ReadDir(config.LOCAL_DIR)
+	// change file to string
+	for _, file := range localFile {
+		logger.PrintInfo(file.Name() + ":  " + strconv.FormatInt(file.Size(), 10) + "B")
+	}
+	logger.PrintInfo("\nSDFS file directory: \n")
 	files, _ := ioutil.ReadDir(config.SDFS_DIR)
 	for _, f := range files {
-		logger.PrintInfo(f.Name())
+		logger.PrintInfo(f.Name() + ":  " + strconv.FormatInt(f.Size(), 10) + "B")
 	}
 
 }

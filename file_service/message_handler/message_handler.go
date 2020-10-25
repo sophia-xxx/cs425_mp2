@@ -16,26 +16,23 @@ import (
 
 // socket to listen TCP message
 func HandleFileMessage() {
-	addressString := util.GetLocalIPAddr().String() + ":" + config.FileServicePort
+	addressString := ":" + config.FileServicePort
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)
 	if err != nil {
-		logger.PrintInfo("Cannot resolve TCP address!  " + addressString)
+		logger.PrintWarning("Cannot resolve TCP address!  " + addressString)
 	}
 	listener, err := net.ListenTCP("tcp4", localAddr)
 	if err != nil {
-		logger.PrintInfo("Cannot listen TCP!")
+		logger.PrintWarning("Cannot listen TCP!")
 	}
 
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
-			logger.PrintInfo("Cannot open TCP connection!")
+			logger.PrintError("Cannot open TCP connection!")
 		}
-		//logger.PrintInfo("Start new TCP connection!")
-
 		go handleConnection(conn)
 	}
-
 }
 
 func handleConnection(conn *net.TCPConn) {
@@ -147,9 +144,8 @@ func getMessageHandler(remoteMsg *pbm.TCPMessage) {
 func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	// master return target node to write
 	if member_service.IsMaster() && remoteMsg.Type == pbm.MsgType_PUT_MASTER {
-		logger.PrintInfo("Master receive put request")
+		logger.PrintInfo("Master received a Put message.")
 		networking.PutReplyMessage(remoteMsg)
-		logger.PrintInfo("Master reply")
 	}
 	// client send write file request to target nodes
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
@@ -159,9 +155,6 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 			networking.SendWriteReq(target, remoteMsg)
 			logger.PrintInfo("Send write request to target  " + target)
 		}
-		/*target := targetList[0]
-		sendWriteReq(target, remoteMsg)
-		logger.PrintInfo("Send write request to target  " + target)*/
 	}
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
@@ -175,7 +168,6 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 		logger.PrintInfo("Start sending file whose filename is: " + remoteMsg.FileName)
 		networking.SendFile(remoteMsg.LocalPath, remoteMsg.SenderIP, remoteMsg.FileName)
 		logger.PrintInfo("Finish sending file  " + remoteMsg.FileName)
-
 	}
 	// when write finish, master will receive write ACK to maintain file-node list
 	if member_service.IsMaster() && remoteMsg.Type == pbm.MsgType_WRITE_ACK {

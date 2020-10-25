@@ -1,6 +1,7 @@
 package file_record
 
 import (
+	"cs425_mp2/file_service/file_manager"
 	"strconv"
 	"strings"
 
@@ -14,6 +15,14 @@ type FileName = string
 type NodeIP = string
 
 var FileNodeList = make(map[FileName][]NodeIP)
+
+func NewMasterInit() {
+	FileNodeList = make(map[FileName][]NodeIP)
+	RestoreFileNode(
+		util.GetLocalIPAddr().String(),
+		file_manager.GetLocalSDFSFileList(),
+	)
+}
 
 // add or update record in file-node map
 func UpdateFileNode(sdfsFileName string, newNodeList []string) {
@@ -31,6 +40,16 @@ func UpdateFileNode(sdfsFileName string, newNodeList []string) {
 	} else {
 		// add new record
 		FileNodeList[sdfsFileName] = newNodeList
+	}
+}
+
+func RestoreFileNode(nodeIP NodeIP, filenames []FileName) {
+	for _, filename := range filenames {
+		if nodelist, exist := FileNodeList[filename]; !exist {
+			FileNodeList[filename] = make([]string, 0)
+		} else {
+			nodelist = append(nodelist, nodeIP)
+		}
 	}
 }
 

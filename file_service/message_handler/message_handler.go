@@ -62,7 +62,7 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	// deal with all DELETE relevant message
 	if remoteMsg.Type > config.GET && remoteMsg.Type <= config.DELETE {
-		deleteMessageHandle(remoteMsg)
+		deleteMessageHandler(remoteMsg)
 	}
 	// deal with other message
 	if remoteMsg.Type > config.DELETE {
@@ -81,9 +81,7 @@ func handleConnection(conn *net.TCPConn) {
 	}
 	// deal with restore
 	if remoteMsg.Type == pbm.MsgType_RESTORE {
-		if member_service.IsMaster() {
-
-		}
+		restoreMessageHandler(remoteMsg)
 	}
 }
 
@@ -185,7 +183,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 }
 
 
-func deleteMessageHandle(remoteMsg *pbm.TCPMessage) {
+func deleteMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if member_service.IsMaster() {
 		// master send DELETE message to target nodes
 		if remoteMsg.Type == pbm.MsgType_DELETE_MASTER {
@@ -201,5 +199,16 @@ func deleteMessageHandle(remoteMsg *pbm.TCPMessage) {
 			networking.SendDeleteACK(remoteMsg.FileName)
 		}
 	}
+}
+
+func restoreMessageHandler(remoteMsg *pbm.TCPMessage) {
+	if !member_service.IsMaster() {
+		return
+	}
+
+	nodeIP := remoteMsg.SenderIP
+	files := remoteMsg.PayLoad
+	file_record.RestoreFileNode(nodeIP, files)
+	logger.PrintInfo("Restored file records from node", nodeIP, files, ".")
 }
 

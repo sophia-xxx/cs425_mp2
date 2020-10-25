@@ -29,7 +29,11 @@ func RemoveSDFSFile(filename string) {
 	os.Remove(config.SDFS_DIR + filename)
 }
 
-func GetAllSDFSFiles() []os.FileInfo {
+func GetLocalSDFSFileList() []string {
+	result := make([]string, 0)
 	files, _ := ioutil.ReadDir(config.SDFS_DIR)
-	return files
+	for _, file := range files {
+		result = append(result, file.Name())
+	}
+	return result
 }

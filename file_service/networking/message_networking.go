@@ -117,7 +117,7 @@ func SendWriteReq(targetIp string, remoteMsg *protocl_buffer.TCPMessage) {
 
 // send file list
 // send connection by TCP connection (send filename-->get ACK-->send connection)
-func SendFileList(fileList []string, dest string) {
+func RestoreFileListToMaster(fileList []string, dest string) {
 	fileMessage := &protocl_buffer.TCPMessage{
 		Type:      	protocl_buffer.MsgType_RESTORE,
 		SenderIP:  	util.GetLocalIPAddr().String(),

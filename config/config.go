@@ -8,9 +8,9 @@ import (
 var DebugMode = false
 
 const (
-	MemberServicePort 	= "7234"
-	FileTransferPort 	= "7235"
-	FileServicePort 	= "7236"
+	MemberServicePort 	= "8234"
+	FileTransferPort 	= "8235"
+	FileServicePort 	= "8236"
 )
 
 

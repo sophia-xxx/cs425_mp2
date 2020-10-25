@@ -116,7 +116,7 @@ func sendFile(localFilePath string, dest string, filename string) {
 		// open connection
 		n, err := fs.Read(buf)
 		logger.PrintInfo("This time we write " + strconv.Itoa(n) + " bytes into buffer")
-		if err == io.EOF {
+		if err == io.EOF || n == 0 {
 			logger.InfoLogger.Println("Compete connection reading!")
 			break
 		}

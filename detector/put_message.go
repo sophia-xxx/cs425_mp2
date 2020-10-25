@@ -29,7 +29,6 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
 		sendWriteReply(remoteMsg)
 		logger.PrintInfo("Got put request from client  ")
-		logger.PrintInfo("**" + introducerIp + "**")
 		ListenFile(config.SDFS_DIR+remoteMsg.FileName, remoteMsg.FileSize, true)
 		logger.PrintInfo("Finish receiving file  ")
 	}

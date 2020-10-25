@@ -288,14 +288,13 @@ func GetFailNodeList() []string {
 
 func Run(isIntro bool, isGossip bool, introIP string) {
 	fileNodeList = make(map[string][]string)
-	logger.PrintInfo("Introducer in detector run is: " + introducerIp)
+	//logger.PrintInfo("Introducer in detector run is: " + introducerIp)
 	logger.PrintInfo("Starting detector\nIs introducer:", isIntro, "\nintroducerIp:", introIP, "\nIs gossip:", isGossip)
 	isIntroducer = isIntro
 	introducerIp = introIP
 	if isIntro {
 		introducerIp = GetLocalIPAddr().String()
 	}
-	logger.PrintInfo("**" + introducerIp + "**")
 
 	isSending = true
 	isJoining = !isIntroducer

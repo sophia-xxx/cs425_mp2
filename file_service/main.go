@@ -16,8 +16,6 @@ SubPackages:
 package file_service
 
 import (
-	"time"
-
 	"cs425_mp2/command_util"
 	"cs425_mp2/config"
 	"cs425_mp2/file_service/command_handler"
@@ -29,6 +27,7 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
+	"time"
 )
 
 func HandleCommand(command command_util.Command) {
@@ -57,29 +56,6 @@ func HandleCommand(command command_util.Command) {
 func RunService() {
 	file_manager.RemoveAllSDFSFile()
 
-	// master node maintain file-node list
-	if member_service.IsMaster() {
-		go func(){
-			for {
-				time.Sleep(config.FileCheckGapSeconds)
-				file_record.RemoveFailedNodes()
-			}
-		}()
-		go func(){
-			for {
-				time.Sleep(config.FileCheckGapSeconds)
-				networking.CheckReplicate()
-			}
-
-		}()
-		go func(){
-			for {
-				time.Sleep(config.FileCheckGapSeconds)
-				failure_handler.HandleMasterFailure()
-			}
-		}()
-	}
-	
 	// listen TCP message
 	go message_handler.HandleFileMessage()
 
@@ -89,4 +65,15 @@ func RunService() {
 		"\tFile Service Port:", config.FileServicePort,
 		"\tFile Transfer Port:", config.FileTransferPort,
 	)
+
+	// loop check
+	for {
+		time.Sleep(config.FileCheckGapSeconds)
+		// master node maintain file-node list
+		if member_service.IsMaster() {
+			file_record.RemoveFailedNodes()
+			networking.CheckReplicate()
+		}
+		failure_handler.HandleMasterFailure()
+	}
 }

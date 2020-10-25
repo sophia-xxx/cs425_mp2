@@ -90,7 +90,8 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
 	//localAddr := ":" + config.FileServicePort
-	localAddr := ":" + config.MemberServicePort
+	//localAddr := ":" + config.MemberServicePort
+	localAddr := ":0"
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
 		logger.PrintError(err)

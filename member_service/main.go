@@ -46,7 +46,7 @@ func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
 	go startHeartbeat()
 
 	logger.PrintInfo(
-		"Starting detector is now Running\n",
+		"Member Service is now running\n",
 		"\tPort:", config.MemberServicePort,
 		"\tIs Master:", isMaster,
 		"\tMasterIP:", masterIP,

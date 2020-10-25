@@ -138,8 +138,6 @@ func Listen(port string, callback func(message []byte) error) error {
 
 	defer conn.Close()
 
-	logger.PrintInfo("Member service beginning listen udp on", addr)
-
 	buffer := make([]byte, config.BUFFER_SIZE)
 	for {
 		n, err := conn.Read(buffer)

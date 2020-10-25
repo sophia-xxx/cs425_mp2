@@ -7,6 +7,7 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
+	"strings"
 )
 
 // send the replicate request to one existed file node
@@ -51,6 +52,11 @@ func GetReplyMessage(filename string, sender string) {
 	readList := file_record.FileNodeList[filename]
 	if readList == nil {
 		/*todo: deal with non-existed file*/
+	}
+	for i, node := range readList {
+		if strings.Compare(node, sender) == 0 {
+			readList = append(readList[:i], readList[i+1:]...)
+		}
 	}
 	repMessage := &protocl_buffer.TCPMessage{
 		Type:     protocl_buffer.MsgType_GET_MASTER_REP,

@@ -89,7 +89,7 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
-	localAddr := ":8231"
+	localAddr := util.GetLocalIPAddr().String() + ":" + config.MemberServicePort
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
 		logger.PrintError(err)
@@ -133,7 +133,7 @@ func SendFile(localFilePath string, dest string, filename string) {
 		//  send connection
 		conn.Write(buf[:n])
 	}
-	logger.PrintInfo("\nFinish sending file!")
+	logger.PrintInfo("Finished sending file!")
 	return
 
 }

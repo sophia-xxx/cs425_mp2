@@ -13,6 +13,7 @@ import (
 
 // socket to read filename and connection
 func ListenFile(filePath string, fileSize int32, isPut bool) {
+	logger.PrintInfo("Introducer in listen file is: " + introducerIp)
 	// open connection socket
 	addressString := GetLocalIPAddr().String() + ":" + config.FILEPORT
 	localAddr, err := net.ResolveTCPAddr("tcp4", addressString)

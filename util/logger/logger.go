@@ -46,28 +46,28 @@ func PrintToConsole(args ...interface{}) {
 func PrintInfo(args ...interface{}) {
 	InfoLogger.Println(args)
 
-	fmt.Print(green("[INFO] " + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ")"))
+	fmt.Print(green("[INFO] " + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ") "))
 	fmt.Print(green(fmt.Sprintln(args...)))
 }
 
 func PrintWarning(args ...interface{}) {
 	WarningLogger.Println(args)
 
-	fmt.Print(yellow("[WARN] " + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ")"))
+	fmt.Print(yellow("[WARN] " + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ") "))
 	fmt.Print(yellow(fmt.Sprintln(args...)))
 }
 
 func PrintError(args ...interface{}) {
 	ErrorLogger.Println(args)
 
-	fmt.Print(green("[ERROR] " + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ")"))
+	fmt.Print(red("[ERROR]" + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ") "))
 	fmt.Print(red(fmt.Sprintln(args...)))
 }
 
 func PrintDebug(args ...interface{}) {
 	ErrorLogger.Println(args)
 	if config.DebugMode {
-		fmt.Print(yellow("[DEBUG]" + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ")"))
+		fmt.Print(yellow("[DEBUG]" + "(" + strings.Split(time.Now().Format(TimeFormat), " ")[1] + ") "))
 		fmt.Println(args...)
 	}
 }

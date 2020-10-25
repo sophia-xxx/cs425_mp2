@@ -5,9 +5,9 @@ import "hash/fnv"
 var DebugMode = false
 
 const (
-	MemberServicePort 	= "6234"
-	FileTransferPort 	= "6235"
-	FileServicePort 	= "6236"
+	MemberServicePort 	= "7234"
+	FileTransferPort 	= "7235"
+	FileServicePort 	= "7236"
 )
 
 

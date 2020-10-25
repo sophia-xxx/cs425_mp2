@@ -193,8 +193,11 @@ func PutReplyMessage(remoteMsg *pbm.TCPMessage) {
 
 func GetReplyMessage(filename string, sender string) {
 	readList := fileNodeList[filename]
-	if readList == nil {
-		/*todo: deal with non-existed file*/
+	// remove client itself
+	for i, node := range readList {
+		if strings.Compare(node, sender) == 0 {
+			readList = append(readList[:i], readList[i+1:]...)
+		}
 	}
 	repMessage := &pbm.TCPMessage{
 		Type:     pbm.MsgType_GET_MASTER_REP,

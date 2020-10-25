@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/c-bata/go-prompt"
@@ -30,9 +31,9 @@ func main() {
 
 	config.DebugMode = *debugMode
 	if *port != 0 {
-		config.MemberServicePort 	= string(*port)
-		config.FileServicePort 		= string(*port + 1)
-		config.FileTransferPort		= string(*port + 2)
+		config.MemberServicePort 	= strconv.Itoa(*port)
+		config.FileServicePort 		= strconv.Itoa(*port + 1)
+		config.FileTransferPort		= strconv.Itoa(*port + 2)
 	}
 	if (!*isMaster && *masterIP == "") || (*isMaster && *masterIP != "") {
 		logger.PrintError("Machine must either be introducer or have IP address of the introducer to connect to, but not both.\nUse the following flags: -gossip -intro -introIp=<ip>")

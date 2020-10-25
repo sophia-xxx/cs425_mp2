@@ -148,7 +148,6 @@ func Listen(port string, callback func(message []byte) error) error {
 			return err
 		}
 
-		logger.PrintDebug("Member service receive:", buffer[0:n])
 		callback(buffer[0:n])
 	}
 }
@@ -206,6 +205,7 @@ func readNewMessage(message []byte) error {
 	if err != nil {
 		return err
 	}
+	logger.PrintDebug("Member service received message:", remoteMessage)
 
 	mux.Lock()
 
@@ -219,6 +219,7 @@ func readNewMessage(message []byte) error {
 		return nil
 	}
 
+	logger.PrintDebug("Merging membership list.")
 	mergeMembershipLists(localMessage, remoteMessage, failureList)
 
 	if isMaster && remoteMessage.Type == protocol_buffer.MessageType_JOINREQ {

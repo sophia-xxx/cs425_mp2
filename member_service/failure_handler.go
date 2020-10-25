@@ -22,6 +22,7 @@ func Election() {
 	newMaster := getLargestAliveServer()
 	logger.PrintInfo("New master is selected:", newMaster)
 	masterIP = strings.Split(newMaster, ":")[0]
+	MasterChanged <- 1
 }
 
 func getLargestAliveServer() string {

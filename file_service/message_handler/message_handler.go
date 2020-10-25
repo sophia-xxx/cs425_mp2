@@ -77,6 +77,11 @@ func handleConnection(conn *net.TCPConn) {
 				fileString := util.ListToString(nodeList)
 				logger.PrintInfo(remoteMsg.FileName + " is stored in machine : " + fileString)
 			}
+		}
+	}
+	// deal with restore
+	if remoteMsg.Type == pbm.MsgType_RESTORE {
+		if member_service.IsMaster() {
 
 		}
 	}

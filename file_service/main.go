@@ -4,6 +4,7 @@ import (
 	"cs425_mp2/command_util"
 	"cs425_mp2/config"
 	"cs425_mp2/file_service/command_handler"
+	"cs425_mp2/file_service/failure_handler"
 	"cs425_mp2/file_service/file_manager"
 	"cs425_mp2/file_service/file_record"
 	"cs425_mp2/file_service/message_handler"
@@ -11,6 +12,7 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
+	"time"
 )
 
 func HandleCommand(command command_util.Command) {
@@ -43,8 +45,18 @@ func RunService() {
 
 	// master node maintain file-node list
 	if member_service.IsMaster() {
-		go networking.CheckReplicate()
-		go file_record.RemoveFailNode()
+		go func(){
+			time.Sleep(config.FileCheckGapSeconds)
+			file_record.RemoveFailNode()
+		}()
+		go func(){
+			time.Sleep(config.FileCheckGapSeconds)
+			networking.CheckReplicate()
+		}()
+		go func(){
+			time.Sleep(config.FileCheckGapSeconds)
+			failure_handler.HandleMasterFailure()
+		}()
 	}
 	
 	// listen TCP message

@@ -31,5 +31,7 @@ enum MsgType {
   DELETE_MASTER=12; // client send deletee request to master
   LIST=13; // client send LIST request to master,
   LIST_REP=14; // master send sdfsfilename list to server
+
+  RESTORE=15;
 }
 

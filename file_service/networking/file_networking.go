@@ -135,5 +135,4 @@ func SendFile(localFilePath string, dest string, filename string) {
 	}
 	logger.PrintInfo("Finished sending file!")
 	return
-
 }

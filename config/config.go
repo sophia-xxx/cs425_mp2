@@ -1,6 +1,9 @@
 package config
 
-import "hash/fnv"
+import (
+	"hash/fnv"
+	"time"
+)
 
 var DebugMode = false
 
@@ -17,6 +20,7 @@ const (
 	T_TIMEOUT = 5
 	T_CLEANUP = 10
 	WaitTimeForElection = 8
+	FileCheckGapSeconds = 2 * time.Second
 )
 
 const STRAT_GOSSIP = "gossip"

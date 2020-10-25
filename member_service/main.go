@@ -29,6 +29,9 @@ var (
 	isMaster 		bool
 )
 
+// used for election
+var MasterChanged = make(chan int)
+
 func RunService(isMasterBool bool, isGossipBool bool, MasterIPString string) {
 	isMaster = isMasterBool
 	masterIP = MasterIPString

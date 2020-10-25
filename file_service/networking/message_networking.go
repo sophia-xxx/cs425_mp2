@@ -3,10 +3,9 @@ package networking
 import (
 	"cs425_mp2/config"
 	"cs425_mp2/member_service"
+	"github.com/golang/protobuf/proto"
 	"net"
 	"os"
-
-	"github.com/golang/protobuf/proto"
 
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
@@ -116,3 +115,15 @@ func SendWriteReq(targetIp string, remoteMsg *protocl_buffer.TCPMessage) {
 	SendMessageViaTCP(targetIp, message)
 }
 
+// send file list
+// send connection by TCP connection (send filename-->get ACK-->send connection)
+func SendFileList(fileList []string, dest string) {
+	fileMessage := &protocl_buffer.TCPMessage{
+		Type:      	protocl_buffer.MsgType_RESTORE,
+		SenderIP:  	util.GetLocalIPAddr().String(),
+		PayLoad: 	fileList,
+	}
+	message, _ := EncodeTCPMessage(fileMessage)
+	logger.PrintInfo("Send file list:", fileList)
+	SendMessageViaTCP(dest, message)
+}

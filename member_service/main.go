@@ -32,9 +32,9 @@ var (
 func RunService(isMaster bool, isGossip bool, MasterIP string) {
 	logger.PrintInfo(
 		"Starting detector\n",
-		"Is introducer:", isMaster,
-		"introducerIP:", MasterIP,
-		"Is gossip:", isGossip)
+		"\tIs Master:", isMaster,
+		"\tintroducerIP:", MasterIP,
+		"\tIs gossip:", isGossip)
 
 	isMaster = isMaster
 	MasterIP = MasterIP

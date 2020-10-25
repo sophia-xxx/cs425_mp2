@@ -10,9 +10,9 @@ const TCPPORT string = "5005"
 
 const BUFFER_SIZE int = 32768
 
-const T_TIMEOUT = 2
+const T_TIMEOUT = 5
 
-const T_CLEANUP = 2
+const T_CLEANUP = 5
 
 const STRAT_GOSSIP = "gossip"
 

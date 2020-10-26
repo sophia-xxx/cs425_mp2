@@ -23,7 +23,7 @@ const REPLICA = 4
 
 const (
 	T_TIMEOUT           = 5
-	T_CLEANUP           = 10
+	T_CLEANUP           = 40
 	WaitTimeForElection = 10
 	FileCheckGapSeconds = 3 * time.Second
 )

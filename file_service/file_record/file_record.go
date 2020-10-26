@@ -20,10 +20,12 @@ var mux sync.Mutex
 func NewMasterInit() {
 	logger.PrintInfo("Initializing file record...")
 	FileNodeList = make(map[FileName][]NodeIP)
+	mux.Lock()
 	RestoreFileNode(
 		util.GetLocalIPAddr().String(),
 		file_manager.GetLocalSDFSFileList(),
 	)
+	mux.Unlock()
 }
 
 // add or update record in file-node map

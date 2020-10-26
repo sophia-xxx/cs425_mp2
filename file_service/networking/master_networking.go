@@ -26,7 +26,7 @@ func ReplicateFile(storeList []string, newList []string, filename string) {
 		FileName: filename,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
-	logger.PrintInfo("ReplicateFile func sending mes with payload: ", util.ListToString(newList))
+	logger.PrintInfo("ReplicateFile func sending mes with payload: " + util.ListToString(newList))
 	SendMessageViaTCP(sourceNode, msgBytes)
 }
 

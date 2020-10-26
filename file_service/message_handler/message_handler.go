@@ -120,10 +120,15 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
 		logger.PrintInfo("Got  " + pbm.MsgType_name[int32(remoteMsg.Type)] + "  from master with filename: " + remoteMsg.FileName)
 		targetList := remoteMsg.PayLoad
-		for _, target := range targetList {
-			networking.SendWriteReq(target, remoteMsg)
-			logger.PrintInfo("Send write request to target  " + target)
+		if targetList == nil {
+			logger.PrintInfo("No valid node to write! ")
+		} else {
+			for _, target := range targetList {
+				networking.SendWriteReq(target, remoteMsg)
+				logger.PrintInfo("Send write request to target  " + target)
+			}
 		}
+
 	}
 	// server send ACK to put request and start file socket
 	if remoteMsg.Type == pbm.MsgType_PUT_P2P {
@@ -183,4 +188,3 @@ func restoreMessageHandler(remoteMsg *pbm.TCPMessage) {
 	file_record.RestoreFileNode(nodeIP, files)
 	logger.PrintInfo("Restored file records from node", nodeIP, files, ".")
 }
-

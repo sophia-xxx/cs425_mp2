@@ -6,7 +6,7 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
-	"strconv"
+	//"strconv"
 	"strings"
 	"sync"
 )
@@ -125,8 +125,8 @@ func FindNewNode(sdfsFileName string, senderIP string) []string {
 	memberIdList := member_service.GetAliveMemberIPList()
 
 	ipList := make([]string, 0)
-	validIPList := memberIdList
-
+	validIPList := make([]string, 0)
+	/*validIPList := memberIdList
 	for index, id := range validIPList {
 
 		if strings.Compare(id, senderIP) == 0 {
@@ -147,7 +147,18 @@ func FindNewNode(sdfsFileName string, senderIP string) []string {
 				}
 			}
 		}
+	}*/
+	for _, member := range memberIdList {
+		if member == senderIP {
+			continue
+		}
+		for _, storeNode := range currStoringNodes {
+			if strings.Compare(member, storeNode) != 0 {
+				validIPList = append(validIPList, member)
+			}
+		}
 	}
+
 	mux.Unlock()
 	// when member node is less than replica
 	if len(validIPList) < numNodesToPut {

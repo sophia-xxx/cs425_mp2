@@ -55,6 +55,7 @@ func RestoreFileNode(nodeIP NodeIP, filenames []FileName) {
 // should run continuously
 func RemoveFailedNodes() {
 	failNodes := member_service.GetFailNodeList()
+	logger.PrintInfo("Failnode:  " + util.ListToString(failNodes))
 	for _, failedNode := range failNodes {
 		filesInNode := FindAllFilesInNode(failedNode)
 		// if the failed does not store any file

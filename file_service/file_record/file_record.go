@@ -6,6 +6,7 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
+
 	//"strconv"
 	"strings"
 	"sync"
@@ -152,10 +153,15 @@ func FindNewNode(sdfsFileName string, senderIP string) []string {
 		if member == senderIP {
 			continue
 		}
+		isValidIP := true
 		for _, storeNode := range currStoringNodes {
-			if strings.Compare(member, storeNode) != 0 {
-				validIPList = append(validIPList, member)
+			if strings.Compare(member, storeNode) == 0 {
+				isValidIP = false
+				break
 			}
+		}
+		if isValidIP {
+			validIPList = append(validIPList, member)
 		}
 	}
 

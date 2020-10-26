@@ -7,13 +7,18 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
+	"math/rand"
 	"strings"
+	"time"
 )
 
 // send the replicate request to one existed file node
 func ReplicateFile(storeList []string, newList []string, filename string) {
 	// decide which node is the good file
-	sourceNode := storeList[0]
+	// randomly choose a source node
+	rand.Seed(time.Now().Unix())
+	sourceNode := storeList[rand.Intn(len(storeList))]
+	// ask the source to put file
 	repMessage := &protocl_buffer.TCPMessage{
 		Type:     protocl_buffer.MsgType_PUT_MASTER_REP,
 		SenderIP: util.GetLocalIPAddr().String(),

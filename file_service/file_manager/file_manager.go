@@ -1,6 +1,7 @@
 package file_manager
 
 import (
+	"cs425_mp2/util/logger"
 	"io/ioutil"
 	"os"
 
@@ -35,5 +36,6 @@ func GetLocalSDFSFileList() []string {
 	for _, file := range files {
 		result = append(result, file.Name())
 	}
+	logger.PrintInfo("Got local SDFS files:", result)
 	return result
 }

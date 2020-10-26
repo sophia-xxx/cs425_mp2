@@ -19,7 +19,7 @@ const (
 )
 
 const BUFFER_SIZE int = 32768
-const REPLICA = 8
+const REPLICA = 4
 
 const (
 	T_TIMEOUT           = 5

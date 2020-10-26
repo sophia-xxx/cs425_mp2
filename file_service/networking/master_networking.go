@@ -26,7 +26,7 @@ func ReplicateFile(storeList []string, newList []string, filename string) {
 		FileName: filename,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
-
+	logger.PrintInfo("ReplicateFile func sending mes with payload: ", util.ListToString(newList))
 	SendMessageViaTCP(sourceNode, msgBytes)
 }
 
@@ -53,6 +53,7 @@ func PutReplyMessage(remoteMsg *protocl_buffer.TCPMessage) {
 		LocalPath: remoteMsg.LocalPath,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
+	logger.PrintInfo("PutReplyMessage func sending mes with payload: ", util.ListToString(writeList))
 	SendMessageViaTCP(remoteMsg.SenderIP, msgBytes)
 }
 

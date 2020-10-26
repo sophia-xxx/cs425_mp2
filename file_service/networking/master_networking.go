@@ -120,6 +120,9 @@ func CheckReplicate() {
 			if ipList == nil {
 				logger.PrintInfo("No valid node to replicate")
 			} else {
+				for _, target := range ipList {
+					logger.PrintInfo("Replication file send to " + target)
+				}
 				ReplicateFile(storeList, ipList, file)
 			}
 

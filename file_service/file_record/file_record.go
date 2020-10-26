@@ -17,6 +17,7 @@ type NodeIP = string
 var FileNodeList = make(map[FileName][]NodeIP)
 
 func NewMasterInit() {
+	logger.PrintInfo("Initializing file record...")
 	FileNodeList = make(map[FileName][]NodeIP)
 	RestoreFileNode(
 		util.GetLocalIPAddr().String(),
@@ -57,6 +58,7 @@ func RemoveFailedNodes() {
 		}
 		// otherwise, remove the node from its fileNode
 		for _, file := range filesInNode {
+			logger.PrintInfo("Clearing file record for a failed node...")
 			newNodeList := make([]string, 0)
 			for _, n := range FileNodeList[file] {
 				if strings.Compare(n, failedNode) != 0 {

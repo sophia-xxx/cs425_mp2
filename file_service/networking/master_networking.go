@@ -101,8 +101,10 @@ func DeleteMessage(filename string) {
 func CheckReplicate() {
 	for file, nodeList := range file_record.FileNodeList {
 		if len(nodeList) < config.REPLICA {
+			logger.PrintInfo(file, "is detected to have only", len(nodeList), "replicas. Trying to add a new replica for it...")
 			storeList := file_record.FileNodeList[file]
 			if len(storeList) == 0 {
+				logger.PrintWarning(file, "is detected to not have any replicas!")
 				return
 			}
 			ipList := file_record.FindNewNode(file, member_service.GetMasterIP())

@@ -27,7 +27,6 @@ import (
 	"cs425_mp2/member_service"
 	"cs425_mp2/util"
 	"cs425_mp2/util/logger"
-	"time"
 )
 
 func HandleCommand(command command_util.Command) {
@@ -68,7 +67,7 @@ func RunService() {
 
 	// loop check
 	for {
-		time.Sleep(config.FileCheckGapSeconds)
+		//time.Sleep(config.FileCheckGapSeconds)
 		// master node maintain file-node list
 		if member_service.IsMaster() {
 			file_record.RemoveFailedNodes()

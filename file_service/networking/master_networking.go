@@ -40,6 +40,10 @@ func PutReplyMessage(remoteMsg *protocl_buffer.TCPMessage) {
 	} else {
 		writeList = file_record.FileNodeList[remoteMsg.FileName]
 	}
+	if writeList == nil {
+		logger.PrintInfo("No valid node to store the file")
+		return
+	}
 	repMessage := &protocl_buffer.TCPMessage{
 		Type:      protocl_buffer.MsgType_PUT_MASTER_REP,
 		SenderIP:  util.GetLocalIPAddr().String(),
@@ -113,7 +117,12 @@ func CheckReplicate() {
 				return
 			}
 			ipList := file_record.FindNewNode(file, member_service.GetMasterIP())
-			ReplicateFile(storeList, ipList, file)
+			if ipList == nil {
+				logger.PrintInfo("No valid node to replicate")
+			} else {
+				ReplicateFile(storeList, ipList, file)
+			}
+
 		}
 	}
 }

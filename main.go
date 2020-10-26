@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cs425_mp2/config"
+	"bufio"
 	"flag"
 	"fmt"
 	"os"
@@ -11,6 +11,7 @@ import (
 	"github.com/c-bata/go-prompt"
 
 	"cs425_mp2/command_util"
+	"cs425_mp2/config"
 	"cs425_mp2/file_service"
 	"cs425_mp2/member_service"
 	"cs425_mp2/util/logger"
@@ -27,6 +28,7 @@ func main() {
 	masterIP := flag.String("masterIp", "", "the ip of master to connect to")
 	port := flag.Int("port", 0, "the port for the server")
 	debugMode := flag.Bool("debug", false, "debug mode")
+	normalPrompt := flag.Bool("normalPrompt", false, "use normal prompt instead of go prompt")
 	flag.Parse()
 
 	config.DebugMode = *debugMode
@@ -46,10 +48,24 @@ func main() {
 	go file_service.RunService()
 
 	// handle user input
-	handleInput()
+	if *normalPrompt {
+		handleInputViaNormalPrompt()
+	} else {
+		handleInputViaGoPrompt()
+	}
+
 }
 
-func handleInput() {
+func handleInputViaNormalPrompt() {
+	inputReader := bufio.NewReader(os.Stdin)
+	fmt.Println("> Please enter a new command in the format of: 'Command Additional_info'")
+	for {
+		input, _ := inputReader.ReadString('\n')
+		inputDispatcher(input)
+	}
+}
+
+func handleInputViaGoPrompt() {
 	completer := func(d prompt.Document) []prompt.Suggest {
 		s := []prompt.Suggest{
 			{Text: "join"},

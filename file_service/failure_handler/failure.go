@@ -24,6 +24,9 @@ func HandleMasterFailure() {
 }
 
 func uploadSDFSFileListToMaster() {
-	logger.PrintInfo("Restoring file record to new master...")
-	networking.RestoreFileListToMaster(file_manager.GetLocalSDFSFileList(), member_service.GetMasterIP())
+	localSDFSFiles := file_manager.GetLocalSDFSFileList()
+	if len(localSDFSFiles) > 0 {
+		logger.PrintInfo("Restoring file record to new master...")
+		networking.RestoreFileListToMaster(file_manager.GetLocalSDFSFileList(), member_service.GetMasterIP())
+	}
 }

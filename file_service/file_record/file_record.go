@@ -39,11 +39,10 @@ func UpdateFileNode(sdfsFileName FileName, newNodeList []NodeIP) {
 
 func RestoreFileNode(nodeIP NodeIP, filenames []FileName) {
 	for _, filename := range filenames {
-		if nodelist, exist := FileNodeList[filename]; !exist {
+		if _, exist := FileNodeList[filename]; !exist {
 			FileNodeList[filename] = make([]string, 0)
-		} else {
-			nodelist = append(nodelist, nodeIP)
 		}
+		FileNodeList[filename] = append(FileNodeList[filename], nodeIP)
 	}
 }
 

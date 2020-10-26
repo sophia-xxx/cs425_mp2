@@ -94,35 +94,36 @@ func SendFile(localFilePath string, dest string, filename string) {
 	localAddr := ":0"
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
-		logger.PrintError("Send file failed because:", err)
+		logger.PrintError("Send file", filename, "failed because:", err)
 		return
 	}
 	defer conn.Close()
 	// send filename and wait for reply
-	logger.PrintInfo("filename is " + filename)
 	sendlen, err := conn.Write([]byte(filename))
 	if err != nil {
-		logger.PrintInfo(err)
+		logger.PrintError("Send file", filename, "failed because:", err)
+		return
 	}
-	logger.InfoLogger.Println("Send length of " + strconv.Itoa(sendlen) + " filename")
+	logger.PrintDebug("Send length of " + strconv.Itoa(sendlen) + " filename")
 
 	responseBuf := make([]byte, config.BUFFER_SIZE)
 	n, err := conn.Read(responseBuf)
 	if err != nil {
-		logger.PrintInfo("Cannot read response")
+		logger.PrintError("Cannot read response when sending file", filename)
+		return
 	}
 	if string(responseBuf[:n]) != "ACK" {
-		logger.PrintInfo("Cannot set up connection transfer connection")
+		logger.PrintError("Cannot set up connection transfer connection")
 		return
 	}
 
 	// set directory and send connection
 	fs, err := os.Open(localFilePath)
-
-	defer fs.Close()
 	if err != nil {
-		logger.PrintWarning("File path error!    " + localFilePath)
+		logger.PrintError("File path error!    " + localFilePath)
 	}
+	defer fs.Close()
+
 	buf := make([]byte, config.BUFFER_SIZE)
 	for {
 		// open connection
@@ -136,6 +137,6 @@ func SendFile(localFilePath string, dest string, filename string) {
 		//  send connection
 		conn.Write(buf[:n])
 	}
-	logger.PrintInfo("Finished sending file!")
-	return
+
+	logger.PrintInfo("Successfully sent file", filename, "to", dest, ".")
 }

@@ -28,10 +28,10 @@ var (
 
 // vars that are accessible for other packages
 var (
-	failureList  	map[string]bool
-	selfID      	string
-	masterIP 		string
-	isMaster 		bool
+	failureList map[string]bool
+	selfID      string
+	masterIP    string
+	isMaster    bool
 )
 
 // used for election
@@ -110,10 +110,9 @@ func HandleCommand(command command_util.Command) {
 	}
 }
 
-
 /*
 	Following methods are exported for other packages so that they can access the membership list
- */
+*/
 
 func GetAliveMemberIPList() []string {
 	ipList := make([]string, 0)
@@ -134,7 +133,8 @@ func GetFailNodeList() []string {
 	failNodes := make([]string, 0)
 	for k := range failureList {
 		if failureList[k] {
-			failNodes = append(failNodes, k)
+			ip := strings.Split(k, ":")[0]
+			failNodes = append(failNodes, ip)
 		}
 	}
 	return failNodes
@@ -151,4 +151,3 @@ func GetSelfID() string {
 func IsMaster() bool {
 	return isMaster
 }
-

@@ -221,7 +221,7 @@ func readNewMessage(message []byte) error {
 	mergeMembershipLists(localMessage, remoteMessage, failureList)
 
 	if isMaster && remoteMessage.Type == protocol_buffer.MessageType_JOINREQ {
-		logger.PrintInfo("Received join request")
+		logger.PrintInfo("Received a join request.")
 		localMessage.Type = protocol_buffer.MessageType_JOINREP
 		message, err := EncodeMembershipServiceMessage(localMessage)
 		localMessage.Type = protocol_buffer.MessageType_STANDARD

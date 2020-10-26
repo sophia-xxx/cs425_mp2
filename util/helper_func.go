@@ -29,6 +29,7 @@ func Merge(list1, list2 []string) []string {
 	return result
 }
 
+
 func ListToString(list []string) string {
 	var targetString strings.Builder
 	for _, e := range list {

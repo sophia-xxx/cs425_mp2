@@ -104,45 +104,51 @@ func DeleteFileInAllNodes(sdfsFileName string) {
 	delete(FileNodeList, sdfsFileName)
 }
 
-// find nodes to write to or read from
-func FindNewNode(sdfsFileName string, sender string) []string {
+// find new nodes to store replica
+func FindNewNode(sdfsFileName string, senderIP string) []string {
 	// if key not exist in map, it will get nil
-	storeList := FileNodeList[sdfsFileName]
-	if len(storeList) > 0 {
-		logger.PrintInfo(util.ListToString(storeList), "has stored file", sdfsFileName)
+	currStoringNodes := FileNodeList[sdfsFileName]
+	if len(currStoringNodes) > 0 {
+		logger.PrintInfo(util.ListToString(currStoringNodes), "has stored file", sdfsFileName)
 	}
-	nodeNum := config.REPLICA - len(storeList)
+	numNodesToPut := config.REPLICA - len(currStoringNodes)
 	memberIdList := member_service.GetAliveMemberIPList()
 
 	ipList := make([]string, 0)
-	validIdList := memberIdList
+	validIPList := memberIdList
 
-	//logger.PrintInfo(listToString(validIdList) + "   are valid list  ")
-	//logger.PrintInfo("senderIP:" + sender)
-	//logger.PrintInfo("Length of the initial validlist" + strconv.Itoa(len(validIdList)))
-	for index, id := range validIdList {
+	for index, id := range validIPList {
 
-		if strings.Compare(id, sender) == 0 {
-			validIdList = append(validIdList[:index], validIdList[index+1:]...)
-			logger.PrintDebug("Length of the modified validlist", strconv.Itoa(len(validIdList)))
+		if strings.Compare(id, senderIP) == 0 {
+			if index==len(validIPList)-1{
+				validIPList = validIPList[:index]
+			}else{
+				validIPList = append(validIPList[:index], validIPList[index+1:]...)
+			}
+			logger.PrintDebug("Length of the modified validlist", strconv.Itoa(len(validIPList)))
 		}
 
-		for i, n := range storeList {
+		for i, n := range currStoringNodes {
 			if strings.Compare(id, n) == 0 {
-				validIdList = append(validIdList[:i], validIdList[i+1:]...)
+				if i == len(validIPList) - 1 {
+					validIPList = validIPList[:i]
+				}else{
+					validIPList = append(validIPList[:i], validIPList[i+1:]...)
+				}
 			}
 		}
 	}
+
 	// when member node is less than replica
-	if len(validIdList) < nodeNum {
-		nodeNum = len(validIdList)
+	if len(validIPList) < numNodesToPut {
+		numNodesToPut = len(validIPList)
 	}
 	// randomly pick servers in valid nodes to store the connection
 	count := 0
-	for len(ipList) != nodeNum {
+	for len(ipList) != numNodesToPut {
 		valid := true
-		num := int(config.Hash(sdfsFileName+string(('a'+rune(count))))) % len(validIdList)
-		ip := validIdList[num]
+		num := int(config.Hash(sdfsFileName+string(('a'+rune(count))))) % len(validIPList)
+		ip := validIPList[num]
 		for _, i := range ipList {
 			if strings.Compare(ip, i) == 0 {
 				valid = false

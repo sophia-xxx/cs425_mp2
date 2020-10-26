@@ -129,7 +129,7 @@ func SendFile(localFilePath string, dest string, filename string) {
 		n, err := fs.Read(buf)
 		logger.PrintDebug("This time we write " + strconv.Itoa(n) + " bytes into buffer")
 		if err == io.EOF || n == 0 {
-			logger.PrintInfo("Complete connection reading!")
+			logger.PrintDebug("Complete connection reading!")
 			break
 		}
 

@@ -69,8 +69,10 @@ func RunService() {
 	// loop check
 	for {
 		time.Sleep(config.FileCheckGapSeconds)
+		logger.PrintDebug("Running routine check...")
 		// master node maintain file-node list
 		if member_service.IsMaster() {
+			logger.PrintDebug("Running master routine check...")
 			file_record.RemoveFailedNodes()
 			networking.CheckReplicate()
 		}

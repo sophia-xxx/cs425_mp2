@@ -77,11 +77,12 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 			return
 		}
 		//if int32(fileInfo.Size()) == fileSize {
-		//	SendWriteACK(member_service.GetMasterIP(), filename)
+		//  SendWriteACK(member_service.GetMasterIP(), filename)
 		//} else {
 		//	logger.PrintInfo("File is broken")
 		//	os.Remove(filePath)
 		//}
+		SendWriteACK(member_service.GetMasterIP(), filename)
 	}
 }
 

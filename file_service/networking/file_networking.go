@@ -69,22 +69,20 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 	// write operation will send ACK to client to guarantee quorum write
 	if isPut {
 		// finish reading file and check file size, then send ACK
-		fileInfo, _ := os.Stat(filePath)
+		//fileInfo, _ := os.Stat(filePath)
 
 		if strings.Compare(util.GetLocalIPAddr().String(), member_service.GetMasterIP()) == 0 {
 			//logger.PrintInfo("Master write file")
 			file_record.UpdateFileNode(filename, []string{member_service.GetMasterIP()})
 			return
 		}
-		if int32(fileInfo.Size()) == fileSize {
-			SendWriteACK(member_service.GetMasterIP(), filename)
-		} else {
-			logger.PrintInfo("File is broken")
-			os.Remove(filePath)
-		}
+		//if int32(fileInfo.Size()) == fileSize {
+		//	SendWriteACK(member_service.GetMasterIP(), filename)
+		//} else {
+		//	logger.PrintInfo("File is broken")
+		//	os.Remove(filePath)
+		//}
 	}
-
-	return
 }
 
 // send connection by TCP connection (send filename-->get ACK-->send connection)

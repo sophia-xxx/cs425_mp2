@@ -8,22 +8,22 @@ import (
 var DebugMode = false
 
 var (
-	MemberServicePort 	= "8234"
-	FileTransferPort 	= "8235"
-	FileServicePort 	= "8236"
+	MemberServicePort = "8234"
+	FileTransferPort  = "8235"
+	FileServicePort   = "8236"
 )
 
 const (
-	SDFS_DIR = "./FileDir/sdfsFiles/"
+	SDFS_DIR  = "./FileDir/sdfsFiles/"
 	LOCAL_DIR = "./FileDir/localFiles/"
 )
 
 const BUFFER_SIZE int = 32768
-const REPLICA = 4
+const REPLICA = 8
 
 const (
-	T_TIMEOUT = 5
-	T_CLEANUP = 10
+	T_TIMEOUT           = 5
+	T_CLEANUP           = 10
 	WaitTimeForElection = 8
 	FileCheckGapSeconds = 2 * time.Second
 )
@@ -36,12 +36,11 @@ const PULSE_TIME = 500
 
 const GOSSIP_FANOUT = 5
 
-
 const PERM_MODE = 0777
 
 const (
-	PUT = 4
-	GET = 9
+	PUT    = 4
+	GET    = 9
 	DELETE = 12
 )
 

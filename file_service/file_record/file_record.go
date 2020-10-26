@@ -60,7 +60,11 @@ func RemoveFailedNodes() {
 	for _, failedNode := range failNodes {
 		filesInNode := FindAllFilesInNode(failedNode)
 		// if the failed does not store any file
-		if filesInNode == nil {
+		// sch?
+		// if filesInNode == nil {
+		// 	continue
+		// }
+		if len(filesInNode) == 0 {
 			continue
 		}
 		mux.Lock()
@@ -95,7 +99,8 @@ func FindAllFilesInNode(nodeIp NodeIP) []FileName {
 // delete record in file-node map
 func DeleteFileInNodeRecord(sdfsFileName string, nodeIP string) {
 	nodeList := FileNodeList[sdfsFileName]
-	if nodeList == nil {
+	//sch?
+	if len(nodeList) == 0 {
 		delete(FileNodeList, sdfsFileName)
 		logger.PrintInfo("File " + sdfsFileName + " has been deleted!")
 	} else {
@@ -188,7 +193,7 @@ func FindNewNode(sdfsFileName string, senderIP string) []string {
 		count++
 	}
 
-	if ipList != nil {
+	if len(ipList) != 0 {
 		logger.PrintInfo("Chosen hosts to store the file are" + util.ListToString(ipList))
 	}
 	return ipList

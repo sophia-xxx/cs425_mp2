@@ -118,7 +118,7 @@ func CheckReplicate() {
 				return
 			}
 			ipList := file_record.FindNewNode(file, member_service.GetMasterIP())
-			if ipList == nil {
+			if len(ipList) == 0 {
 				logger.PrintInfo("No valid node to replicate")
 			} else {
 				for _, target := range ipList {

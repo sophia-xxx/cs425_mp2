@@ -20,10 +20,11 @@ func ReplicateFile(storeList []string, newList []string, filename string) {
 	sourceNode := storeList[rand.Intn(len(storeList))]
 	// ask the source to put file
 	repMessage := &protocl_buffer.TCPMessage{
-		Type:     protocl_buffer.MsgType_PUT_MASTER_REP,
-		SenderIP: util.GetLocalIPAddr().String(),
-		PayLoad:  newList,
-		FileName: filename,
+		Type:      protocl_buffer.MsgType_PUT_MASTER_REP,
+		SenderIP:  util.GetLocalIPAddr().String(),
+		PayLoad:   newList,
+		FileName:  filename,
+		LocalPath: config.SDFS_DIR + filename,
 	}
 	msgBytes, _ := EncodeTCPMessage(repMessage)
 	logger.PrintInfo("ReplicateFile func sending mes with payload: " + util.ListToString(newList))

@@ -120,7 +120,7 @@ func putMessageHandler(remoteMsg *pbm.TCPMessage) {
 	if remoteMsg.Type == pbm.MsgType_PUT_MASTER_REP {
 		logger.PrintInfo("Got  " + pbm.MsgType_name[int32(remoteMsg.Type)] + "  from master with filename: " + remoteMsg.FileName)
 		targetList := remoteMsg.PayLoad
-		if targetList == nil {
+		if len(targetList) == 0 {
 			logger.PrintInfo("No valid node to write! ")
 		} else {
 			for _, target := range targetList {

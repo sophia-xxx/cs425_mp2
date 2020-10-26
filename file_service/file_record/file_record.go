@@ -188,6 +188,8 @@ func FindNewNode(sdfsFileName string, senderIP string) []string {
 		count++
 	}
 
-	logger.PrintInfo("Chosen hosts to store the file are", util.ListToString(ipList))
+	if ipList != nil {
+		logger.PrintInfo("Chosen hosts to store the file are", util.ListToString(ipList))
+	}
 	return ipList
 }

@@ -24,8 +24,8 @@ const REPLICA = 4
 const (
 	T_TIMEOUT           = 5
 	T_CLEANUP           = 10
-	WaitTimeForElection = 8
-	FileCheckGapSeconds = 2 * time.Second
+	WaitTimeForElection = 10
+	FileCheckGapSeconds = 3 * time.Second
 )
 
 const STRAT_GOSSIP = "gossip"

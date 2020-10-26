@@ -27,7 +27,8 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 
 	conn, err := listener.Accept()
 	if err != nil {
-		logger.PrintInfo("Cannot open file connection!")
+		logger.PrintError("Listen file failed because:", err)
+		return
 	}
 	defer conn.Close()
 
@@ -89,10 +90,12 @@ func ListenFile(filePath string, fileSize int32, isPut bool) {
 // send connection by TCP connection (send filename-->get ACK-->send connection)
 func SendFile(localFilePath string, dest string, filename string) {
 	remoteAddress := dest + ":" + config.FileTransferPort
-	localAddr := util.GetLocalIPAddr().String() + ":" + config.MemberServicePort
+	//localAddr := util.GetLocalIPAddr().String() + ":" + config.MemberServicePort
+	localAddr := ":0"
 	conn, err := greuse.Dial("tcp4", localAddr, remoteAddress)
 	if err != nil {
-		logger.PrintError(err)
+		logger.PrintError("Send file failed because:", err)
+		return
 	}
 	defer conn.Close()
 	// send filename and wait for reply

@@ -1,21 +1,30 @@
-# CS 425 MP1 - Distributed Group Membership
+# 分布式系统HDFS
+### 启动服务
+* 以introducer加入
 
-### Prerequisites for compilation
-- The Go programming language: https://golang.org/
-- Google Protocol Buffers (for Go): https://developers.google.com/protocol-buffers/docs/gotutorial
+运行命令 `go run *.go -intro`
+* 以一般成员加入
 
-### Compilation & Running
-1. Clone the repo
-2. Copy the MP2 folder out to `/home/username/go/src` (by mkdir go and mkdir src)
-3. Change setup.sh content into your username, in MP2 folder run `bash setup.sh`
-4. Compile the code with `go build main.go`, which will produce the executable `./main`
-5. Run the code with the following commands:
-    - `./main -gossip -introIp=123.123.10.1` (gossip strategy, join group with introducer 123.123.10.1)
-    - `./main -introIp=123.123.10.1` (all-to-all strategy, join group with introducer 123.123.10.1)
-    - `./main -intro -gossip` (gossip strategy, this machine is the introducer)
+运行命令 `go run *.go -introIp=123.123.10.1`
 
-6. Then use put, get, ls, store... command, with the local file folder.
+* 以gossip心跳机制加入（默认不带flag为all-to-all心跳机制）
 
-Alternatively, you can run the code without building an exectuable using `go run main.go [args]`, such as `go run main.go -gossip -introIp=123.123.10.1`
+运行命令 `go run *.go -introIp=123.123.10.1 -gossip`
 
-We have included an executable file (named `./vm_main`) for Linux AMD64 machines, which can be run out of the box without installing any of the prerequisites.
+
+### 命令
+* 从HDFS获取文件
+
+运行命令 `get [local file name] [hdfs file name]`。其中，local file name为下载到本地的文件名，hdfs file name为文件存储在hdfs中的名字。
+
+* 上传文件到HDFS
+
+运行命令 `put [local file name] [hdfs file name]`。其中，local file name为待上传的本地文件名，hdfs file name为文件存储在hdfs中的名字。
+
+* 查找在哪些VM上有文件的replicas
+
+运行命令 `ls [hdfs file name]`。 其中，hdfs file name为文件存储在hdfs中的名字。显示结果为存储VM的ID。
+
+* 显示本机上存有哪些HDFS文件
+
+运行命令 `store`。 
